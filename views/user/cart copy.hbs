@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/cart.css">
+</head>
+<body>
+    <div class="card">
+            <div class="row">
+                <div class="col-md-8 cart">
+                    <div class="title">
+                        <div class="row">
+                            <div class="col"><h4><b>Shopping Cart</b></h4></div>
+                            <div class="col align-self-center text-right text-muted">3 items</div>
+                        </div>
+                    </div>  
+                    {{#each cart}}  
+                    <div class="row border-top border-bottom">
+                        <div class="row main align-items-center">
+                            <div class="col-2"><img class="img-fluid" src="/productImages/{{this.image.[0]}}"></div>
+                            <div class="col">
+                                <div class="row text-muted">{{this.pname}}</div>
+                                <div class="row">{{this.category}}</div>
+                            </div>
+                            <div class="col">
+                                <a href="/decCart?id={{this._id}}">-</a>{{this.quantity}}</a><a href="/incCart?id={{this._id}}">+</a>
+                               {{#if lessProduct}} <p>Product quantity must be Atleast One</p>
+                               {{/if}}
+                            </div>
+                            <div class="col">{{this.totalPrice}} ₹<span class="close">&#10005;</span></div>
+                        </div>
+                    </div>
+                    {{/each}}
+                    <div class="back-to-shop"><a href="#">&leftarrow;</a><span class="text-muted">Back to shop</span></div>
+                </div>
+                <div class="col-md-4 summary">
+                    <div><h5><b>Summary</b></h5></div>
+                    <hr>
+                    <div class="row">
+                        <div class="col" style="padding-left:0;">ITEMS {{number}}</div>
+                        <div class="col text-right">{{price}} ₹</div>
+                    </div>
+                    
+    <div class="row">
+  <div class="col" style="padding-left:0;">ITEMS {{number}}</div>
+  <div class="col text-right">
+  </div>
+</div>
+
+                    <form>
+        <p>SHIPPING</p>
+    {{#if expensive}}
+    <p>Your Order Value is above 2000,So,You are eligible for free delivery</p>
+     {{else}}
+    <p>Your Order Value is below 2000,So,You have to pay 50₹ as delivery charge</p>
+     {{/if}}
+                        
+                        <p>GIVE CODE</p>
+                        <input id="code" placeholder="Enter your code">
+                    </form>
+                    <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
+                        <div class="col">TOTAL PRICE</div>
+                        <div class="col text-right">{{TOTALPRICE}}</div>
+                    </div>
+                    <button class="btn">CHECKOUT</button>
+                </div>
+            </div>
+            
+        </div>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

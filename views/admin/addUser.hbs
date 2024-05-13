@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Design by foolishdeveloper.com -->
+    <title>Glassmorphism login Form Tutorial in html css</title>
+ 
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <!--Stylesheet-->
+    <style media="screen">
+      *,
+*:before,
+*:after{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body{
+    background-color: #080710;
+}
+.background{
+    width: 430px;
+    height: 520px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top: 50%;
+}
+.background .shape{
+    height: 200px;
+    width: 200px;
+    position: absolute;
+    border-radius: 50%;
+}
+.shape:first-child{
+    background: linear-gradient(
+        #1845ad,
+        #23a2f6
+    );
+    left: -80px;
+    top: -80px;
+}
+.shape:last-child{
+    background: linear-gradient(
+        to right,
+        #ff512f,
+        #f09819
+    );
+    right: -30px;
+    bottom: -80px;
+}
+form{
+    height: 520px;
+    width: 400px;
+    background-color: rgba(255,255,255,0.13);
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    padding: 50px 35px;
+}
+form *{
+    font-family: 'Poppins',sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    outline: none;
+    border: none;
+}
+form h3{
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 42px;
+    text-align: center;
+}
+
+label{
+    display: block;
+    margin-top: 30px;
+    font-size: 16px;
+    font-weight: 500;
+}
+input{
+    display: block;
+    height: 30px;
+    width: 100%;
+    background-color: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+}
+::placeholder{
+    color: #e5e5e5;
+}
+button{
+    margin-top: 50px;
+    width: 100%;
+    background-color: #ffffff;
+    color: #080710;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.social{
+  margin-top: 30px;
+  display: flex;
+}
+.social div{
+  background: red;
+  width: 150px;
+  border-radius: 3px;
+  padding: 5px 10px 10px 5px;
+  background-color: rgba(255,255,255,0.27);
+  color: #eaf0fb;
+  text-align: center;
+}
+.social div:hover{
+  background-color: rgba(255,255,255,0.47);
+}
+.social .fb{
+  margin-left: 25px;
+}
+.social i{
+  margin-right: 4px;
+}
+select{
+  color: #080710;
+}
+option{
+  color: #080710;
+}
+label{
+  display: none;
+}
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <form action="/admin/addUser" method="post" enctype="multipart/form-data">
+    <h3>Add User</h3>
+      <input type="text" name="username" placeholder="Username">
+      <label for="email">Email</label>
+<input type="text" name="email" placeholder="Email" id="email" onblur="validateEmail(this.value)">
+<span id="emailError" style="color: red;"></span>
+      <div class="name">
+      <input type="text" name="fname" placeholder="First Name">
+      <input type="text" name="lname" placeholder="Last Name">
+      </div>
+      <label for="mobileNumber">Mobile Number</label>
+<input type="text" name="mobileNumber" placeholder="Mobile Number" id="mobileNumber" onblur="validateMobileNumber(this.value)">
+<div id="mobileNumberError" style="color: red;"></div>
+      <input type="file" name="image" id="img">
+<label for="password">Password</label>
+<input type="password" name="password" placeholder="Password" id="password" onblur="validatePassword(this.value)">
+<div id="passwordErrors" style="color: red;"></div>
+      {{#if Username}}
+            <p style="color: red;">Username already exist!!....Try with Another Username....</p>
+    {{/if}}
+    {{#if Email}}
+            <p style="color: red;">Email already exist!!....Try with Another Email....</p>
+    {{/if}}
+    {{#if MobileNumber}}
+            <p style="color: red;">Mobile Number already exist!!....Try with Another Mobile Number....</p>
+    {{/if}}
+    {{#if Password}}
+            <p style="color: red;">Confirmation Password is Not Correct!!....confirm password....</p>
+    {{/if}}
+      <button type="submit">Add User</button>
+    </form>
+    <script>
+    function validateEmail(email) {
+        var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        var emailInput = document.getElementById("email");
+        var emailError = document.getElementById("emailError");
+
+        if (emailPattern.test(email)) {
+            emailInput.style.border = "1px solid #ccc";
+            emailError.textContent = "";
+        } else {
+            emailInput.style.border = "1px solid red";
+            emailError.textContent = "Please enter a valid email address";
+        }
+    }
+     function validatePassword(password) {
+        var passwordInput = document.getElementById("password");
+        var passwordErrors = document.getElementById("passwordErrors");
+
+        // Reset error messages
+        passwordErrors.innerHTML = "";
+
+        // Check length
+        if (password.length < 8) {
+            passwordErrors.innerHTML += "Password must have at least 8 characters";
+        }
+
+        // Check for at least one digit
+        if (!/\d/.test(password)) {
+            passwordErrors.innerHTML += ", and contain at least one digit";
+        }
+
+        // Check for at least one uppercase letter
+        if (!/[A-Z]/.test(password)) {
+            passwordErrors.innerHTML += ", one uppercase letter";
+        }
+
+        // Check for at least one symbol
+        if (!/[^a-zA-Z0-9]/.test(password)) {
+            passwordErrors.innerHTML += ", one symbol<br>";
+        }
+
+        // If there are errors, display them and set border color to red
+        if (passwordErrors.innerHTML !== "") {
+            passwordInput.style.border = "1px solid red";
+        } else {
+            // If no errors, reset border color
+            passwordInput.style.border = "1px solid #ccc";
+        }
+    }
+    function validateMobileNumber(mobileNumber) {
+        var mobileNumberInput = document.getElementById("mobileNumber");
+        var mobileNumberError = document.getElementById("mobileNumberError");
+
+        // Remove any existing error message
+        mobileNumberError.textContent = "";
+
+        // Check if the mobile number contains only digits and has exactly 10 digits
+        var mobileNumberPattern = /^\d{10}$/;
+        if (!mobileNumberPattern.test(mobileNumber)) {
+            mobileNumberError.textContent = "Mobile number must have exactly 10 digits and contain no alphabet or symbols.";
+            mobileNumberInput.style.border = "1px solid red";
+        } else {
+            mobileNumberInput.style.border = "1px solid #ccc";
+        }
+    }
+</script>
+
+</body>
+</html>
