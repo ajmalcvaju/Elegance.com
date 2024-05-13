@@ -1,16 +1,21 @@
+const mongoose = require("mongoose");
+const Address= require("../model/addressModel");
 const orderSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    items: [cartItemSchema], 
+    items: {type:String,required:true}, 
     totalPrice: {
         type: Number
     },
     status: {
         type: String,
         default: 'Pending' 
+    }, address: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Address'
     }
 });
 

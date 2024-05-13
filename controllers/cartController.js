@@ -1,6 +1,8 @@
 const Cart = require('../model/cartModel');
 const Product = require("../model/productModel");
 const User = require("../model/userModel");
+const Address= require("../model/addressModel");
+const Order= require("../model/orderModel");
 
 const addToCart = async (req, res) => {
   try {
@@ -87,10 +89,30 @@ const incCart=async (req, res) => {
 };
 const checkout=async (req,res)=>{
   try {
-    res.render("user/checkout")
+    const email=req.session.email
+        const user = await User.findOne({email});
+        const userId = user._id
+        const cart = await Cart.findOne({ userId }).populate('items.productId');
+        const address=await Address.find({ userId })
+        console.log(address)
+    res.render("user/checkout",{cart,address})
   } catch (error) {
-    console.log(error.message);
+    
   }
 }
+const placeOrder=async (req,res)=>{
+try {
+  console.log(req.body)
+  const email=req.session.email
+        const user = await User.findOne({email});
+        const userId = user._id
+       const {address,items,totalPrice}=req.body
+       const order= new Order({userId:userId,address:address,items:items,totalPrice:totalPrice});
+       const orderData=await order.save()
 
-module.exports={addToCart,updateCart,checkout,cart,incCart,decCart,checkout}
+} catch (error) {
+  console.log(error.message);
+}
+}
+
+module.exports={addToCart,updateCart,checkout,cart,incCart,decCart,checkout,placeOrder}

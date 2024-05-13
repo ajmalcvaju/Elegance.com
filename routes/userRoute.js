@@ -153,4 +153,6 @@ router.get('/decrementItem', cartController.decCart);
 
 router.get('/checkout', cartController.checkout);
 
+router.post('/placeOrder', cartController.placeOrder);
+
 module.exports = router;

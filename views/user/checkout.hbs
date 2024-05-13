@@ -1,41 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout</title>
-    <link rel="stylesheet" href="/checkout.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout</title>
+  <link rel="stylesheet" href="/checkout.css">
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    /* Responsive styles */
+    @media only screen and (max-width: 600px) {
+
+      th,
+      td {
+        padding: 6px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-   <header>
+  <header>
     <h1>Order Summary</h1>
-   </header>
+  </header>
   <section class="content">
 
-    {{!-- <div class="container">
-<div class="details shadow">
-    <table>
-  <thead>
-    <tr>
-      <th>Option</th>
-      <th>Default</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>showSpeed</strong></td>
-      <td>15</td>
-      <td>The speed of the show/reveal</td>
-    </tr>
-  </tbody>
-</table>
+    <div class="container">
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Sub Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each cart}}
+          {{#each this.items}}
+          <tr>
+            <td><strong>{{this.productId.pname}}</strong></td>
+            <td>{{this.quantity}}</td>
+            <td>{{this.price}} ₹</td>
+          </tr>
+          {{/each}}
+          {{/each}}
+          <tr>
+            <td><b>Total Amount</b></td>
+            <td></td>
+            <td>
+              {{#each cart}}<b>{{this.totalPrice}}</b>{{/each}}₹
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
+    </div>
 
-Resources
-</div>
-    </div> --}}
-   
     <div class="discount"></div>
 
     <div class="container">
@@ -45,17 +76,21 @@ Resources
         </div>
         <div class="payment__types">
           <div class="payment__type payment__type--cc active">
-            <i class="icon icon-credit-card"></i>Credit Card</div>
+            <i class="icon icon-credit-card"></i>Cash On Delivery
+          </div>
           <div class="payment__type payment__type--paypal">
-            <i class="icon icon-paypal"></i>Paypal</div>
+            <i class="icon icon-paypal"></i>Paypal
+          </div>
           <div class="payment__type payment__type--paypal">
-            <i class="icon icon-wallet"></i>SEPA</div>
+            <i class="icon icon-wallet"></i>Credit Card
+          </div>
           <div class="payment__type payment__type--paypal">
-            <i class="icon icon-note"></i>Invoice</div>
+            <i class="icon icon-note"></i>Invoice
+          </div>
         </div>
 
         <div class="payment__info">
-          <div class="payment__cc">
+          {{!-- <div class="payment__cc">
             <div class="payment__title">
               <i class="icon icon-user"></i>Personal Information
             </div>
@@ -137,32 +172,32 @@ Resources
 
               </div>
             </form>
-          </div>
-          <div class="payment__shipping">
-            <div class="payment__title">
-              <i class="icon icon-plane"></i> Shiping Information
-            </div>
-            <div class="details__user">
-              <div class="user__name">John Doe
-                <br> 13/03/1980</div>
-              <div class="user__address">Shipping Address: 22 Street, Address
-                <br>Country</div>
-            </div>
+          </div> --}}
+        
+          <form action="/placeOrder" method="post" class="form">
+            <div style="display: flex;flex-direction: column;">
+              {{#each address}}
+              <div>
+                <input type="radio" name="address" value="{{this._id}}">
 
-          </div>
+                <label><u>{{this.addressType}}</u><br>{{this.houseName}},{{this.street}}<br>{{this.district}},{{this.state}}<br>Pincode:{{this.pincode}}</label>
+              </div>
+              <br>
+
+              {{/each}}
+
+              <input type="text" value="{{ cart.items}}" name="items">
+              <input type="text" value="{{ cart.totalPrice}}" name="totalPrice">
+            </div>
+            <div style="text-align: center;">
+             <button type="submit"  class="btn btn-primary" style="margin-top: 10%;">Place Order</button>
+            </div>
+    </form>
         </div>
       </div>
     </div>
-    <div class="container">
-      <div class="actions">
-
-        <a href="#" class="btn action__submit">Place your Order
-          <i class="icon icon-arrow-right-circle"></i>
-        </a>
-        <a href="#" class="backBtn">Go Back to Shop</a>
-
-      </div>
   </section>
   </div>
 </body>
+
 </html>
