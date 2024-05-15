@@ -64,28 +64,18 @@
           {{#each this.items}}
                 <tr>
                     <td>1</td>
-                    <td>Mark</td>
+                    <td>{{this.date}}</td>
                     <td>{{this.productId.pname}}</td>
-                    <td>@mdo</td>
-                    <td>@mdo</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
+                    <td>{{this.quantity}}</td>
+                    <td>{{this.price}}</td>
+                    <td>{{this.status}}</td>
+                    <td>{{this.expectedArrival}}</td>
                     <td>@mdo</td>
                 </tr>
                 <tr>
                 {{/each}}
           {{/each}}
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td>@twitter</td>
-                </tr>
+                   
             </tbody>
         </table>
     </div>

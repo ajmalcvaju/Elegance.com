@@ -18,8 +18,29 @@ const orderItemSchema = new mongoose.Schema({
     status: {
         type: String,
         default: 'Pending' 
+    },
+    date: {
+        type: String,
+        default: formatDate(new Date()) 
+    },
+    expectedArrival:{
+        type: String,
+        default: expectedDate(new Date()) 
     }
 });
+
+function formatDate(date) {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+function expectedDate(date) {
+    const day = String(date.getDate()+3).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
 
 const orderSchema = new mongoose.Schema({
     userId: {
@@ -27,7 +48,7 @@ const orderSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    items: [orderItemSchema], // Changed items to an array of orderItemSchema
+    items: [orderItemSchema], 
     totalPrice: {
         type: Number
     },
