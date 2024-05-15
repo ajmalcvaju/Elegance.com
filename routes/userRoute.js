@@ -17,6 +17,7 @@ const middleware = require("../middlewares/middlewares");
 const cartController=require("../controllers/cartController")
 const Cart=require("../model/cartModel")
 
+
 router.get("/", async (req, res) => {
   if (req.session && req.session.email) {
     res.render("user/home", { login: 1 });
@@ -154,5 +155,7 @@ router.get('/decrementItem', cartController.decCart);
 router.get('/checkout', cartController.checkout);
 
 router.post('/placeOrder', cartController.placeOrder);
+
+router.get('/orderStatus', cartController.orderStatus);
 
 module.exports = router;

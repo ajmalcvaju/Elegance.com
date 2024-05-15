@@ -101,18 +101,39 @@ const checkout=async (req,res)=>{
   }
 }
 const placeOrder=async (req,res)=>{
-try {
-  console.log(req.body)
-  const email=req.session.email
+try {   const email=req.session.email
         const user = await User.findOne({email});
         const userId = user._id
-       const {address,items,totalPrice}=req.body
-       const order= new Order({userId:userId,address:address,items:items,totalPrice:totalPrice});
-       const orderData=await order.save()
-
+        const cart = await Cart.findOne({ userId }).populate('items.productId');
+        const orderItems = cart.items.map(item => ({
+          productId: item.productId._id,
+          quantity: item.quantity,
+          price: item.price
+      }));
+      const address=req.body.address
+      console.log("add",address)
+      const totalPrice = cart.totalPrice;
+      const order = new Order({
+        userId,
+        items: orderItems,
+        totalPrice,
+        address
+    });
+    await order.save();
+    cart.items = [];
+        cart.totalPrice = 0;
+        await cart.save();
+    res.render("user/orderSuccess")
 } catch (error) {
   console.log(error.message);
 }
 }
+const orderStatus=async (req,res)=>{
+  try {
+    
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 
-module.exports={addToCart,updateCart,checkout,cart,incCart,decCart,checkout,placeOrder}
+module.exports={addToCart,updateCart,checkout,cart,incCart,decCart,checkout,placeOrder,orderStatus}
