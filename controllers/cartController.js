@@ -108,7 +108,8 @@ try {   const email=req.session.email
         const orderItems = cart.items.map(item => ({
           productId: item.productId._id,
           quantity: item.quantity,
-          price: item.price
+          price: item.price,
+          userId:userId
       }));
       const address=req.body.address
       console.log("add",address)

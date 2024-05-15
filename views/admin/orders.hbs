@@ -162,12 +162,38 @@
                 </div>
             </nav>
             <!-- Navbar End -->
-
-
-            <!-- Sale & Revenue Start -->
-            
-
-           
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Order Id</th>
+      <th scope="col">Date</th>
+      <th scope="col">Product</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">User</th>
+      <th scope="col">Price</th>
+      <th scope="col">Status</th>
+      <th scope="col">Expected Arrival</th>
+      <th scope="col">Manage</th>
+    </tr>
+  </thead>
+  <tbody>
+         {{#each order}}
+          {{#each this.items}}
+    <tr>
+      <th scope="row">1</th>
+      <td>{{this.date}}</td>
+      <td>{{this.productId.pname}}</td>
+      <td>{{this.quantity}}</td>
+      <td >{{this.userId.fname}} {{this.userId.lname}}</td>
+      <td>{{this.price}}</td>
+      <td>{{this.status}}</td>
+      <td>{{this.expectedArrival}}</td>
+      <td>@mdo</td>
+    </tr>
+    {{/each}}
+          {{/each}}
+  </tbody>
+</table>           
         </div>
         <!-- Content End -->
 
@@ -189,6 +215,12 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script>
+        {{#each order}}
+         const un="{{this.userId.fname}}"
+         document.getElementById("price").innerText= un;
+          {{/each}}
+    </script>
 </body>
 
 </html>

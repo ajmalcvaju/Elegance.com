@@ -12,6 +12,11 @@
         <link rel="stylesheet"href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
         <link rel="stylesheet" href="/css/uicons-regular-rounded.css">
         <link rel="stylesheet" type="text/css" href="/css/responsive.css">
+        <style>
+            #star:hover{
+                color: brown;
+            }
+        </style>
     </head>
     <body>
 <header>
@@ -205,8 +210,9 @@
       <li style="display:block;">
         
        <div class="product-detail-mini-img overflow-hidden active">
+        <a href="#" onclick="changeMainImage('{{this}}')">
         <img class="img-fluid w-100" src="/productImages/{{this}}">
-        <a href="#"></a>
+        </a>
        <!--mini-img--></div>
       </li>
         {{/each}}
@@ -215,10 +221,7 @@
      </ul>
  
     <div class="big-img">
-     <a href="/productImages/{{product.image.[0]}}">
-      <img src="/productImages/{{product.image.[0]}}" style="
-    width: 100%;
-"></a>
+      <img id="mainImage" src="/productImages/{{product.image.[0]}}" style="width: 100%;">
     </div>
 
     <!--product-detail-imgs--></div>
@@ -233,14 +236,14 @@
     <div class="product-rate-review d-flex flex-wrap align-items-center">
                                     
       <span class="d-inline-block rate">
-       <i class="fas fa-star on"></i>
-       <i class="fas fa-star on"></i>
-       <i class="fas fa-star on"></i>
-       <i class="fas fa-star on"></i>
-       <i class="fas fa-star on"></i>
+       <i class="fas fa-star on" id="star"></i>
+       <i class="fas fa-star " id="star"></i>
+       <i class="fas fa-star " id="star"></i>
+       <i class="fas fa-star " id="star"></i>
+       <i class="fas fa-star " id="star"></i>
       </span>
-                                
-                                
+      
+                          
     <!--product-rate--></div>
 
     <h2 class="mb-0">{{product.pname}}</h2>
@@ -664,5 +667,11 @@
 </footer>
 
 <script src="/js/bootstrap.bundle.min.js"></script>
+<script>
+    function changeMainImage(imageSrc) {
+    var mainImage = document.getElementById("mainImage");
+    mainImage.src = "/productImages/" + imageSrc;
+}
+</script>
     </body>
 </html>

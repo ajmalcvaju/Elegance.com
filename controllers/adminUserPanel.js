@@ -18,14 +18,6 @@ const adminUser=async(req,res)=>{
     }
   }
 
-  const adminOrder=async(req,res)=>{
-    try{
-        res.render("admin/orders")
-    }catch{
-        console.log(error.message)
-    }
-  }
-
   const addUser=async(req,res)=>{
     try{
         res.render("admin/addUser")
@@ -94,4 +86,4 @@ console.log(proId)
   );
   res.redirect("/admin/user");
 }
-  module.exports={adminUser,adminCategory,adminOrder,addUser,blockUser,unBlockUser,updateUser,editUser,updatingUser}
+  module.exports={adminUser,adminCategory,addUser,blockUser,unBlockUser,updateUser,editUser,updatingUser}

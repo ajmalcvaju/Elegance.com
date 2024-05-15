@@ -4,6 +4,7 @@ const adminController=require("../controllers/adminController")
 const adminUserPanel=require("../controllers/adminUserPanel")
 const adminProductPanel=require("../controllers/adminProductPanel")
 const adminCategoryPanel=require("../controllers/adminCategoryPanel")
+const adminOrderPanel=require("../controllers/adminOrderPanel")
 const multer=require("multer")
 const path=require("path")
 const middleware=require("../middlewares/middlewares")
@@ -16,7 +17,7 @@ router.get("/dashboard",async (req,res)=>{
 router.get("/adminLogin",adminController.loginLoad);
 router.post("/adminLogin",adminController.verifyLogin);
 
-router.get("/orders",adminUserPanel.adminOrder);
+router.get("/orders",adminOrderPanel.adminOrder);
 router.get("/block-user", adminUserPanel.blockUser);
 router.get("/unblock-user", adminUserPanel.unBlockUser);
 router.get("/admindashboard",adminController.loadDashboard);

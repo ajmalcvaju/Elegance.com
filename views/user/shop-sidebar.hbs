@@ -366,7 +366,7 @@
             <div class="col-lg-4 col-md-6 col-sm-6">
               <div class="block-product">
                   <div class="product-thumb position-relative">
-                      <a href="/product-details?id={{this._id}}"><img src=" /productImages/{{this.image.[0]}}"></a>
+                      <a href="/product-details?id={{this._id}}"><img id="mainImage" src=" /productImages/{{this.image.[0]}}"></a>
                       <span class="position-absolute sv">Save {{this.discount}}%</span>
                       <a href="/add-to-cart?id={{this._id}}" class="ad-cart position-absolute text-center" id="add-to-cart-link">
                           <span>Add to Cart</span>
@@ -406,7 +406,7 @@
                             <ul class="list-unstyled d-flex gap-2 align-items-center justify-content-center">
                                {{#each this.image}}
                                <a href="/product-details?id={{this._id}}">
-                                <li><a href="#"><img src="/productImages/{{this}}"></a></li>
+                                <li><a href="#" onclick="changeMainImage('{{this}}')"><img src="/productImages/{{this}}"></a></li>
                                 {{/each}}
                             </ul>
                         </div>
@@ -551,6 +551,9 @@
             $('#reloadArea').html(data);
         });
     });
+    function changeMainImage(imageSrc) {
+    var mainImage = document.getElementById("mainImage");
+    mainImage.src = "/productImages/" + imageSrc;}
 </script>
     </body>
 </html>

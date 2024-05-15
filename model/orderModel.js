@@ -26,6 +26,11 @@ const orderItemSchema = new mongoose.Schema({
     expectedArrival:{
         type: String,
         default: expectedDate(new Date()) 
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }
 });
 

@@ -11,7 +11,8 @@ const productSchema=new mongoose.Schema({
   image:{ type: [String], required:true },
   category:{type:String,required:true},
   discountedPrice:{type:Number,required:true},
-  is_deleted:{type:Number,default:0}
+  is_deleted:{type:Number,default:0},
+  PurchaseDate: { type: Date, default: Date.now }
 })
 
 const Product = mongoose.model('Product', productSchema);
