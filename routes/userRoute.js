@@ -151,5 +151,6 @@ router.get('/checkout', cartController.checkout);
 router.post('/placeOrder', cartController.placeOrder);
 
 router.get('/orderStatus', cartController.orderStatus);
+// router.get('/search',userController.search);
 
 module.exports = router;

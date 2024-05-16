@@ -237,6 +237,20 @@ const updatePassword = async (req, res) => {
     console.log(error.message);
   }
 };
+
+// const search=async(req, res) => {
+//   try {
+//     const query = req.query.query.toLowerCase();
+//     const products=await Product.find({})
+//     const filteredProducts =products.filter(product => 
+//         product.pname.toLowerCase().includes(query)
+//     );
+//     res.render('products', { products: filteredProducts, query: query });
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// }
+
 module.exports = {
   home,
   loadRegister,
@@ -246,4 +260,5 @@ module.exports = {
   resetPass,
   changePassword,
   updatePassword,
+  
 };
