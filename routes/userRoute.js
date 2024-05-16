@@ -18,13 +18,7 @@ const cartController=require("../controllers/cartController")
 const Cart=require("../model/cartModel")
 
 
-router.get("/", async (req, res) => {
-  if (req.session && req.session.email) {
-    res.render("user/home", { login: 1 });
-  } else {
-    res.render("user/home", { login: 0 });
-  }
-});
+router.get("/",userController.home) 
 router.get("/login", middleware.checkSession, async (req, res) => {
   res.render("user/login");
 });

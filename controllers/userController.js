@@ -1,7 +1,29 @@
 const User = require("../model/userModel");
 const nodemailer = require("nodemailer");
 const OTPcode = require("../model/otpModel");
+const Product=require("../model/productModel");
 
+
+const home=async (req, res) => {
+  try {
+    if (req.session && req.session.email) {
+      const featured = await Product.find({});
+      const topDeal= await Product.find({discount:{$gt:30}});
+      console.log(topDeal)
+      const topRated= await Product.find({});
+      const newArrival= await Product.find({});
+      res.render("user/home", { login: 1,topDeal });
+    } else {
+      const featured = await Product.find({});
+      const topDeal= await Product.find({discount:{$gt:30}});
+      const topRated= await Product.find({});
+      const newArrival= await Product.find({});
+      res.render("user/home", { login: 0,topDeal });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 const sendVerifyMail = async (fname, lname, email, Otp) => {
   try {
     const transporter = nodemailer.createTransport({
@@ -216,6 +238,7 @@ const updatePassword = async (req, res) => {
   }
 };
 module.exports = {
+  home,
   loadRegister,
   insertUser,
   verifyMail,

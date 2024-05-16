@@ -438,11 +438,13 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                             <div class="row">
+                                {{#each topDeal}}
+                                {{#unless this.is_deleted}}
                                 <div class="col-lg-3 col-md-6 col-sm-12">
                                     <div class="block-product">
                                         <div class="product-thumb position-relative">
-                                            <a href="#"><img src="assets/images/resources/prd-1.jpg"></a>
-                                            <span class="position-absolute sv">Save 38%</span>
+                                            <a href="#"><img id="mainImage" src=" /productImages/{{this.image.[0]}}"></a>
+                                            <span class="position-absolute sv">Save {{this.discount}}%</span>
                                             <a href="#" class="ad-cart position-absolute text-center">
                                                 <span>Add to Cart</span>
                                             </a>
@@ -463,11 +465,11 @@
                                             </div>
                                         </div>
                                         <div class="product-body text-center">
-                                            <a href="#" class="brand-name">Elegance</a>
+                                            <a href="#" class="brand-name">{{this.brandName}}</a>
                                             <h2 class="product-name">
-                                                <a href="#">Denim jacket</a>
+                                                <a href="#">{{this.pname}}</a>
                                             </h2>
-                                            <span class="product-price">$7.99 <del>$12.99</span></del></span>
+                                            <span class="product-price">{{this.discountedPrice}} <del>{{this.price}}₹</span></del></span>
                                             <div class="prd-options">
                                                 <ul
                                                     class="list-unstyled d-flex gap-2 align-items-center justify-content-center">
@@ -484,6 +486,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                {{/unless}}
+                                {{/each}}
                             </div>
                         </div>
                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
