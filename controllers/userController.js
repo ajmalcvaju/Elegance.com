@@ -2,7 +2,7 @@ const User = require("../model/userModel");
 const nodemailer = require("nodemailer");
 const OTPcode = require("../model/otpModel");
 const Product=require("../model/productModel");
-
+const Category = require("../model/categoryModel");
 
 const home=async (req, res) => {
   try {
@@ -238,18 +238,26 @@ const updatePassword = async (req, res) => {
   }
 };
 
-// const search=async(req, res) => {
-//   try {
-//     const query = req.query.query.toLowerCase();
-//     const products=await Product.find({})
-//     const filteredProducts =products.filter(product => 
-//         product.pname.toLowerCase().includes(query)
-//     );
-//     res.render('products', { products: filteredProducts, query: query });
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// }
+const categorySearch=async(req,res)=>{
+  try {
+    if (req.session && req.session.email) {
+      const category=req.query.category
+    console.log(category)
+      const products = await Product.find({category});
+      const categories = await Category.find({});
+      res.render("user/shop-sidebar", { products, categories, login: 1 });
+    } else {
+      const category=req.query.category
+      console.log(category)
+      const products = await Product.find({category});
+      const categories = await Category.find({});
+      res.render("user/shop-sidebar", { products, categories, login: 0 });
+    }
+
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 
 module.exports = {
   home,
@@ -260,5 +268,5 @@ module.exports = {
   resetPass,
   changePassword,
   updatePassword,
-  
+  categorySearch
 };
