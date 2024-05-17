@@ -68,5 +68,35 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+const hbs = require('hbs');
+
+hbs.registerHelper('range', function (start, end) {
+  let result = [];
+  for (let i = start; i <= end; i++) {
+    result.push(i);
+  }
+  return result;
+});
+
+hbs.registerHelper('add', function (value, addition) {
+  return value + addition;
+});
+
+hbs.registerHelper('subtract', function (value, subtraction) {
+  return value - subtraction;
+});
+
+hbs.registerHelper('gt', function (value1, value2) {
+  return value1 > value2;
+});
+
+hbs.registerHelper('lt', function (value1, value2) {
+  return value1 < value2;
+});
+
+hbs.registerHelper('eq', function (value1, value2) {
+  return value1 === value2;
+});
+
 
 module.exports = app;

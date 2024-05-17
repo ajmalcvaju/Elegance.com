@@ -277,72 +277,71 @@
 
                     <div class="col-lg-9 col-sm-12 col-md-12">
                         <div class="row">
-                            {{#each products}}
-                            {{#unless this.is_deleted}}
-                            <div id="product" class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="block-product">
-                                    <div class="product-thumb position-relative">
-                                        <a href="/product-details?id={{this._id}}"><img id="mainImage"
-                                                src=" /productImages/{{this.image.[0]}}"></a>
-                                        <span class="position-absolute sv">Save {{this.discount}}%</span>
-                                        <a href="/add-to-cart?id={{this._id}}"
-                                            class="ad-cart position-absolute text-center" id="add-to-cart-link">
-                                            <span>Add to Cart</span>
-                                        </a>
-                                        {{!-- {{#unless inCart}}
-                                        <a href="/add-to-cart?id={{this._id}}"
-                                            class="ad-cart position-absolute text-center" id="add-to-cart-link">
-                                            <span>Add to Cart</span>
-                                        </a>
-                                        {{/unless}}
-                                        {{#if inCart}}
-                                        <div class="quantity-controls">
-                                            <button class="decrement">-</button>
-                                            <p>{{quantity}}</p>
-                                            <button class="increment">+</button>
-                                        </div>
-                                        {{/if}} --}}
-                                        <div class="product-btns position-absolute">
-                                            <a class="wishlist-btn" href="wishlist.html" style="transition-delay:0ms;">
-                                                <i class="fi fi-rr-heart"></i>
-                                            </a>
-                                            <a class="cart-btn" href="cart.html" style="transition-delay: 45ms;">
-                                                <i class="fi-rr-shopping-bag"></i>
-                                            </a>
-                                            <a class="expand-btn" href="images/product-img1-2.jpg"
-                                                style="transition-delay:90ms;">
-                                                <i class="fi fi-rr-picture"></i>
-                                            </a>
+  {{#each products}}
+    {{#unless this.is_deleted}}
+    <div id="product" class="col-lg-4 col-md-6 col-sm-6">
+      <div class="block-product">
+        <div class="product-thumb position-relative">
+          <a href="/product-details?id={{this._id}}">
+            <img id="mainImage" src="/productImages/{{this.image.[0]}}">
+          </a>
+          <span class="position-absolute sv">Save {{this.discount}}%</span>
+          <a href="/add-to-cart?id={{this._id}}" class="ad-cart position-absolute text-center" id="add-to-cart-link">
+            <span>Add to Cart</span>
+          </a>
+          <div class="product-btns position-absolute">
+            <a class="wishlist-btn" href="wishlist.html" style="transition-delay:0ms;">
+              <i class="fi fi-rr-heart"></i>
+            </a>
+            <a class="cart-btn" href="cart.html" style="transition-delay: 45ms;">
+              <i class="fi-rr-shopping-bag"></i>
+            </a>
+            <a class="expand-btn" href="images/product-img1-2.jpg" style="transition-delay:90ms;">
+              <i class="fi fi-rr-picture"></i>
+            </a>
+          </div>
+        </div>
 
-                                            <!--product-btns-->
-                                        </div>
-                                    </div>
+        <div class="product-body text-center">
+          <a href="#" class="brand-name" style="color: black;">{{this.pname}}</a>
+          <h2 class="product-name">
+            <a href="#"></a>
+          </h2>
+          <span class="product-price">₹{{this.discountedPrice}} <del style="color: red;">₹{{this.price}}</del></span>
+          <div class="prd-options">
+            <ul class="list-unstyled d-flex gap-2 align-items-center justify-content-center">
+              {{#each this.image}}
+              <a href="/product-details?id={{../this._id}}">
+                <li>
+                  <a href="#" onclick="changeMainImage('{{this}}')"><img src="/productImages/{{this}}"></a>
+                </li>
+              </a>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/unless}}
+  {{/each}}
+</div>
 
-                                    <div class="product-body text-center">
-                                        <a href="#" class="brand-name" style="color: black;">{{this.pname}}</a>
-                                        <h2 class="product-name">
-                                            <a href="#"></a>
-                                        </h2>
-                                        <span class="product-price">₹{{this.discountedPrice}} <del
-                                                style="color: red;">₹{{this.price}}</del></span>
-                                        <div class="prd-options">
-                                            <ul
-                                                class="list-unstyled d-flex gap-2 align-items-center justify-content-center">
-                                                {{#each this.image}}
-                                                <a href="/product-details?id={{this._id}}">
-                                                    <li><a href="#" onclick="changeMainImage('{{this}}')"><img
-                                                                src="/productImages/{{this}}"></a></li>
-                                                    {{/each}}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-    
-                            {{/unless}}
-                            {{/each}}
+<!-- Pagination Controls -->
+<div class="pagination-controls">
+  {{#if (gt currentPage 1)}}
+  <a href="?page={{subtract currentPage 1}}&category={{category}}" class="btn btn-primary">Previous</a>
+  {{/if}}
 
-                        </div>
+  {{#each (range 1 totalPages)}}
+  <a href="?page={{this}}&category={{category}}" class="btn btn-primary {{#if (eq this ../currentPage)}}active{{/if}}">
+    {{this}}
+  </a>
+  {{/each}}
+
+  {{#if (lt currentPage totalPages)}}
+  <a href="?page={{add currentPage 1}}&category={{category}}" class="btn btn-primary">Next</a>
+  {{/if}}
+</div>
 
                     </div>
                 </div>

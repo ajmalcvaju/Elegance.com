@@ -44,15 +44,28 @@ router.post("/reset/verify", userController.changePassword);
 router.post("/reset/new-password", userController.updatePassword);
 
 router.get("/shop", async (req, res) => {
-  if (req.session && req.session.email) {
-    const products = await Product.find({});
-    const categories = await Category.find({});
-    res.render("user/shop-sidebar", { products, categories, login: 1 });
-  } else {
-    const products = await Product.find({});
-    const categories = await Category.find({});
-    res.render("user/shop-sidebar", { products, categories, login: 0 });
-  }
+  const page = parseInt(req.query.page) || 1;
+  const limit = 6;
+  const category = req.query.category;
+
+  const query = category ? { category } : {};
+
+  const totalProducts = await Product.countDocuments(query);
+  const totalPages = Math.ceil(totalProducts / limit);
+
+  const products = await Product.find(query)
+    .skip((page - 1) * limit)
+    .limit(limit);
+
+  const categories = await Category.find({});
+
+  res.render('user/shop-sidebar', {
+    products,
+    categories,
+    currentPage: page,
+    totalPages,
+    login: req.session && req.session.email ? 1 : 0,
+  });
 });
 router.get("/home", async (req, res) => {
   res.render("user/home");
