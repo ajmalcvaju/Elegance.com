@@ -217,44 +217,65 @@
                     <div class="col-lg-3 col-md-12 col-sm-12">
                         <div class="block-sidebar">
                             <div class="Catagories border-top">
-                                <h3 class="mt-3">Categories</h3>
+                                <h3 class="mt-3"><b><u>Categories</u></b></h3>
                                 <div class="content">
-                                    <div class="block-lst align-items-center d-flex justify-content-between">
-                                        <div class="form-check">
-                                            <a href="/category?category= " class="btn btn-info"><label class="form-check-label"
-                                                    for="flexCheckChecked">All Categories</label></a>
-                                        </div>
-                                    </div>
                                     {{#each categories}}
                                     <div class="block-lst align-items-center d-flex justify-content-between">
                                         <div class="form-check">
-                                            {{!-- <input class="form-check-input active" type="checkbox" value=""
-                                                id="flexCheckChecked" checked> --}}
-
-                                            <a href="/category?category={{this.cname}}" class="btn btn-info"><label
-                                                    class="form-check-label"
-                                                    for="flexCheckChecked">{{this.cname}}</label></a>
+                                            
+                                            <a href="/advanceSearch?category={{this.cname}}&Psort={{priceSort}}&Asort={{alphabetSort}}" class="btn btn-light">
+                                                <label class="form-check-label"
+                                                    for="flexCheckChecked">{{this.cname}}</label>
+                                            </a>
                                         </div>
-                                        {{!-- <span class="count active">87</span> --}}
                                     </div>
                                     {{/each}}
-                                    <h3>price</h3>
+                                    <a href="/advanceSearch?category=&Psort={{priceSort}}&Asort={{alphabetSort}}"class="btn btn-info">Clear Filter</a>
+                                    
                                     <div class="block-lst align-items-center d-flex justify-content-between">
                                         <div class="form-check">
-                                            <a href="/category?sort=price_asc" class="btn btn-light">
+                                            <h3><b><u>Price</u></b></h3>
+                                            <a href="/advanceSearch?category={{category}}&Psort=1&Asort={{alphabetSort}}" class="btn btn-light">
                                                 <label class="form-check-label" for="flexCheckChecked">Price: Low To
                                                     High</label>
                                             </a>
                                         </div>
                                     </div>
+                                    <div class="block-lst align-items-center d-flex justify-content-between">
+                                        <div class="form-check">
+                                            <a href="/advanceSearch?category={{category}}&Psort=-1&Asort={{alphabetSort}}" class="btn btn-light">
+                                                <label class="form-check-label" for="flexCheckChecked">Price: High To
+                                                    Low</label>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <a href="/advanceSearch?category={{category}}&Psort=&Asort={{alphabetSort}}"class="btn btn-info">Clear Filter</a>
+                                     <h3><b><u>Alphabet Sorting</u></b></h3>
+                                    <div class="block-lst align-items-center d-flex justify-content-between">
+                                        <div class="form-check">
+                                            <a href="/advanceSearch?category={{category}}&Psort={{priceSort}}&Asort=1" class="btn btn-light">
+                                                <label class="form-check-label" for="flexCheckChecked">Aa-Zz</label>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="block-lst align-items-center d-flex justify-content-between">
+                                        <div class="form-check">
+                                            <a href="/advanceSearch?category={{category}}&Psort={{priceSort}}&Asort=-1" class="btn btn-light">
+                                                <label class="form-check-label" for="flexCheckChecked">Zz-Aa</label>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <a href="/advanceSearch?category={{category}}&Psort={{priceSort}}&Asort="class="btn btn-info">Clear Filter</a>
                                 </div>
+                                
                             </div>
+                            
                         </div>
+                        <a href="/advanceSearch?category=&Psort=&Asort="class="btn btn-danger">Clear All Filters</a>
                     </div>
 
 
                     <div class="col-lg-9 col-sm-12 col-md-12">
-
                         <div class="row">
                             {{#each products}}
                             {{#unless this.is_deleted}}
@@ -317,6 +338,7 @@
                                     </div>
                                 </div>
                             </div>
+    
                             {{/unless}}
                             {{/each}}
 

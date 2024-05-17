@@ -238,26 +238,238 @@ const updatePassword = async (req, res) => {
   }
 };
 
-const categorySearch=async(req,res)=>{
+const advanceSearch = async (req, res) => {
   try {
     if (req.session && req.session.email) {
-      const category=req.query.category
-    console.log(category)
-      const products = await Product.find({category});
-      const categories = await Category.find({});
-      res.render("user/shop-sidebar", { products, categories, login: 1 });
-    } else {
-      const category=req.query.category
+      req.session.category = req.query.category;
+      req.session.priceSort = parseInt(req.query.Psort);
+      req.session.alphabetSort = parseInt(req.query.Asort);
+      const category = req.session.category;
+      const priceSort = req.session.priceSort;
+      const alphabetSort = req.session.alphabetSort;
       console.log(category)
-      const products = await Product.find({category});
-      const categories = await Category.find({});
-      res.render("user/shop-sidebar", { products, categories, login: 0 });
-    }
+         
+      let products = [];
+      if(category){
+       if(priceSort&&alphabetSort){
+          if(priceSort==1&&alphabetSort==1){
+            products = await Product.find({ category }).sort({
+              discountedPrice: 1,
+              pname: 1
+            });
+          }else if(priceSort==1&&alphabetSort==-1){
+            products = await Product.find({ category }).sort({
+              discountedPrice: 1,
+              pname: -1
+            });
 
+          }else if(priceSort==-1&&alphabetSort==1){
+            products = await Product.find({ category }).sort({
+              discountedPrice: -1,
+              pname: 1
+            });
+
+          }else if(priceSort==-1&&alphabetSort==-1){
+            products = await Product.find({ category }).sort({
+              discountedPrice: -1,
+              pname: -1
+            });
+          }
+       }else if(priceSort){
+        if(priceSort==1){
+          products = await Product.find({ category }).sort({
+            discountedPrice: 1
+          });
+        }else if(priceSort==-1){
+          products = await Product.find({ category }).sort({
+            discountedPrice: -1
+          });
+        }
+       }else if(alphabetSort){
+        if(alphabetSort==1){
+          products = await Product.find({ category }).sort({
+            pname: 1
+          });
+        }else if(alphabetSort==-1){
+          products = await Product.find({ category }).sort({
+            pname: -1
+          });
+        }
+       }else{
+        products = await Product.find({ category })
+       }
+
+      }else{
+        if(priceSort&&alphabetSort){
+          if(priceSort==1&&alphabetSort==1){
+            products = await Product.find({ }).sort({
+              discountedPrice: 1,
+              pname: 1
+            });
+          }else if(priceSort==1&&alphabetSort==-1){
+            products = await Product.find({ }).sort({
+              discountedPrice: 1,
+              pname: -1
+            });
+
+          }else if(priceSort==-1&&alphabetSort==1){
+            products = await Product.find({  }).sort({
+              discountedPrice: -1,
+              pname: 1
+            });
+
+          }else if(priceSort==-1&&alphabetSort==-1){
+            products = await Product.find({ }).sort({
+              discountedPrice: -1,
+              pname: -1
+            });
+          }
+       }else if(priceSort){
+        if(priceSort==1){
+          products = await Product.find({ }).sort({
+            discountedPrice: 1
+          });
+        }else if(priceSort==-1){
+          products = await Product.find({}).sort({
+            discountedPrice: -1
+          });
+        }
+       }else if(alphabetSort){
+        if(alphabetSort==1){
+          products = await Product.find({}).sort({
+            pname: 1
+          });
+        }else if(alphabetSort==-1){
+          products = await Product.find({}).sort({
+            pname: -1
+          });
+        }
+       }else{
+        products = await Product.find({})
+       }
+      }
+      const categories = await Category.find({});
+      res.render("user/shop-sidebar", { products, categories, login: 1,priceSort,alphabetSort,category });
+    } else {
+      req.session.category = req.query.category;
+      req.session.priceSort = parseInt(req.query.Psort);
+      req.session.alphabetSort = parseInt(req.query.Asort);
+      const category = req.session.category;
+      const priceSort = req.session.priceSort;
+      const alphabetSort = req.session.alphabetSort;
+      console.log(category)
+         
+      let products = [];
+      if(category){
+       if(priceSort&&alphabetSort){
+          if(priceSort==1&&alphabetSort==1){
+            products = await Product.find({ category }).sort({
+              discountedPrice: 1,
+              pname: 1
+            });
+          }else if(priceSort==1&&alphabetSort==-1){
+            products = await Product.find({ category }).sort({
+              discountedPrice: 1,
+              pname: -1
+            });
+
+          }else if(priceSort==-1&&alphabetSort==1){
+            products = await Product.find({ category }).sort({
+              discountedPrice: -1,
+              pname: 1
+            });
+
+          }else if(priceSort==-1&&alphabetSort==-1){
+            products = await Product.find({ category }).sort({
+              discountedPrice: -1,
+              pname: -1
+            });
+          }
+       }else if(priceSort){
+        if(priceSort==1){
+          products = await Product.find({ category }).sort({
+            discountedPrice: 1
+          });
+        }else if(priceSort==-1){
+          products = await Product.find({ category }).sort({
+            discountedPrice: -1
+          });
+        }
+       }else if(alphabetSort){
+        if(alphabetSort==1){
+          products = await Product.find({ category }).sort({
+            pname: 1
+          });
+        }else if(alphabetSort==-1){
+          products = await Product.find({ category }).sort({
+            pname: -1
+          });
+        }
+       }else{
+        products = await Product.find({ category })
+       }
+
+      }else{
+        if(priceSort&&alphabetSort){
+          if(priceSort==1&&alphabetSort==1){
+            products = await Product.find({ }).sort({
+              discountedPrice: 1,
+              pname: 1
+            });
+          }else if(priceSort==1&&alphabetSort==-1){
+            products = await Product.find({ }).sort({
+              discountedPrice: 1,
+              pname: -1
+            });
+
+          }else if(priceSort==-1&&alphabetSort==1){
+            products = await Product.find({  }).sort({
+              discountedPrice: -1,
+              pname: 1
+            });
+
+          }else if(priceSort==-1&&alphabetSort==-1){
+            products = await Product.find({ }).sort({
+              discountedPrice: -1,
+              pname: -1
+            });
+          }
+       }else if(priceSort){
+        if(priceSort==1){
+          products = await Product.find({ }).sort({
+            discountedPrice: 1
+          });
+        }else if(priceSort==-1){
+          products = await Product.find({}).sort({
+            discountedPrice: -1
+          });
+        }
+       }else if(alphabetSort){
+        if(alphabetSort==1){
+          products = await Product.find({}).sort({
+            pname: 1
+          });
+        }else if(alphabetSort==-1){
+          products = await Product.find({}).sort({
+            pname: -1
+          });
+        }
+       }else{
+        products = await Product.find({})
+       }
+
+      }
+
+
+      const categories = await Category.find({});
+      res.render("user/shop-sidebar", { products, categories, login: 0,priceSort,alphabetSort,category });
+    }
   } catch (error) {
     console.log(error.message);
+    res.status(500).send("Internal Server Error");
   }
-}
+};
+
 
 module.exports = {
   home,
@@ -268,5 +480,5 @@ module.exports = {
   resetPass,
   changePassword,
   updatePassword,
-  categorySearch
+  advanceSearch
 };

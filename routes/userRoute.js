@@ -153,6 +153,7 @@ router.post('/placeOrder', cartController.placeOrder);
 router.get('/orderStatus', cartController.orderStatus);
 // router.get('/search',userController.search);
 
-router.get('/category',userController.categorySearch);
+router.get('/advanceSearch',userController.advanceSearch);
+
 
 module.exports = router;
