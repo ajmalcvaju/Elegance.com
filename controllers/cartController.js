@@ -13,6 +13,7 @@ const addToCart = async (req, res) => {
    const userId = user._id
    let cart = await Cart.findOne({ userId});
    console.log(cart)
+   let isProductInCart = false;
    if (!cart) {
     cart = new Cart({ userId, items: [{ productId, quantity:1 }] });
     const cartData=await cart.save()
@@ -22,12 +23,16 @@ const addToCart = async (req, res) => {
     if (index !== -1) {
   (cart.items[index].quantity)++
   const cartData=await cart.save()
+  isProductInCart = true;
   } else {
       cart.items.push({ productId, quantity:1 });
       const cartData=await cart.save()
   }
    }
-   res.redirect("/shop")
+   res.json({
+    success: true,
+    isProductInCart
+  });
   } catch (error) {
     console.log(error.message);
   }
