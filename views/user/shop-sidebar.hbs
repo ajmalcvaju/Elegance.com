@@ -286,8 +286,8 @@
             <img id="mainImage" src="/productImages/{{this.image.[0]}}">
           </a>
           <span class="position-absolute sv">Save {{this.discount}}%</span>
-          <a href="/add-to-cart?id={{this._id}}" class="ad-cart position-absolute text-center" id="add-to-cart-link">
-            <span>Add to Cart</span>
+          <a class="ad-cart position-absolute text-center" id="add-to-cart-link">
+            <span onclick="addToCart(event, '{{this._id}}')">Add to Cart</span>
           </a>
           <div class="product-btns position-absolute">
             <a class="wishlist-btn" href="wishlist.html" style="transition-delay:0ms;">
@@ -472,6 +472,7 @@
     </footer>
     <script src="/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
 
         $(document).ready(function () {
@@ -501,7 +502,71 @@
                 $("#searchInput").val("");
             });
         });
+function addToCart(productId) {
+    console.log(productId)
+}
 
+    </script>
+    <script>
+  async function addToCart(event, productId) {
+    event.preventDefault();
+     
+    // Show success message
+    successMessage();
+
+    // Make an asynchronous request to add the product to the cart
+    fetch(`/add-to-cart?id=${productId}`)
+        .then(response => response.json())
+           .then(data => {
+    if (data.success) {
+      if (data.isProductInCart) {
+        failMessage();
+      } else {
+        successMessage();
+      }
+    } else {
+      console.error('Error:', data.message);
+    }
+  })
+        .catch(error => {
+            console.error(error);
+            // Handle error if needed
+        });
+}
+
+function successMessage() {
+    Swal.fire({
+        text: 'Product successfully added to cart',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        customClass: {
+            title: 'text-success',
+            popup: 'swal2-popup-custom',
+            confirmButton: 'btn btn-success'
+        },
+        showCancelButton: false,
+        showCloseButton: true,
+        showLoaderOnConfirm: false,
+        timer: 3000 
+    });
+}
+
+function failMessage() {
+    Swal.fire({
+        text: 'Product Already Present in the cart',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        customClass: {
+            title: 'text-danger',
+            popup: 'swal2-popup-custom',
+            confirmButton: 'btn btn-danger'
+        },
+        showCancelButton: false,
+        showCloseButton: true,
+        showLoaderOnConfirm: false,
+        timer: 3000 
+    });
+}
     </script>
 </body>
 
