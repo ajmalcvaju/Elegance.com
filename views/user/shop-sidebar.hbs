@@ -17,6 +17,11 @@
     <link rel="stylesheet" type="text/css" href=" /css/responsive.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        #add-to-cart-link:hover{
+          cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -286,9 +291,9 @@
             <img id="mainImage" src="/productImages/{{this.image.[0]}}">
           </a>
           <span class="position-absolute sv">Save {{this.discount}}%</span>
-          <a class="ad-cart position-absolute text-center" id="add-to-cart-link">
-            <span onclick="addToCart(event, '{{this._id}}')">Add to Cart</span>
-          </a>
+          
+            <span onclick="addToCart(event, '{{this._id}}')" class="ad-cart position-absolute text-center" id="add-to-cart-link">Add to Cart</span>
+          
           <div class="product-btns position-absolute">
             <a class="wishlist-btn" href="wishlist.html" style="transition-delay:0ms;">
               <i class="fi fi-rr-heart"></i>
@@ -523,6 +528,8 @@ function addToCart(productId) {
         failMessage();
       } else {
         successMessage();
+        document.getElementById("add-to-cart-link").innerHTML="Cart"
+         
       }
     } else {
       console.error('Error:', data.message);

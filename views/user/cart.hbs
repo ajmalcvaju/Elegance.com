@@ -7,6 +7,10 @@
     <title>Shopping Cart</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="/cart.css">
+    <style>
+        .back-to-shop {
+    cursor: pointer;}
+    </style>
 </head>
 
 <body>
@@ -21,6 +25,7 @@
                         <div class="col align-self-center text-right text-muted">3 items</div>
                     </div>
                 </div>
+                
                 {{#each cart}}
                 {{#each this.items}}
                 <div class="row border-top border-bottom">
@@ -43,7 +48,7 @@
                 {{/each}}
                 {{/each}}
 
-                <div class="back-to-shop"><a href="#">&leftarrow;</a><span class="text-muted"></a>Back to shop</span>
+                <div class="back-to-shop" ><a href="/shop">&leftarrow; Back to shop</a>
                 </div>
             </div>
             <div class="col-md-4 summary">

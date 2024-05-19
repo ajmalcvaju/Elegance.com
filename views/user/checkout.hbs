@@ -180,11 +180,12 @@
               <div>
                 <input type="radio" name="address" value="{{this._id}}">
 
-                <label><u>{{this.addressType}}</u><br>{{this.houseName}},{{this.street}}<br>{{this.district}},{{this.state}}<br>Pincode:{{this.pincode}}</label>
+                <label><u>{{this.addressType}}</u><br>{{this.houseName}},{{this.street}} <a href="/editAddress?id={{this._id}}" style="color:blue;">Edit Address</a><br>{{this.district}},{{this.state}}<br>Pincode:{{this.pincode}}<br><a style="color: red;" href="/deleteAddress?id={{this._id}}">Delete</a></label>
               </div>
               <br>
 
               {{/each}}
+              <a href="/addAddress" >Add New Address</a>
             </div>
             <div style="text-align: center;">
              <button type="submit"  class="btn btn-primary" style="margin-top: 10%;">Place Order</button>

@@ -3,6 +3,7 @@ const nodemailer = require("nodemailer");
 const OTPcode = require("../model/otpModel");
 const Product=require("../model/productModel");
 const Category = require("../model/categoryModel");
+const Address=require("../model/addressModel");
 
 const home=async (req, res) => {
   try {
@@ -470,7 +471,23 @@ const advanceSearch = async (req, res) => {
   }
 };
 
-
+const checkoutAddAddress=async (req, res) =>{
+  try {
+    const {houseName,street,district,state,pincode,addressType}=req.body
+  const email=req.session.email
+  const user = await User.findOne({ email });
+  const userId=user._id 
+  console.log(userId) 
+  const address=new Address({userId:userId,houseName:houseName,street:street,district:district,state:state,pincode:pincode,addressType:addressType})
+  const addressData=await address.save()
+  
+  const addresses = await Address.find({ userId });
+  res.redirect("/checkout")
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+ }
 module.exports = {
   home,
   loadRegister,

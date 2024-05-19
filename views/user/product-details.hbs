@@ -252,7 +252,7 @@
     <ul class="product-stock-info list-unstyled mb-0">
                                     
      <li>Only {{product.purchase}} Left</li>
-     <li>Free delivery available</li>
+     <li>Free delivery available above purchase 2000₹</li>
      <li>Sales 30% Off Use Code: MOTIVE30</li>
                                
     </ul>
@@ -291,20 +291,12 @@
          
       <div class="input-group bootstrap-touchspin bootstrap-touchspin-injected">
 
-       <span class="input-group-btn input-group-prepend">
-        <button class="btn btn-primary bootstrap-touchspin-down" type="button">-</button>
-       </span>
-  
-       <input type="number" class="qty form-control" value="01">
-       <span class="input-group-btn input-group-append">
-        <button class="btn btn-primary bootstrap-touchspin-up" type="button">+</button>
-       </span>
-
+       
       <!--input-group--></div>
      
      <!--product-quanty--></div>
                                     
-      <button class="theme-btn bg-color1" type="submit">Add to Cart
+      <button class="theme-btn bg-color1" onclick="addToCart(event, '{{product._id}}')">Add to Cart
        
       </button>
                               
@@ -667,11 +659,75 @@
 </footer>
 
 <script src="/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
     function changeMainImage(imageSrc) {
     var mainImage = document.getElementById("mainImage");
     mainImage.src = "/productImages/" + imageSrc;
 }
 </script>
+<script>
+  async function addToCart(event, productId) {
+    event.preventDefault();
+     
+    // Show success message
+    successMessage();
+
+    // Make an asynchronous request to add the product to the cart
+    fetch(`/add-to-cart?id=${productId}`)
+        .then(response => response.json())
+           .then(data => {
+    if (data.success) {
+      if (data.isProductInCart) {
+        failMessage();
+      } else {
+        successMessage();
+         
+      }
+    } else {
+      console.error('Error:', data.message);
+    }
+  })
+        .catch(error => {
+            console.error(error);
+            // Handle error if needed
+        });
+}
+
+function successMessage() {
+    Swal.fire({
+        text: 'Product successfully added to cart',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        customClass: {
+            title: 'text-success',
+            popup: 'swal2-popup-custom',
+            confirmButton: 'btn btn-success'
+        },
+        showCancelButton: false,
+        showCloseButton: true,
+        showLoaderOnConfirm: false,
+        timer: 3000 
+    });
+}
+
+function failMessage() {
+    Swal.fire({
+        text: 'Product Already Present in the cart ',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        customClass: {
+            title: 'text-danger',
+            popup: 'swal2-popup-custom',
+            confirmButton: 'btn btn-danger'
+        },
+        showCancelButton: false,
+        showCloseButton: true,
+        showLoaderOnConfirm: false,
+        timer: 3000 
+    });
+}
+    </script>
     </body>
 </html>

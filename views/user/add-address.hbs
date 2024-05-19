@@ -150,8 +150,11 @@ option{
     <div class="background">
         <div class="shape"></div>
         <div class="shape"></div>
-    </div>
+    </div>{{#if checkout}}
+    <form action="/addAddress" method="post">
+    {{else}}
     <form action="/myProfile/add-address" method="post">
+    {{/if}}
       <h3>Add Address</h3>
       <input type="text" name="houseName" placeholder="House Name">
       <input type="text" name="street" placeholder="Street Name and Location">

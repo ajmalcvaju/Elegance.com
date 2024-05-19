@@ -18,11 +18,14 @@ const addToCart = async (req, res) => {
     cart = new Cart({ userId, items: [{ productId, quantity:1 }] });
     const cartData=await cart.save()
     console.log(cartData)
+    await Product.updateOne({_id:productId},{$inc: { "purchase": -1 }})
+    let product = await Product.findOne({_id:productId});
+    const productData=await product.save()
    }else{
     const index = cart.items.findIndex(item => item.productId.toString() === productId);
     if (index !== -1) {
-  (cart.items[index].quantity)++
-  const cartData=await cart.save()
+  // (cart.items[index].quantity)++
+  // const cartData=await cart.save()
   isProductInCart = true;
   } else {
       cart.items.push({ productId, quantity:1 });
@@ -38,13 +41,6 @@ const addToCart = async (req, res) => {
   }
 };
 
-const updateCart = async (req, res) => {
-    try {
-    
-    } catch (error) {
-      console.log(error.message);
-    }
-};
 
 const cart=async (req, res) => {
     try {
@@ -53,12 +49,13 @@ const cart=async (req, res) => {
     const userId = user._id
     const cart = await Cart.findOne({ userId }).populate('items.productId');
     let carts = await Cart.findOne({ userId});
-    const totalPrice=carts.totalPrice
-    if(totalPrice>2000){
-      res.render("user/cart",{cart,expensive:true,totalAmount:totalPrice})
-    }else{
-      res.render("user/cart",{cart,expensive:false,totalAmount:totalPrice+50})
-    }
+    console.log(carts)
+      const totalPrice=carts.totalPrice
+      if(totalPrice>2000){
+        res.render("user/cart",{cart,expensive:true,totalAmount:totalPrice})
+      }else{
+        res.render("user/cart",{cart,expensive:false,totalAmount:totalPrice+50})
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -147,4 +144,4 @@ const orderStatus=async (req,res)=>{
   }
 }
 
-module.exports={addToCart,updateCart,checkout,cart,incCart,decCart,checkout,placeOrder,orderStatus}
+module.exports={addToCart,checkout,cart,incCart,decCart,checkout,placeOrder,orderStatus}

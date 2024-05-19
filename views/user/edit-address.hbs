@@ -152,7 +152,12 @@ option{
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
+    {{#if checkout}}
+    <form action="/editAddress?id={{address._id}}" method="post">
+    {{else}}
     <form action="/edit-address?id={{address._id}}" method="post">
+    {{/if}}
+    
       <h3>Edit Address</h3>
       <input type="text" name="houseName" placeholder="House Name" value="{{address.houseName}}">
       <input type="text" name="street" placeholder="Street Name/Location" value="{{address.street}}">
