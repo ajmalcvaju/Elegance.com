@@ -22,7 +22,6 @@
                         <div class="col">
                             <h4><b>Shopping Cart</b></h4>
                         </div>
-                        <div class="col align-self-center text-right text-muted">3 items</div>
                     </div>
                 </div>
                 
@@ -39,14 +38,19 @@
                         <div class="col">
                             <a href="/decrementItem?id={{this._id}}">-</a></a>{{this.quantity}}</a><a
                                 href="/incrementItem?id={{this._id}}">+</a>
+                                
                             {{#if lessProduct}} <p>Product quantity must be Atleast One</p>
                             {{/if}}
                         </div>
                         <div class="col">{{this.price}} ₹<span class="close">&#10005;</span></div>
                     </div>
                 </div>
+
                 {{/each}}
                 {{/each}}
+                {{#if noProduct}}
+                <h1>No Product</h1>
+                {{/if}}
 
                 <div class="back-to-shop" ><a href="/shop">&leftarrow; Back to shop</a>
                 </div>
@@ -92,6 +96,43 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        async function increase(event, productId) {
+            event.preventDefault();
+            window.location.href = '/';
+            fetch(`/incrementItem?id=${productId}`)
+        .then(response => response.json())
+           .then(data => {
+    if (data.success) {
+      if (data.outOfStock) {
+        successMessage();
+      }else {
+        successMessage();
+         
+      }
+    } else {
+      console.error('Error:', data.message);
+    }
+        }
+        function successMessage() {
+    Swal.fire({
+        text: 'Product successfully added to cart',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        customClass: {
+            title: 'text-success',
+            popup: 'swal2-popup-custom',
+            confirmButton: 'btn btn-success'
+        },
+        showCancelButton: false,
+        showCloseButton: true,
+        showLoaderOnConfirm: false,
+        timer: 3000 
+    });
+}
+    </script>
 </body>
 
 </html>

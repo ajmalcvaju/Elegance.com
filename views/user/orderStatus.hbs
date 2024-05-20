@@ -72,7 +72,8 @@
                     <td>{{this.status}}</td>
                     <td>{{this.expectedArrival}}</td>
                     <td>{{this.paymentMethod}}</td>
-                    <td>@mdo</td>
+                    <td><a href="/cancelOrder?orderId={{../_id}}&productId={{this.productId._id}}" class="btn btn-danger"  onclick="return confirm('Do You want to Cancell {{this.productId.pname}}?')">Cancell</a></td>
+
                 </tr>
                 <tr>
                 {{/each}}

@@ -188,7 +188,7 @@
       <td>{{this.price}}</td>
       <td>{{this.status}}</td>
       <td>{{this.expectedArrival}}</td>
-      <td>@mdo</td>
+      <td> <a href="/admin/manage?orderId={{../_id}}&productId={{this.productId._id}}" class="btn btn-danger">Manage</a></td>
     </tr>
     {{/each}}
           {{/each}}

@@ -45,30 +45,7 @@ router.post("/reset", userController.resetPass);
 router.post("/reset/verify", userController.changePassword);
 router.post("/reset/new-password", userController.updatePassword);
 
-router.get("/shop", async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = 6;
-  const category = req.query.category;
-
-  const query = category ? { category } : {};
-
-  const totalProducts = await Product.countDocuments(query);
-  const totalPages = Math.ceil(totalProducts / limit);
-
-  const products = await Product.find(query)
-    .skip((page - 1) * limit)
-    .limit(limit);
-
-  const categories = await Category.find({});
-
-  res.render('user/shop-sidebar', {
-    products,
-    categories,
-    currentPage: page,
-    totalPages,
-    login: req.session && req.session.email ? 1 : 0,
-  });
-});
+router.get("/shop",userController.shop)
 router.get("/home", async (req, res) => {
   res.render("user/home");
 });
@@ -122,8 +99,7 @@ hbs.registerHelper('incrementIndex', function(index) {
 });
 
 router.get('/add-to-cart',cartController.addToCart);
-// router.post('/update-cart', cartController.updateCart);
-// router.post('/checkout', cartController.checkout);
+
 
 router.get('/cart', cartController.cart);
 router.get('/incrementItem', cartController.incCart);
@@ -155,7 +131,12 @@ router.get("/AddAddress",async (req, res) =>{
   await Address.deleteOne({ _id: addId });
   res.redirect("/checkout");
 });
- 
- 
+router.get("/cancelOrder",userCheckoutOrderControll.orderCancell)
+
+router.get("/addWishlist",cartController.addWishlist);
+
+router.get("/myWishlist",cartController.myWishlist);
+
+router.get("/add-cart",cartController.wishlistToAddCart);
 
 module.exports = router;

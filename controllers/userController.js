@@ -5,6 +5,35 @@ const Product=require("../model/productModel");
 const Category = require("../model/categoryModel");
 const Address=require("../model/addressModel");
 
+
+const shop=async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+  const limit = 6;
+  const category = req.query.category;
+
+  const query = category ? { category } : {};
+
+  const totalProducts = await Product.countDocuments(query);
+  const totalPages = Math.ceil(totalProducts / limit);
+
+  const products = await Product.find(query)
+    .skip((page - 1) * limit)
+    .limit(limit);
+
+  const categories = await Category.find({});
+
+  res.render('user/shop-sidebar', {
+    products,
+    categories,
+    currentPage: page,
+    totalPages,
+    login: req.session && req.session.email ? 1 : 0,
+  });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 const home=async (req, res) => {
   try {
     if (req.session && req.session.email) {
@@ -497,5 +526,6 @@ module.exports = {
   resetPass,
   changePassword,
   updatePassword,
-  advanceSearch
+  advanceSearch,
+  shop
 };

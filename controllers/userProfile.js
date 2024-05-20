@@ -2,11 +2,15 @@ const User = require("../model/userModel");
 const Address=require("../model/addressModel");
 const openProfile=async (req, res) =>{
     try {
+    if(req.session&&req.session.email){
         const email=req.session.email
-    const user = await User.findOne({email});
-    const userId = user._id
-    const addresses = await Address.find({ userId });
-    res.render("user/my-profile",{user,addresses,})
+        const user = await User.findOne({email});
+        const userId = user._id
+        const addresses = await Address.find({ userId });
+        res.render("user/my-profile",{user,addresses})
+    }else{
+      res.redirect("/login")
+    }
     } catch (error) {
         console.log(error.message);
     }

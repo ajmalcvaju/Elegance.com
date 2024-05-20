@@ -82,10 +82,10 @@
                     </div>
                     <div class="menu-right col-md-4 col-lg-4">
                         <ul class="shp-lst list-unstyled d-flex align-items-center justify-content-end">
-                            <li><a style="font-weight: 300;" href="/cart"><img src="/images/resources/icon-1.png"
+                            <li><a style="font-weight: 300;" href="/myWishlist"><img src="/images/resources/icon-1.png"
                                         alt=""> My wishlist</a></li>
                             <li><a style="font-weight: 500;" href="/cart"><img src="/images/resources/icon-2.png"
-                                        alt="">$0.00</a></li>
+                                        alt="">My Cart</a></li>
                         </ul>
                     </div>
                 </div>
@@ -294,17 +294,7 @@
           
             <span onclick="addToCart(event, '{{this._id}}')" class="ad-cart position-absolute text-center" id="add-to-cart-link">Add to Cart</span>
           
-          <div class="product-btns position-absolute">
-            <a class="wishlist-btn" href="wishlist.html" style="transition-delay:0ms;">
-              <i class="fi fi-rr-heart"></i>
-            </a>
-            <a class="cart-btn" href="cart.html" style="transition-delay: 45ms;">
-              <i class="fi-rr-shopping-bag"></i>
-            </a>
-            <a class="expand-btn" href="images/product-img1-2.jpg" style="transition-delay:90ms;">
-              <i class="fi fi-rr-picture"></i>
-            </a>
-          </div>
+         
         </div>
 
         <div class="product-body text-center">
@@ -515,20 +505,17 @@ function addToCart(productId) {
     <script>
   async function addToCart(event, productId) {
     event.preventDefault();
-     
-    // Show success message
-    successMessage();
-
-    // Make an asynchronous request to add the product to the cart
+       // Make an asynchronous request to add the product to the cart
     fetch(`/add-to-cart?id=${productId}`)
         .then(response => response.json())
            .then(data => {
     if (data.success) {
       if (data.isProductInCart) {
         failMessage();
+      }else if(data.notLogin){
+         loginMessage();
       } else {
         successMessage();
-        document.getElementById("add-to-cart-link").innerHTML="Cart"
          
       }
     } else {
@@ -561,6 +548,23 @@ function successMessage() {
 function failMessage() {
     Swal.fire({
         text: 'Product Already Present in the cart ',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        customClass: {
+            title: 'text-danger',
+            popup: 'swal2-popup-custom',
+            confirmButton: 'btn btn-danger'
+        },
+        showCancelButton: false,
+        showCloseButton: true,
+        showLoaderOnConfirm: false,
+        timer: 3000 
+    });
+}
+
+function loginMessage() {
+    Swal.fire({
+        text: 'You have not Logged in in Your Account ',
         icon: 'error',
         confirmButtonText: 'OK',
         customClass: {

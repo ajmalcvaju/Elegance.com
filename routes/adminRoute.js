@@ -84,6 +84,8 @@ router.post("/edit-user",adminUserPanel.updatingUser);
 router.post("/edit-product",adminProductPanel.updatingProduct);
 router.post("/edit-category", adminCategoryPanel.updatingCategory);
 
+router.get("/manage",adminOrderPanel.manageOrder)
+router.post("/manage",adminOrderPanel.updateOrder)
 
 
 module.exports = router;

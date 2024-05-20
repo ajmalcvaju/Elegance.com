@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishlist</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" href="/myWishlist.css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+    	<div class="cart-wrap">
+		<div class="container">
+	        <div class="row">
+			    <div class="col-md-12">
+			        <div class="main-heading mb-10">My wishlist</div>
+			        <div class="table-wishlist">
+				        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+				        	<thead>
+					        	<tr>
+					        		<th width="45%">Product Name</th>
+					        		<th width="15%">Unit Price</th>
+					        		<th width="15%">Stock Status</th>
+					        		<th width="15%"></th>
+					        		<th width="10%"></th>
+					        	</tr>
+					        </thead>
+					        <tbody>
+                                 {{#each wishlist}}
+                {{#each this.items}}
+					        	<tr>
+					        		<td width="45%">
+					        			<div class="display-flex align-center">
+		                                    <div class="img-product">
+		                                        <img src="/productImages/{{this.productId.image.[0]}}" alt="" class="mCS_img_loaded">
+		                                    </div>
+		                                    <div class="name-product">
+		                                        {{this.productId.pname}}
+		                                    </div>
+	                                    </div>
+	                                </td>
+					        		<td width="15%" class="price">{{this.productId.price}}</td>
+					        		<td width="15%"><span class="in-stock-box">In Stock</span></td>
+					        		<td width="15%"><a class="round-black-btn small-btn" href="/add-cart?id={{this.productId._id}}">Add to Cart</a></td>
+					        		<td width="10%" class="text-center"><a href="#" class="trash-icon"><i class="far fa-trash-alt"></i></a></td>
+					        	</tr>
+					    {{/each}}
+                        {{/each}}
+							
+			
+				        	</tbody>
+							
+				        </table>
+						{{#if noProduct}}
+												<h3>No Product in Wishlist</h3>
+												{{/if}}
+				    </div>
+			    </div>
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

@@ -304,7 +304,7 @@
         
     <!--product-bottom--></div>
     <div class="wish my-4">
-<a class="heart-btn d-inline-block rounded-circle" href="wishlist.html" title=""><i class="fi-rr-heart"></i>Add to Wishlist</a></div>
+<a class="heart-btn d-inline-block rounded-circle" onclick="addTowishlist(event, '{{product._id}}')" title=""><i class="fi-rr-heart"></i>Add to Wishlist</a></div>
 <div class="safe-check">
   <img src="/images/resources/safe.png">
 </div>
@@ -681,7 +681,9 @@
     if (data.success) {
       if (data.isProductInCart) {
         failMessage();
-      } else {
+      } else if(data.notLogin){
+         loginMessage();
+      }else {
         successMessage();
          
       }
@@ -715,6 +717,102 @@ function successMessage() {
 function failMessage() {
     Swal.fire({
         text: 'Product Already Present in the cart ',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        customClass: {
+            title: 'text-danger',
+            popup: 'swal2-popup-custom',
+            confirmButton: 'btn btn-danger'
+        },
+        showCancelButton: false,
+        showCloseButton: true,
+        showLoaderOnConfirm: false,
+        timer: 3000 
+    });
+}
+function loginMessage() {
+    Swal.fire({
+        text: 'You have not Logged in in Your Account ',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        customClass: {
+            title: 'text-danger',
+            popup: 'swal2-popup-custom',
+            confirmButton: 'btn btn-danger'
+        },
+        showCancelButton: false,
+        showCloseButton: true,
+        showLoaderOnConfirm: false,
+        timer: 3000 
+    });
+}
+    </script>
+    <script>
+  async function addTowishlist(event, productId) {
+    event.preventDefault();
+     
+    // Show success message
+   
+
+    // Make an asynchronous request to add the product to the cart
+    fetch(`/addWishlist?id=${productId}`)
+        .then(response => response.json())
+           .then(data => {
+    if (data.success) {
+      if (data.isProductInWishlist) {
+        failMessages();
+      }else if(data.notLogin){
+         loginMessages();
+      } else {
+        successMessages();
+         
+      }
+    } else {
+      console.error('Error:', data.message);
+    }
+  })
+        .catch(error => {
+            console.error(error);
+            // Handle error if needed
+        });
+}
+
+function successMessages() {
+    Swal.fire({
+        text: 'Product successfully added to Wishlist',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        customClass: {
+            title: 'text-success',
+            popup: 'swal2-popup-custom',
+            confirmButton: 'btn btn-success'
+        },
+        showCancelButton: false,
+        showCloseButton: true,
+        showLoaderOnConfirm: false,
+        timer: 3000 
+    });
+}
+
+function failMessages() {
+    Swal.fire({
+        text: 'Product Already Present in the Wishlist ',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        customClass: {
+            title: 'text-danger',
+            popup: 'swal2-popup-custom',
+            confirmButton: 'btn btn-danger'
+        },
+        showCancelButton: false,
+        showCloseButton: true,
+        showLoaderOnConfirm: false,
+        timer: 3000 
+    });
+}
+function loginMessages() {
+    Swal.fire({
+        text: 'You have not Logged in in Your Account ',
         icon: 'error',
         confirmButtonText: 'OK',
         customClass: {

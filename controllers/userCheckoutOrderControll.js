@@ -1,5 +1,6 @@
 const User = require("../model/userModel");
 const Address=require("../model/addressModel");
+const Order = require("../model/orderModel");
 
 const checkoutAddAddress=async (req, res) =>{
     try {
@@ -36,4 +37,22 @@ const checkoutAddAddress=async (req, res) =>{
     console.log(error.message);
    }
    }
-   module.exports={checkoutAddAddress,checkoutEditAddress}
+   const orderCancell=async(req,res)=>{
+    try {
+       const orderId=req.query.orderId
+       const productId=req.query.productId
+    console.log(orderId)
+    console.log(productId)
+    const order = await Order.updateOne(
+      {_id:orderId,'items.productId': productId},
+      { $set: { 'items.$.status': 'Cancelled' } }
+  );
+  res.redirect("/orderStatus")
+     
+    } catch (error) {
+        console.log(error.message);
+    }
+   }
+
+
+   module.exports={checkoutAddAddress,checkoutEditAddress,orderCancell}
