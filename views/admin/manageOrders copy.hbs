@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,31 +61,34 @@
       text-decoration: none;
       font-size: 14px;
     }
-    .gender{
+
+    .gender {
       display: flex;
       flex-direction: row;
     }
+
     .create-account-link:hover {
       text-decoration: underline;
     }
   </style>
 </head>
+
 <body>
   <div class="login-container">
 
     <h2>Manage Orders</h2>
     <form action="/manage?id={{category._id}}" method="post">
-    <label for="">Expected Arrival</label>
+      <label for="">Expected Arrival</label>
       <input type="Date" name="expectedArrival" placeholder="Expected Arrival" value="{{category.cname}}">
-     <label for="">Order Status</label>
-     <select id="orderStatus" name="orderStatus" class="form-control">
-            <option value="Pending">Pending</option>
-            <option value="Accepted">Accepted</option>
-            <option value="Shipped">Shipped</option>
-            <option value="Arrived">Arrived</option>
-            <option value="Delivered">Delivered</option>
-            <option value="Cancelled">Cancelled</option>
-        </select>
+      <label for="">Order Status</label>
+      <select id="orderStatus" name="orderStatus" class="form-control">
+        <option value="Pending">Pending</option>
+        <option value="Accepted">Accepted</option>
+        <option value="Shipped">Shipped</option>
+        <option value="Arrived">Arrived</option>
+        <option value="Delivered">Delivered</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
 
       <button type="submit">Edit Category</button>
     </form>

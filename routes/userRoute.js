@@ -6,21 +6,20 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
-const userProfile= require("../controllers/userProfile");
+const userProfile = require("../controllers/userProfile");
 const multer = require("multer");
 const path = require("path");
 const Product = require("../model/productModel");
 const Category = require("../model/categoryModel");
 const User = require("../model/userModel");
-const Address=require("../model/addressModel");
+const Address = require("../model/addressModel");
 const userauth = require("../controllers/userauth");
 const middleware = require("../middlewares/middlewares");
-const cartController=require("../controllers/cartController")
-const userCheckoutOrderControll=require("../controllers/userCheckoutOrderControll")
-const Cart=require("../model/cartModel")
+const cartController = require("../controllers/cartController");
+const userCheckoutOrderControll = require("../controllers/userCheckoutOrderControll");
+const Cart = require("../model/cartModel");
 
-
-router.get("/",userController.home) 
+router.get("/", userController.home);
 router.get("/login", middleware.checkSession, async (req, res) => {
   res.render("user/login");
 });
@@ -45,7 +44,7 @@ router.post("/reset", userController.resetPass);
 router.post("/reset/verify", userController.changePassword);
 router.post("/reset/new-password", userController.updatePassword);
 
-router.get("/shop",userController.shop)
+router.get("/shop", userController.shop);
 router.get("/home", async (req, res) => {
   res.render("user/home");
 });
@@ -60,83 +59,87 @@ router.get("/product-details", async (req, res) => {
     res.render("user/product-details", { product, login: 0 });
   }
 });
-router.get("/myProfile",userProfile.openProfile)
+router.get("/myProfile", userProfile.openProfile);
 
- router.get("/myProfile/add-address",async (req, res) =>{
-  res.render("user/add-address",{checkout:0})
- }) 
- router.post("/myProfile/add-address",userProfile.addAddress) 
- router.get("/edit-address",async (req, res) =>{
-  const addId=req.query.id
-  const address = await Address.findOne({ _id:addId });
-  res.render("user/edit-address",{address,checkout:0})
- })  
- router.post("/edit-address",userProfile.editAddress) 
- router.get("/delete-address",async (req, res) => {
+router.get("/myProfile/add-address", async (req, res) => {
+  res.render("user/add-address", { checkout: 0 });
+});
+router.post("/myProfile/add-address", userProfile.addAddress);
+router.get("/edit-address", async (req, res) => {
   const addId = req.query.id;
-  console.log(addId)
+  const address = await Address.findOne({ _id: addId });
+  res.render("user/edit-address", { address, checkout: 0 });
+});
+router.get("/myProfile/changePassword", userProfile.changePassword);
+router.post("/myProfile/changePassword", userProfile.updatePassword);
+router.post("/edit-address", userProfile.editAddress);
+router.get("/delete-address", async (req, res) => {
+  const addId = req.query.id;
+  console.log(addId);
   await Address.deleteOne({ _id: addId });
   res.redirect("/myProfile");
 });
-router.get("/edit-profile",async (req, res) => {
-  const email=req.session.email
-  const user = await User.findOne({email});
-  res.render("user/edit-profile",{user})
+router.get("/edit-profile", async (req, res) => {
+  const email = req.session.email;
+  const user = await User.findOne({ email });
+  res.render("user/edit-profile", { user });
 });
-router.post("/edit-profile",async (req, res) => {
+router.post("/edit-profile", async (req, res) => {
   const userId = req.query.id;
-  const {username,fname,lname,mobileNumber}=req.body
+  const { username, fname, lname, mobileNumber } = req.body;
   await User.updateOne(
     { _id: userId },
-    { $set: {username,fname,lname,mobileNumber} }
-  )
-  res.redirect("/myProfile")
+    { $set: { username, fname, lname, mobileNumber } }
+  );
+  res.redirect("/myProfile");
 });
 
-const hbs = require('hbs');
-hbs.registerHelper('incrementIndex', function(index) {
-    return index + 1;
+const hbs = require("hbs");
+hbs.registerHelper("incrementIndex", function (index) {
+  return index + 1;
 });
 
-router.get('/add-to-cart',cartController.addToCart);
+router.get("/add-to-cart", cartController.addToCart);
 
+router.get("/cart", cartController.cart);
+router.get("/incrementItem", cartController.incCart);
+router.get("/decrementItem", cartController.decCart);
 
-router.get('/cart', cartController.cart);
-router.get('/incrementItem', cartController.incCart);
-router.get('/decrementItem', cartController.decCart);
+router.get("/checkout", cartController.checkout);
 
-router.get('/checkout', cartController.checkout);
+router.post("/placeOrder", cartController.placeOrder);
 
-router.post('/placeOrder', cartController.placeOrder);
-
-router.get('/orderStatus', cartController.orderStatus);
+router.get("/orderStatus", cartController.orderStatus);
 // router.get('/search',userController.search);
 
-router.get('/advanceSearch',userController.advanceSearch);
+router.get("/advanceSearch", userController.advanceSearch);
 
-router.get("/AddAddress",async (req, res) =>{
-  res.render("user/add-address",{checkout:1})
- }) 
- router.post("/AddAddress",userCheckoutOrderControll.checkoutAddAddress)
+router.get("/AddAddress", async (req, res) => {
+  res.render("user/add-address", { checkout: 1 });
+});
+router.post("/AddAddress", userCheckoutOrderControll.checkoutAddAddress);
 
- router.get("/editAddress",async (req, res) =>{
-  const addId=req.query.id
-  const address = await Address.findOne({ _id:addId });
-  res.render("user/edit-address",{address,checkout:1})
- })  
- router.post("/editAddress",userCheckoutOrderControll.checkoutEditAddress)
- router.get("/deleteAddress",async (req, res) => {
+router.get("/editAddress", async (req, res) => {
   const addId = req.query.id;
-  console.log(addId)
+  const address = await Address.findOne({ _id: addId });
+  res.render("user/edit-address", { address, checkout: 1 });
+});
+router.post("/editAddress", userCheckoutOrderControll.checkoutEditAddress);
+router.get("/deleteAddress", async (req, res) => {
+  const addId = req.query.id;
+  console.log(addId);
   await Address.deleteOne({ _id: addId });
   res.redirect("/checkout");
 });
-router.get("/cancelOrder",userCheckoutOrderControll.orderCancell)
+router.get("/cancelOrder", userCheckoutOrderControll.orderCancell);
 
-router.get("/addWishlist",cartController.addWishlist);
+router.get("/addWishlist", cartController.addWishlist);
 
-router.get("/myWishlist",cartController.myWishlist);
+router.get("/myWishlist", cartController.myWishlist);
 
-router.get("/add-cart",cartController.wishlistToAddCart);
+router.get("/add-cart", cartController.wishlistToAddCart);
 
+router.get("/deleteWishlist", cartController.deleteWishlist);
+
+router.get("/deleteCart", cartController.deleteCart);
 module.exports = router;

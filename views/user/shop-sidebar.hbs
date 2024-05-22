@@ -18,8 +18,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        #add-to-cart-link:hover{
-          cursor: pointer;
+        #add-to-cart-link:hover {
+            cursor: pointer;
         }
     </style>
 </head>
@@ -82,10 +82,12 @@
                     </div>
                     <div class="menu-right col-md-4 col-lg-4">
                         <ul class="shp-lst list-unstyled d-flex align-items-center justify-content-end">
+                            <li><a style="font-weight: 300;" href="/myProfile"><i class="fa-regular fa-user"
+                                        style="transform: scale(1.4)"></i> My Profile</a></li>
                             <li><a style="font-weight: 300;" href="/myWishlist"><img src="/images/resources/icon-1.png"
                                         alt=""> My wishlist</a></li>
                             <li><a style="font-weight: 500;" href="/cart"><img src="/images/resources/icon-2.png"
-                                        alt="">My Cart</a></li>
+                                        alt="">$0.00</a></li>
                         </ul>
                     </div>
                 </div>
@@ -227,20 +229,23 @@
                                     {{#each categories}}
                                     <div class="block-lst align-items-center d-flex justify-content-between">
                                         <div class="form-check">
-                                            
-                                            <a href="/advanceSearch?category={{this.cname}}&Psort={{priceSort}}&Asort={{alphabetSort}}" class="btn btn-light">
+
+                                            <a href="/advanceSearch?category={{this.cname}}&Psort={{priceSort}}&Asort={{alphabetSort}}"
+                                                class="btn btn-light">
                                                 <label class="form-check-label"
                                                     for="flexCheckChecked">{{this.cname}}</label>
                                             </a>
                                         </div>
                                     </div>
                                     {{/each}}
-                                    <a href="/advanceSearch?category=&Psort={{priceSort}}&Asort={{alphabetSort}}"class="btn btn-info">Clear Filter</a>
-                                    
+                                    <a href="/advanceSearch?category=&Psort={{priceSort}}&Asort={{alphabetSort}}"
+                                        class="btn btn-info">Clear Filter</a>
+
                                     <div class="block-lst align-items-center d-flex justify-content-between">
                                         <div class="form-check">
                                             <h3><b><u>Price</u></b></h3>
-                                            <a href="/advanceSearch?category={{category}}&Psort=1&Asort={{alphabetSort}}" class="btn btn-light">
+                                            <a href="/advanceSearch?category={{category}}&Psort=1&Asort={{alphabetSort}}"
+                                                class="btn btn-light">
                                                 <label class="form-check-label" for="flexCheckChecked">Price: Low To
                                                     High</label>
                                             </a>
@@ -248,95 +253,107 @@
                                     </div>
                                     <div class="block-lst align-items-center d-flex justify-content-between">
                                         <div class="form-check">
-                                            <a href="/advanceSearch?category={{category}}&Psort=-1&Asort={{alphabetSort}}" class="btn btn-light">
+                                            <a href="/advanceSearch?category={{category}}&Psort=-1&Asort={{alphabetSort}}"
+                                                class="btn btn-light">
                                                 <label class="form-check-label" for="flexCheckChecked">Price: High To
                                                     Low</label>
                                             </a>
                                         </div>
                                     </div>
-                                    <a href="/advanceSearch?category={{category}}&Psort=&Asort={{alphabetSort}}"class="btn btn-info">Clear Filter</a>
-                                     <h3><b><u>Alphabet Sorting</u></b></h3>
+                                    <a href="/advanceSearch?category={{category}}&Psort=&Asort={{alphabetSort}}"
+                                        class="btn btn-info">Clear Filter</a>
+                                    <h3><b><u>Alphabet Sorting</u></b></h3>
                                     <div class="block-lst align-items-center d-flex justify-content-between">
                                         <div class="form-check">
-                                            <a href="/advanceSearch?category={{category}}&Psort={{priceSort}}&Asort=1" class="btn btn-light">
+                                            <a href="/advanceSearch?category={{category}}&Psort={{priceSort}}&Asort=1"
+                                                class="btn btn-light">
                                                 <label class="form-check-label" for="flexCheckChecked">Aa-Zz</label>
                                             </a>
                                         </div>
                                     </div>
                                     <div class="block-lst align-items-center d-flex justify-content-between">
                                         <div class="form-check">
-                                            <a href="/advanceSearch?category={{category}}&Psort={{priceSort}}&Asort=-1" class="btn btn-light">
+                                            <a href="/advanceSearch?category={{category}}&Psort={{priceSort}}&Asort=-1"
+                                                class="btn btn-light">
                                                 <label class="form-check-label" for="flexCheckChecked">Zz-Aa</label>
                                             </a>
                                         </div>
                                     </div>
-                                    <a href="/advanceSearch?category={{category}}&Psort={{priceSort}}&Asort="class="btn btn-info">Clear Filter</a>
+                                    <a href="/advanceSearch?category={{category}}&Psort={{priceSort}}&Asort="
+                                        class="btn btn-info">Clear Filter</a>
                                 </div>
-                                
+
                             </div>
-                            
+
                         </div>
-                        <a href="/advanceSearch?category=&Psort=&Asort="class="btn btn-danger">Clear All Filters</a>
+                        <a href="/advanceSearch?category=&Psort=&Asort=" class="btn btn-danger">Clear All Filters</a>
                     </div>
 
 
                     <div class="col-lg-9 col-sm-12 col-md-12">
                         <div class="row">
-  {{#each products}}
-    {{#unless this.is_deleted}}
-    <div id="product" class="col-lg-4 col-md-6 col-sm-6">
-      <div class="block-product">
-        <div class="product-thumb position-relative">
-          <a href="/product-details?id={{this._id}}">
-            <img id="mainImage" src="/productImages/{{this.image.[0]}}">
-          </a>
-          <span class="position-absolute sv">Save {{this.discount}}%</span>
-          
-            <span onclick="addToCart(event, '{{this._id}}')" class="ad-cart position-absolute text-center" id="add-to-cart-link">Add to Cart</span>
-          
-         
-        </div>
+                            {{#each products}}
+                            {{#unless this.is_deleted}}
+                            <div id="product" class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="block-product">
+                                    <div class="product-thumb position-relative">
+                                        <a href="/product-details?id={{this._id}}">
+                                            <img id="mainImage" src="/productImages/{{this.image.[0]}}">
+                                        </a>
+                                        <span class="position-absolute sv">Save {{this.discount}}%</span>
 
-        <div class="product-body text-center">
-          <a href="#" class="brand-name" style="color: black;">{{this.pname}}</a>
-          <h2 class="product-name">
-            <a href="#"></a>
-          </h2>
-          <span class="product-price">₹{{this.discountedPrice}} <del style="color: red;">₹{{this.price}}</del></span>
-          <div class="prd-options">
-            <ul class="list-unstyled d-flex gap-2 align-items-center justify-content-center">
-              {{#each this.image}}
-              <a href="/product-details?id={{../this._id}}">
-                <li>
-                  <a href="#" onclick="changeMainImage('{{this}}')"><img src="/productImages/{{this}}"></a>
-                </li>
-              </a>
-              {{/each}}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-    {{/unless}}
-  {{/each}}
-</div>
+                                        <span onclick="addToCart(event, '{{this._id}}')"
+                                            class="ad-cart position-absolute text-center" id="add-to-cart-link">Add to
+                                            Cart</span>
 
-<!-- Pagination Controls -->
-<div class="pagination-controls">
-  {{#if (gt currentPage 1)}}
-  <a href="?page={{subtract currentPage 1}}&category={{category}}" class="btn btn-primary">Previous</a>
-  {{/if}}
 
-  {{#each (range 1 totalPages)}}
-  <a href="?page={{this}}&category={{category}}" class="btn btn-primary {{#if (eq this ../currentPage)}}active{{/if}}">
-    {{this}}
-  </a>
-  {{/each}}
+                                    </div>
 
-  {{#if (lt currentPage totalPages)}}
-  <a href="?page={{add currentPage 1}}&category={{category}}" class="btn btn-primary">Next</a>
-  {{/if}}
-</div>
+                                    <div class="product-body text-center">
+                                        <a href="#" class="brand-name" style="color: black;">{{this.pname}}</a>
+                                        <h2 class="product-name">
+                                            <a href="#"></a>
+                                        </h2>
+                                        <span class="product-price">₹{{this.discountedPrice}} <del
+                                                style="color: red;">₹{{this.price}}</del></span>
+                                        <div class="prd-options">
+                                            <ul
+                                                class="list-unstyled d-flex gap-2 align-items-center justify-content-center">
+                                                {{#each this.image}}
+                                                <a href="/product-details?id={{../this._id}}">
+                                                    <li>
+                                                        <a href="#" onclick="changeMainImage('{{this}}')"><img
+                                                                src="/productImages/{{this}}"></a>
+                                                    </li>
+                                                </a>
+                                                {{/each}}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{/unless}}
+                            {{/each}}
+                        </div>
+
+                        <!-- Pagination Controls -->
+                        <div class="pagination-controls">
+                            {{#if (gt currentPage 1)}}
+                            <a href="?page={{subtract currentPage 1}}&category={{category}}"
+                                class="btn btn-primary">Previous</a>
+                            {{/if}}
+
+                            {{#each (range 1 totalPages)}}
+                            <a href="?page={{this}}&category={{category}}"
+                                class="btn btn-primary {{#if (eq this ../currentPage)}}active{{/if}}">
+                                {{this}}
+                            </a>
+                            {{/each}}
+
+                            {{#if (lt currentPage totalPages)}}
+                            <a href="?page={{add currentPage 1}}&category={{category}}" class="btn btn-primary">Next</a>
+                            {{/if}}
+                        </div>
 
                     </div>
                 </div>
@@ -497,87 +514,87 @@
                 $("#searchInput").val("");
             });
         });
-function addToCart(productId) {
-    console.log(productId)
-}
+        function addToCart(productId) {
+            console.log(productId)
+        }
 
     </script>
     <script>
-  async function addToCart(event, productId) {
-    event.preventDefault();
-       // Make an asynchronous request to add the product to the cart
-    fetch(`/add-to-cart?id=${productId}`)
-        .then(response => response.json())
-           .then(data => {
-    if (data.success) {
-      if (data.isProductInCart) {
-        failMessage();
-      }else if(data.notLogin){
-         loginMessage();
-      } else {
-        successMessage();
-         
-      }
-    } else {
-      console.error('Error:', data.message);
-    }
-  })
-        .catch(error => {
-            console.error(error);
-            // Handle error if needed
-        });
-}
+        async function addToCart(event, productId) {
+            event.preventDefault();
+            // Make an asynchronous request to add the product to the cart
+            fetch(`/add-to-cart?id=${productId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (data.isProductInCart) {
+                            failMessage();
+                        } else if (data.notLogin) {
+                            loginMessage();
+                        } else {
+                            successMessage();
 
-function successMessage() {
-    Swal.fire({
-        text: 'Product successfully added to cart',
-        icon: 'success',
-        confirmButtonText: 'OK',
-        customClass: {
-            title: 'text-success',
-            popup: 'swal2-popup-custom',
-            confirmButton: 'btn btn-success'
-        },
-        showCancelButton: false,
-        showCloseButton: true,
-        showLoaderOnConfirm: false,
-        timer: 3000 
-    });
-}
+                        }
+                    } else {
+                        console.error('Error:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    // Handle error if needed
+                });
+        }
 
-function failMessage() {
-    Swal.fire({
-        text: 'Product Already Present in the cart ',
-        icon: 'error',
-        confirmButtonText: 'OK',
-        customClass: {
-            title: 'text-danger',
-            popup: 'swal2-popup-custom',
-            confirmButton: 'btn btn-danger'
-        },
-        showCancelButton: false,
-        showCloseButton: true,
-        showLoaderOnConfirm: false,
-        timer: 3000 
-    });
-}
+        function successMessage() {
+            Swal.fire({
+                text: 'Product successfully added to cart',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    title: 'text-success',
+                    popup: 'swal2-popup-custom',
+                    confirmButton: 'btn btn-success'
+                },
+                showCancelButton: false,
+                showCloseButton: true,
+                showLoaderOnConfirm: false,
+                timer: 3000
+            });
+        }
 
-function loginMessage() {
-    Swal.fire({
-        text: 'You have not Logged in in Your Account ',
-        icon: 'error',
-        confirmButtonText: 'OK',
-        customClass: {
-            title: 'text-danger',
-            popup: 'swal2-popup-custom',
-            confirmButton: 'btn btn-danger'
-        },
-        showCancelButton: false,
-        showCloseButton: true,
-        showLoaderOnConfirm: false,
-        timer: 3000 
-    });
-}
+        function failMessage() {
+            Swal.fire({
+                text: 'Product Already Present in the cart ',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    title: 'text-danger',
+                    popup: 'swal2-popup-custom',
+                    confirmButton: 'btn btn-danger'
+                },
+                showCancelButton: false,
+                showCloseButton: true,
+                showLoaderOnConfirm: false,
+                timer: 3000
+            });
+        }
+
+        function loginMessage() {
+            Swal.fire({
+                text: 'You have not Logged in in Your Account ',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    title: 'text-danger',
+                    popup: 'swal2-popup-custom',
+                    confirmButton: 'btn btn-danger'
+                },
+                showCancelButton: false,
+                showCloseButton: true,
+                showLoaderOnConfirm: false,
+                timer: 3000
+            });
+        }
     </script>
 </body>
 

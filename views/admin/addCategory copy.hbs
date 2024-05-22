@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,40 +61,44 @@
       text-decoration: none;
       font-size: 14px;
     }
-    .gender{
+
+    .gender {
       display: flex;
       flex-direction: row;
     }
+
     .create-account-link:hover {
       text-decoration: underline;
     }
   </style>
 </head>
+
 <body>
   <div class="login-container">
 
     <h2>Add Category</h2>
     <form action="/admin/addCategory" method="post" enctype="multipart/form-data">
-      <input type="text" name="cname" placeholder="Category Name">
-      <input type="file" name="image" id="img">
+      <input type="text" name="cname" placeholder="Category Name" required>
+      <input type="file" name="image" id="img" required>
       <div class="gender">
-<input type="radio" name="Type" value="Male" id="option1">
-<label for="Male">Male</label><br>
+        <input type="radio" name="Type" value="Male" id="option1" required>
+        <label for="Male">Male</label><br>
 
-<input type="radio" name="Type" value="Female" id="option2">
-<label for="Female">Female</label><br>
+        <input type="radio" name="Type" value="Female" id="option2">
+        <label for="Female">Female</label><br>
 
-<input type="radio" name="Type" value="Boy" id="option3">
-<label for="Boy">Boy</label><br>
+        <input type="radio" name="Type" value="Boy" id="option3">
+        <label for="Boy">Boy</label><br>
 
-<input type="radio" name="Type" value="Girl" id="option4">
-<label for="Girl">Girl</label><br>
-</div>
-{{#if exist}}
-  <p style="color: red;">Category Already Exists</p>
-{{/if}}
+        <input type="radio" name="Type" value="Girl" id="option4">
+        <label for="Girl">Girl</label><br>
+      </div>
+      {{#if exist}}
+      <p style="color: red;">Category Already Exists</p>
+      {{/if}}
       <button type="submit">Add Category</button>
     </form>
   </div>
 </body>
+
 </html>

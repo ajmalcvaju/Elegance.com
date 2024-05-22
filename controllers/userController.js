@@ -1,54 +1,53 @@
 const User = require("../model/userModel");
 const nodemailer = require("nodemailer");
 const OTPcode = require("../model/otpModel");
-const Product=require("../model/productModel");
+const Product = require("../model/productModel");
 const Category = require("../model/categoryModel");
-const Address=require("../model/addressModel");
+const Address = require("../model/addressModel");
 
-
-const shop=async (req, res) => {
+const shop = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-  const limit = 6;
-  const category = req.query.category;
+    const limit = 6;
+    const category = req.query.category;
 
-  const query = category ? { category } : {};
+    const query = category ? { category } : {};
 
-  const totalProducts = await Product.countDocuments(query);
-  const totalPages = Math.ceil(totalProducts / limit);
+    const totalProducts = await Product.countDocuments(query);
+    const totalPages = Math.ceil(totalProducts / limit);
 
-  const products = await Product.find(query)
-    .skip((page - 1) * limit)
-    .limit(limit);
+    const products = await Product.find(query)
+      .skip((page - 1) * limit)
+      .limit(limit);
 
-  const categories = await Category.find({});
+    const categories = await Category.find({});
 
-  res.render('user/shop-sidebar', {
-    products,
-    categories,
-    currentPage: page,
-    totalPages,
-    login: req.session && req.session.email ? 1 : 0,
-  });
+    res.render("user/shop-sidebar", {
+      products,
+      categories,
+      currentPage: page,
+      totalPages,
+      login: req.session && req.session.email ? 1 : 0,
+    });
   } catch (error) {
     console.log(error.message);
   }
-}
-const home=async (req, res) => {
+};
+const home = async (req, res) => {
   try {
     if (req.session && req.session.email) {
       const featured = await Product.find({});
-      const topDeal= await Product.find({discount:{$gt:30}});
-      console.log(topDeal)
-      const topRated= await Product.find({});
-      const newArrival= await Product.find({});
-      res.render("user/home", { login: 1,topDeal });
+      const topDeal = await Product.find({ discount: { $gt: 30 } });
+      console.log(topDeal);
+      const topRated = await Product.find({});
+      const newArrival = await Product.find({});
+      res.render("user/home", { login: 1, topDeal });
     } else {
       const featured = await Product.find({});
-      const topDeal= await Product.find({discount:{$gt:30}});
-      const topRated= await Product.find({});
-      const newArrival= await Product.find({});
-      res.render("user/home", { login: 0,topDeal });
+      const topDeal = await Product.find({ discount: { $gt: 30 } });
+      const topRated = await Product.find({});
+      const newArrival = await Product.find({});
+      res.render("user/home", { login: 0, topDeal });
     }
   } catch (error) {
     console.log(error.message);
@@ -250,14 +249,14 @@ const changePassword = async (req, res) => {
 };
 const updatePassword = async (req, res) => {
   try {
-    const { Password, confirmPassword, UserId } = req.body;
-    if (Password == confirmPassword) {
+    const { password, confirmPassword, UserId } = req.body;
+    if (password == confirmPassword) {
       const user = await User.findOne({ _id: UserId });
       req.session.email = user.email;
       console.log(UserId);
       updateInfo = await User.updateOne(
         { _id: UserId },
-        { $set: { password: Password } }
+        { $set: { password: password } }
       );
       res.redirect("/");
     } else {
@@ -277,109 +276,111 @@ const advanceSearch = async (req, res) => {
       const category = req.session.category;
       const priceSort = req.session.priceSort;
       const alphabetSort = req.session.alphabetSort;
-      console.log(category)
-         
+      console.log(category);
+
       let products = [];
-      if(category){
-       if(priceSort&&alphabetSort){
-          if(priceSort==1&&alphabetSort==1){
+      if (category) {
+        if (priceSort && alphabetSort) {
+          if (priceSort == 1 && alphabetSort == 1) {
             products = await Product.find({ category }).sort({
               discountedPrice: 1,
-              pname: 1
+              pname: 1,
             });
-          }else if(priceSort==1&&alphabetSort==-1){
+          } else if (priceSort == 1 && alphabetSort == -1) {
             products = await Product.find({ category }).sort({
               discountedPrice: 1,
-              pname: -1
+              pname: -1,
             });
-
-          }else if(priceSort==-1&&alphabetSort==1){
+          } else if (priceSort == -1 && alphabetSort == 1) {
             products = await Product.find({ category }).sort({
               discountedPrice: -1,
-              pname: 1
+              pname: 1,
             });
-
-          }else if(priceSort==-1&&alphabetSort==-1){
+          } else if (priceSort == -1 && alphabetSort == -1) {
             products = await Product.find({ category }).sort({
               discountedPrice: -1,
-              pname: -1
+              pname: -1,
             });
           }
-       }else if(priceSort){
-        if(priceSort==1){
-          products = await Product.find({ category }).sort({
-            discountedPrice: 1
-          });
-        }else if(priceSort==-1){
-          products = await Product.find({ category }).sort({
-            discountedPrice: -1
-          });
-        }
-       }else if(alphabetSort){
-        if(alphabetSort==1){
-          products = await Product.find({ category }).sort({
-            pname: 1
-          });
-        }else if(alphabetSort==-1){
-          products = await Product.find({ category }).sort({
-            pname: -1
-          });
-        }
-       }else{
-        products = await Product.find({ category })
-       }
-
-      }else{
-        if(priceSort&&alphabetSort){
-          if(priceSort==1&&alphabetSort==1){
-            products = await Product.find({ }).sort({
+        } else if (priceSort) {
+          if (priceSort == 1) {
+            products = await Product.find({ category }).sort({
               discountedPrice: 1,
-              pname: 1
             });
-          }else if(priceSort==1&&alphabetSort==-1){
-            products = await Product.find({ }).sort({
-              discountedPrice: 1,
-              pname: -1
-            });
-
-          }else if(priceSort==-1&&alphabetSort==1){
-            products = await Product.find({  }).sort({
+          } else if (priceSort == -1) {
+            products = await Product.find({ category }).sort({
               discountedPrice: -1,
-              pname: 1
-            });
-
-          }else if(priceSort==-1&&alphabetSort==-1){
-            products = await Product.find({ }).sort({
-              discountedPrice: -1,
-              pname: -1
             });
           }
-       }else if(priceSort){
-        if(priceSort==1){
-          products = await Product.find({ }).sort({
-            discountedPrice: 1
-          });
-        }else if(priceSort==-1){
-          products = await Product.find({}).sort({
-            discountedPrice: -1
-          });
+        } else if (alphabetSort) {
+          if (alphabetSort == 1) {
+            products = await Product.find({ category }).sort({
+              pname: 1,
+            });
+          } else if (alphabetSort == -1) {
+            products = await Product.find({ category }).sort({
+              pname: -1,
+            });
+          }
+        } else {
+          products = await Product.find({ category });
         }
-       }else if(alphabetSort){
-        if(alphabetSort==1){
-          products = await Product.find({}).sort({
-            pname: 1
-          });
-        }else if(alphabetSort==-1){
-          products = await Product.find({}).sort({
-            pname: -1
-          });
+      } else {
+        if (priceSort && alphabetSort) {
+          if (priceSort == 1 && alphabetSort == 1) {
+            products = await Product.find({}).sort({
+              discountedPrice: 1,
+              pname: 1,
+            });
+          } else if (priceSort == 1 && alphabetSort == -1) {
+            products = await Product.find({}).sort({
+              discountedPrice: 1,
+              pname: -1,
+            });
+          } else if (priceSort == -1 && alphabetSort == 1) {
+            products = await Product.find({}).sort({
+              discountedPrice: -1,
+              pname: 1,
+            });
+          } else if (priceSort == -1 && alphabetSort == -1) {
+            products = await Product.find({}).sort({
+              discountedPrice: -1,
+              pname: -1,
+            });
+          }
+        } else if (priceSort) {
+          if (priceSort == 1) {
+            products = await Product.find({}).sort({
+              discountedPrice: 1,
+            });
+          } else if (priceSort == -1) {
+            products = await Product.find({}).sort({
+              discountedPrice: -1,
+            });
+          }
+        } else if (alphabetSort) {
+          if (alphabetSort == 1) {
+            products = await Product.find({}).sort({
+              pname: 1,
+            });
+          } else if (alphabetSort == -1) {
+            products = await Product.find({}).sort({
+              pname: -1,
+            });
+          }
+        } else {
+          products = await Product.find({});
         }
-       }else{
-        products = await Product.find({})
-       }
       }
       const categories = await Category.find({});
-      res.render("user/shop-sidebar", { products, categories, login: 1,priceSort,alphabetSort,category });
+      res.render("user/shop-sidebar", {
+        products,
+        categories,
+        login: 1,
+        priceSort,
+        alphabetSort,
+        category,
+      });
     } else {
       req.session.category = req.query.category;
       req.session.priceSort = parseInt(req.query.Psort);
@@ -387,112 +388,112 @@ const advanceSearch = async (req, res) => {
       const category = req.session.category;
       const priceSort = req.session.priceSort;
       const alphabetSort = req.session.alphabetSort;
-      console.log(category)
-         
+      console.log(category);
+
       let products = [];
-      if(category){
-       if(priceSort&&alphabetSort){
-          if(priceSort==1&&alphabetSort==1){
+      if (category) {
+        if (priceSort && alphabetSort) {
+          if (priceSort == 1 && alphabetSort == 1) {
             products = await Product.find({ category }).sort({
               discountedPrice: 1,
-              pname: 1
+              pname: 1,
             });
-          }else if(priceSort==1&&alphabetSort==-1){
+          } else if (priceSort == 1 && alphabetSort == -1) {
             products = await Product.find({ category }).sort({
               discountedPrice: 1,
-              pname: -1
+              pname: -1,
             });
-
-          }else if(priceSort==-1&&alphabetSort==1){
+          } else if (priceSort == -1 && alphabetSort == 1) {
             products = await Product.find({ category }).sort({
               discountedPrice: -1,
-              pname: 1
+              pname: 1,
             });
-
-          }else if(priceSort==-1&&alphabetSort==-1){
+          } else if (priceSort == -1 && alphabetSort == -1) {
             products = await Product.find({ category }).sort({
               discountedPrice: -1,
-              pname: -1
+              pname: -1,
             });
           }
-       }else if(priceSort){
-        if(priceSort==1){
-          products = await Product.find({ category }).sort({
-            discountedPrice: 1
-          });
-        }else if(priceSort==-1){
-          products = await Product.find({ category }).sort({
-            discountedPrice: -1
-          });
-        }
-       }else if(alphabetSort){
-        if(alphabetSort==1){
-          products = await Product.find({ category }).sort({
-            pname: 1
-          });
-        }else if(alphabetSort==-1){
-          products = await Product.find({ category }).sort({
-            pname: -1
-          });
-        }
-       }else{
-        products = await Product.find({ category })
-       }
-
-      }else{
-        if(priceSort&&alphabetSort){
-          if(priceSort==1&&alphabetSort==1){
-            products = await Product.find({ }).sort({
+        } else if (priceSort) {
+          if (priceSort == 1) {
+            products = await Product.find({ category }).sort({
               discountedPrice: 1,
-              pname: 1
             });
-          }else if(priceSort==1&&alphabetSort==-1){
-            products = await Product.find({ }).sort({
-              discountedPrice: 1,
-              pname: -1
-            });
-
-          }else if(priceSort==-1&&alphabetSort==1){
-            products = await Product.find({  }).sort({
+          } else if (priceSort == -1) {
+            products = await Product.find({ category }).sort({
               discountedPrice: -1,
-              pname: 1
-            });
-
-          }else if(priceSort==-1&&alphabetSort==-1){
-            products = await Product.find({ }).sort({
-              discountedPrice: -1,
-              pname: -1
             });
           }
-       }else if(priceSort){
-        if(priceSort==1){
-          products = await Product.find({ }).sort({
-            discountedPrice: 1
-          });
-        }else if(priceSort==-1){
-          products = await Product.find({}).sort({
-            discountedPrice: -1
-          });
+        } else if (alphabetSort) {
+          if (alphabetSort == 1) {
+            products = await Product.find({ category }).sort({
+              pname: 1,
+            });
+          } else if (alphabetSort == -1) {
+            products = await Product.find({ category }).sort({
+              pname: -1,
+            });
+          }
+        } else {
+          products = await Product.find({ category });
         }
-       }else if(alphabetSort){
-        if(alphabetSort==1){
-          products = await Product.find({}).sort({
-            pname: 1
-          });
-        }else if(alphabetSort==-1){
-          products = await Product.find({}).sort({
-            pname: -1
-          });
+      } else {
+        if (priceSort && alphabetSort) {
+          if (priceSort == 1 && alphabetSort == 1) {
+            products = await Product.find({}).sort({
+              discountedPrice: 1,
+              pname: 1,
+            });
+          } else if (priceSort == 1 && alphabetSort == -1) {
+            products = await Product.find({}).sort({
+              discountedPrice: 1,
+              pname: -1,
+            });
+          } else if (priceSort == -1 && alphabetSort == 1) {
+            products = await Product.find({}).sort({
+              discountedPrice: -1,
+              pname: 1,
+            });
+          } else if (priceSort == -1 && alphabetSort == -1) {
+            products = await Product.find({}).sort({
+              discountedPrice: -1,
+              pname: -1,
+            });
+          }
+        } else if (priceSort) {
+          if (priceSort == 1) {
+            products = await Product.find({}).sort({
+              discountedPrice: 1,
+            });
+          } else if (priceSort == -1) {
+            products = await Product.find({}).sort({
+              discountedPrice: -1,
+            });
+          }
+        } else if (alphabetSort) {
+          if (alphabetSort == 1) {
+            products = await Product.find({}).sort({
+              pname: 1,
+            });
+          } else if (alphabetSort == -1) {
+            products = await Product.find({}).sort({
+              pname: -1,
+            });
+          }
+        } else {
+          products = await Product.find({});
         }
-       }else{
-        products = await Product.find({})
-       }
-
       }
 
-
       const categories = await Category.find({});
-      res.render("user/shop-sidebar", { products, categories, login: 0,priceSort,alphabetSort,category });
+      res.render("user/shop-sidebar", {
+        products,
+        categories,
+        login: 0,
+        priceSort,
+        alphabetSort,
+        category,
+      });
     }
   } catch (error) {
     console.log(error.message);
@@ -500,23 +501,32 @@ const advanceSearch = async (req, res) => {
   }
 };
 
-const checkoutAddAddress=async (req, res) =>{
+const checkoutAddAddress = async (req, res) => {
   try {
-    const {houseName,street,district,state,pincode,addressType}=req.body
-  const email=req.session.email
-  const user = await User.findOne({ email });
-  const userId=user._id 
-  console.log(userId) 
-  const address=new Address({userId:userId,houseName:houseName,street:street,district:district,state:state,pincode:pincode,addressType:addressType})
-  const addressData=await address.save()
-  
-  const addresses = await Address.find({ userId });
-  res.redirect("/checkout")
+    const { houseName, street, district, state, pincode, addressType } =
+      req.body;
+    const email = req.session.email;
+    const user = await User.findOne({ email });
+    const userId = user._id;
+    console.log(userId);
+    const address = new Address({
+      userId: userId,
+      houseName: houseName,
+      street: street,
+      district: district,
+      state: state,
+      pincode: pincode,
+      addressType: addressType,
+    });
+    const addressData = await address.save();
+
+    const addresses = await Address.find({ userId });
+    res.redirect("/checkout");
   } catch (error) {
     console.log(error.message);
     res.status(500).send("Internal Server Error");
   }
- }
+};
 module.exports = {
   home,
   loadRegister,
@@ -527,5 +537,5 @@ module.exports = {
   changePassword,
   updatePassword,
   advanceSearch,
-  shop
+  shop,
 };

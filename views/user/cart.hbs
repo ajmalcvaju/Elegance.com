@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="/cart.css">
     <style>
         .back-to-shop {
-    cursor: pointer;}
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -24,7 +25,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 {{#each cart}}
                 {{#each this.items}}
                 <div class="row border-top border-bottom">
@@ -38,11 +39,12 @@
                         <div class="col">
                             <a href="/decrementItem?id={{this._id}}">-</a></a>{{this.quantity}}</a><a
                                 href="/incrementItem?id={{this._id}}">+</a>
-                                
+
                             {{#if lessProduct}} <p>Product quantity must be Atleast One</p>
                             {{/if}}
                         </div>
-                        <div class="col">{{this.price}} ₹<span class="close">&#10005;</span></div>
+                        <div class="col">{{this.price}} ₹<a href="deleteCart?id={{this.productId._id}}"
+                                class="close">&#10005;</a></div>
                     </div>
                 </div>
 
@@ -52,7 +54,7 @@
                 <h1>No Product</h1>
                 {{/if}}
 
-                <div class="back-to-shop" ><a href="/shop">&leftarrow; Back to shop</a>
+                <div class="back-to-shop"><a href="/shop">&leftarrow; Back to shop</a>
                 </div>
             </div>
             <div class="col-md-4 summary">
@@ -80,7 +82,7 @@
                     <input id="code" placeholder="Enter your code">
                 </form>
 
-                 <div style="overflow: hidden;">
+                <div style="overflow: hidden;">
                     <h6 style="float: left;">Total Amount has to be paid:</h6>
                     <div style="float: right;">
                         <h6 style="display: inline;"><b>{{totalAmount}}</b></h6>
@@ -97,41 +99,41 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
         async function increase(event, productId) {
             event.preventDefault();
             window.location.href = '/';
             fetch(`/incrementItem?id=${productId}`)
-        .then(response => response.json())
-           .then(data => {
-    if (data.success) {
-      if (data.outOfStock) {
-        successMessage();
-      }else {
-        successMessage();
-         
-      }
-    } else {
-      console.error('Error:', data.message);
-    }
-        }
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (data.outOfStock) {
+                            successMessage();
+                        } else {
+                            successMessage();
+
+                        }
+                    } else {
+                        console.error('Error:', data.message);
+                    }
+                }
         function successMessage() {
-    Swal.fire({
-        text: 'Product successfully added to cart',
-        icon: 'success',
-        confirmButtonText: 'OK',
-        customClass: {
-            title: 'text-success',
-            popup: 'swal2-popup-custom',
-            confirmButton: 'btn btn-success'
-        },
-        showCancelButton: false,
-        showCloseButton: true,
-        showLoaderOnConfirm: false,
-        timer: 3000 
-    });
-}
+                        Swal.fire({
+                            text: 'Product successfully added to cart',
+                            icon: 'success',
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                title: 'text-success',
+                                popup: 'swal2-popup-custom',
+                                confirmButton: 'btn btn-success'
+                            },
+                            showCancelButton: false,
+                            showCloseButton: true,
+                            showLoaderOnConfirm: false,
+                            timer: 3000
+                        });
+                    }
     </script>
 </body>
 

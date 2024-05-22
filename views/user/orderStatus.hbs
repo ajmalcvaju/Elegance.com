@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +26,8 @@
         }
 
         /* Style the table body */
-        .table td, .table th {
+        .table td,
+        .table th {
             border: 1px solid #ddd;
             padding: 8px;
         }
@@ -43,6 +45,7 @@
         }
     </style>
 </head>
+
 <body>
     <div style="overflow-x:auto;">
         <h1 style="text-align: center;">Order Status</h1>
@@ -62,9 +65,9 @@
             </thead>
             <tbody>
                 {{#each order}}
-          {{#each this.items}}
+                {{#each this.items}}
                 <tr>
-                    <td>1</td>
+                    <td>{{this.orderId}}</td>
                     <td>{{this.date}}</td>
                     <td>{{this.productId.pname}}</td>
                     <td>{{this.quantity}}</td>
@@ -72,15 +75,19 @@
                     <td>{{this.status}}</td>
                     <td>{{this.expectedArrival}}</td>
                     <td>{{this.paymentMethod}}</td>
-                    <td><a href="/cancelOrder?orderId={{../_id}}&productId={{this.productId._id}}" class="btn btn-danger"  onclick="return confirm('Do You want to Cancell {{this.productId.pname}}?')">Cancell</a></td>
+                    <td><a href="/cancelOrder?orderId={{../_id}}&productId={{this.productId._id}}"
+                            class="btn btn-danger"
+                            onclick="return confirm('Do You want to Cancell {{this.productId.pname}}?')">Cancell</a>
+                    </td>
 
                 </tr>
                 <tr>
-                {{/each}}
-          {{/each}}
-                   
+                    {{/each}}
+                    {{/each}}
+
             </tbody>
         </table>
     </div>
 </body>
+
 </html>

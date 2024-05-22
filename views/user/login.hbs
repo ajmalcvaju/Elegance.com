@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>Login</title>
 
@@ -11,130 +12,150 @@
   <style media="screen">
     *,
     *:before,
-    *:after{
+    *:after {
       padding: 0;
       margin: 0;
       box-sizing: border-box;
     }
-    body{
+
+    body {
       background-color: #080710;
     }
-    .background{
+
+    .background {
       width: 430px;
       height: 520px;
       position: absolute;
-      transform: translate(-50%,-50%);
+      transform: translate(-50%, -50%);
       left: 50%;
       top: 50%;
     }
-    .background .shape{
+
+    .background .shape {
       height: 200px;
       width: 200px;
       position: absolute;
       border-radius: 50%;
     }
-    .shape:first-child{
-      background: linear-gradient(
-        #1845ad,
-        #23a2f6
-      );
+
+    .shape:first-child {
+      background: linear-gradient(#1845ad,
+          #23a2f6);
       left: -80px;
       top: -80px;
     }
-    .shape:last-child{
-      background: linear-gradient(
-        to right,
-        #ff512f,
-        #f09819
-      );
+
+    .shape:last-child {
+      background: linear-gradient(to right,
+          #ff512f,
+          #f09819);
       right: -30px;
       bottom: -80px;
     }
-    form{
-      width: 95%; /* Increase width */
+
+    form {
+      width: 95%;
+      /* Increase width */
       max-width: 400px;
-      background-color: rgba(255,255,255,0.13);
+      background-color: rgba(255, 255, 255, 0.13);
       position: absolute;
-      transform: translate(-50%,-50%);
+      transform: translate(-50%, -50%);
       top: 50%;
       left: 50%;
       border-radius: 10px;
       backdrop-filter: blur(10px);
-      border: 2px solid rgba(255,255,255,0.1);
-      box-shadow: 0 0 40px rgba(8,7,16,0.6);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
       padding: 50px 35px;
     }
-    form *{
-      font-family: 'Poppins',sans-serif;
+
+    form * {
+      font-family: 'Poppins', sans-serif;
       color: #ffffff;
       letter-spacing: 0.5px;
       outline: none;
       border: none;
     }
-    form h3{
+
+    form h3 {
       font-size: 120%;
       font-weight: 500;
       line-height: 10%;
       text-align: center;
     }
 
-    label{
+    label {
       display: block;
       margin-top: 5%;
       font-size: 16px;
       font-weight: 500;
     }
-    input{
+
+    input {
       display: block;
       width: 100%;
-      background-color: rgba(255,255,255,0.07);
+      background-color: rgba(255, 255, 255, 0.07);
       border-radius: 3px;
       padding: 5px 10px;
       margin-top: 8px;
       font-size: 14px;
       font-weight: 300;
     }
-    ::placeholder{
+
+    ::placeholder {
       color: #e5e5e5;
     }
-    button{
-      margin-top: 8%; /* Reduce margin-top */
-      width: 90%; /* Reduce button width */
+
+    button {
+      margin-top: 8%;
+      /* Reduce margin-top */
+      width: 90%;
+      /* Reduce button width */
       background-color: #ffffff;
       color: #080710;
-      padding: 12px 0; /* Reduce padding */
-      font-size: 16px; /* Reduce font size */
+      padding: 12px 0;
+      /* Reduce padding */
+      font-size: 16px;
+      /* Reduce font size */
       font-weight: 600;
       border-radius: 5px;
       cursor: pointer;
     }
-    .social{
-      margin-top: 20px; /* Reduce margin-top */
+
+    .social {
+      margin-top: 20px;
+      /* Reduce margin-top */
       display: flex;
       justify-content: center;
     }
-    .social div{
+
+    .social div {
       background: red;
       width: 150px;
       border-radius: 3px;
-      padding: 5px 10px 8px 5px; /* Adjust padding */
-      background-color: rgba(255,255,255,0.27);
+      padding: 5px 10px 8px 5px;
+      /* Adjust padding */
+      background-color: rgba(255, 255, 255, 0.27);
       color: #eaf0fb;
       text-align: center;
       margin: 0 5px;
     }
-    .social div:hover{
-      background-color: rgba(255,255,255,0.47);
-    }
-    .social .fb{
-      margin-left: 20px; /* Reduce margin-left */
-    }
-    .social i{
-      margin-right: 4px;
+
+    .social div:hover {
+      background-color: rgba(255, 255, 255, 0.47);
     }
 
+    .social .fb {
+      margin-left: 20px;
+      /* Reduce margin-left */
+    }
+
+    .social i {
+      margin-right: 4px;
+    }
   </style>
 </head>
+
 <body>
   <div class="background">
     <div class="shape"></div>
@@ -143,18 +164,18 @@
   <form action="/login" method="post" id="login">
     <h3>Login Here</h3>
 
-<label for="email">Email</label>
-<input type="text" name="email" placeholder="Email" id="email" onblur="validateEmail(this.value)">
-<span id="emailError" style="color: red;"></span>
- <label for="password">Password</label>
-<input type="password" name="password" placeholder="Password" id="password" onblur="validatePassword(this.value)">
-<div id="passwordErrors" style="color: red;"></div>
+    <label for="email">Email</label>
+    <input type="text" name="email" placeholder="Email" id="email" onblur="validateEmail(this.value)">
+    <span id="emailError" style="color: red;"></span>
+    <label for="password">Password</label>
+    <input type="password" name="password" placeholder="Password" id="password" onblur="validatePassword(this.value)">
+    <div id="passwordErrors" style="color: red;"></div>
     <label for="" class="lab" id="fp"><a href="/reset">Forgot Password</a></label>
     {{#if blocked}}
-            <p style="color: red;">Your Account is blocked!!....Contact Our Customer Support....</p>
+    <p style="color: red;">Your Account is blocked!!....Contact Our Customer Support....</p>
     {{/if}}
     {{#if invalid}}
-            <p style="color: red;">Invalid Credentials!!....Try Again....</p>
+    <p style="color: red;">Invalid Credentials!!....Try Again....</p>
     {{/if}}
     <button type="submit" id="login">Log In</button>
     <a href="/signup" class="create-account-link ">Create New Account</a>
@@ -167,54 +188,55 @@
 </body>
 
 <script>
-    function validateEmail(email) {
-        var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        var emailInput = document.getElementById("email");
-        var emailError = document.getElementById("emailError");
+  function validateEmail(email) {
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    var emailInput = document.getElementById("email");
+    var emailError = document.getElementById("emailError");
 
-        if (emailPattern.test(email)) {
-            emailInput.style.border = "1px solid #ccc";
-            emailError.textContent = "";
-        } else {
-            emailInput.style.border = "1px solid red";
-            emailError.textContent = "Please enter a valid email address";
-        }
+    if (emailPattern.test(email)) {
+      emailInput.style.border = "1px solid #ccc";
+      emailError.textContent = "";
+    } else {
+      emailInput.style.border = "1px solid red";
+      emailError.textContent = "Please enter a valid email address";
     }
-     function validatePassword(password) {
-        var passwordInput = document.getElementById("password");
-        var passwordErrors = document.getElementById("passwordErrors");
+  }
+  function validatePassword(password) {
+    var passwordInput = document.getElementById("password");
+    var passwordErrors = document.getElementById("passwordErrors");
 
-        // Reset error messages
-        passwordErrors.innerHTML = "";
+    // Reset error messages
+    passwordErrors.innerHTML = "";
 
-        // Check length
-        if (password.length < 8) {
-            passwordErrors.innerHTML += "Password must have at least 8 characters.<br>";
-        }
-
-        // Check for at least one digit
-        if (!/\d/.test(password)) {
-            passwordErrors.innerHTML += "and contain at least one digit,<br>";
-        }
-
-        // Check for at least one uppercase letter
-        if (!/[A-Z]/.test(password)) {
-            passwordErrors.innerHTML += " one uppercase letter,<br>";
-        }
-
-        // Check for at least one symbol
-        if (!/[^a-zA-Z0-9]/.test(password)) {
-            passwordErrors.innerHTML += " one symbol.<br>";
-        }
-
-        // If there are errors, display them and set border color to red
-        if (passwordErrors.innerHTML !== "") {
-            passwordInput.style.border = "1px solid red";
-        } else {
-            // If no errors, reset border color
-            passwordInput.style.border = "1px solid #ccc";
-        }
+    // Check length
+    if (password.length < 8) {
+      passwordErrors.innerHTML += "Password must have at least 8 characters.<br>";
     }
-    
+
+    // Check for at least one digit
+    if (!/\d/.test(password)) {
+      passwordErrors.innerHTML += "and contain at least one digit,<br>";
+    }
+
+    // Check for at least one uppercase letter
+    if (!/[A-Z]/.test(password)) {
+      passwordErrors.innerHTML += " one uppercase letter,<br>";
+    }
+
+    // Check for at least one symbol
+    if (!/[^a-zA-Z0-9]/.test(password)) {
+      passwordErrors.innerHTML += " one symbol.<br>";
+    }
+
+    // If there are errors, display them and set border color to red
+    if (passwordErrors.innerHTML !== "") {
+      passwordInput.style.border = "1px solid red";
+    } else {
+      // If no errors, reset border color
+      passwordInput.style.border = "1px solid #ccc";
+    }
+  }
+
 </script>
+
 </html>
