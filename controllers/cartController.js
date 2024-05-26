@@ -4,6 +4,12 @@ const User = require("../model/userModel");
 const Address = require("../model/addressModel");
 const Order = require("../model/orderModel");
 const Wishlist = require("../model/wishlistModel");
+const Razorpay=require('razorpay')
+
+const razorpayInstance=new Razorpay({
+  key_id:"rzp_test_8qF3L1nSyCD4kf",
+  key_secret:"XKCeAFQwm8d8xEv8684Sgqsh"
+})
 
 const addToCart = async (req, res) => {
   try {
@@ -115,10 +121,29 @@ const decCart = async (req, res) => {
     if (quantity == 1) {
       let lessCount = true;
       res.send(`
+      <html>
+          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <body>
           <script>
-      alert('Product quantity must be atleast one.');
-      window.location.href = '/cart';
-    </script>`);
+             
+              function failMessage() {
+                  Swal.fire({
+                      title: 'Product Quantity',
+                      text: 'Product quantity will be atleast one,Otherwise,Delete Product From Cart',
+                      icon: 'error',
+                      confirmButtonText: 'OK'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      window.location.href = '/cart';
+                    }
+                });
+              }
+              failMessage();
+          </script>
+      </body>
+      </html>
+  `);
+    
     } else {
       await Cart.updateOne(
         { userId, "items._id": proId },
@@ -151,10 +176,28 @@ const incCart = async (req, res) => {
     let outOfStock = false;
     if (stock == quantity) {
       res.send(`
+      <html>
+          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <body>
           <script>
-      alert('Product become out of stock.');
-      window.location.href = '/cart';
-    </script>`);
+             
+              function failMessage() {
+                  Swal.fire({
+                      title: 'Product Quantity',
+                      text: 'Product Become Out of Stock.',
+                      icon: 'error',
+                      confirmButtonText: 'OK'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      window.location.href = '/cart';
+                    }
+                });
+              }
+              failMessage();
+          </script>
+      </body>
+      </html>
+  `);
     } else {
       await Cart.updateOne(
         { userId, "items._id": proId },
@@ -202,6 +245,34 @@ const checkout = async (req, res) => {
     console.log(error.message);
   }
 };
+const createOrder=async(req,res)=>{
+  try {
+    const amount=2000
+    const options={
+      amount:amount,
+      currency:'INR',
+      receipt:'razorUser@gmail.com'
+    }
+    razorpayInstance.orders.create(options,(err,order)=>{
+      if(!err){
+        res.status(200).send({
+          success:true,
+          msg:"Order Created",
+          order_id:1234,
+          amount:amount,
+          key_id:"rzp_test_8qF3L1nSyCD4kf",
+          contact:"8714156151",
+          name:"ajmal cv",
+          email:"ajmalmayanad@gmail.com"
+        })
+      }else{
+        res.status(400).send({success:false,msg:"something went wrong!!"})
+      }
+    })
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 const placeOrder = async (req, res) => {
   try {
     const email = req.session.email;
@@ -406,6 +477,7 @@ module.exports = {
   incCart,
   decCart,
   checkout,
+  createOrder,
   placeOrder,
   orderStatus,
   addWishlist,

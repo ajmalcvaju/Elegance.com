@@ -26,6 +26,8 @@ const updateOrder = async (req, res) => {
     const productId = req.query.productId;
     const expectedArrival = req.body.expectedArrival;
     const orderStatus = req.body.orderStatus;
+    console.log(req.body)
+    console.log(req.query)
     const order = await Order.updateOne(
       { _id: orderId, "items.productId": productId },
       {
@@ -35,6 +37,8 @@ const updateOrder = async (req, res) => {
         },
       }
     );
+    const orders=await Order.find({})
+    console.log(orders)
     res.redirect("/admin/orders");
   } catch (error) {
     console.log(error.message);

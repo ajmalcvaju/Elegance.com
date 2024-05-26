@@ -106,6 +106,7 @@ router.get("/incrementItem", cartController.incCart);
 router.get("/decrementItem", cartController.decCart);
 
 router.get("/checkout", cartController.checkout);
+router.post("/createOrder",cartController.createOrder)
 
 router.post("/placeOrder", cartController.placeOrder);
 

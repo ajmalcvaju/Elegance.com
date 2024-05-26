@@ -6,6 +6,14 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const noCache = require("nocache");
 const mongoose = require("mongoose");
+require("dotenv").config()
+const Razorpay=require('razorpay')
+
+const razorpayInstance=new Razorpay({
+  key_id:"rzp_test_8qF3L1nSyCD4kf",
+  key_secret:"XKCeAFQwm8d8xEv8684Sgqsh"
+})
+
 
 var usersRouter = require("./routes/userRoute");
 var adminRouter = require("./routes/adminRoute");
