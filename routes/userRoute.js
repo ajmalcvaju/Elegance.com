@@ -108,7 +108,7 @@ router.get("/decrementItem", cartController.decCart);
 router.get("/checkout", cartController.checkout);
 router.post("/createOrder",cartController.createOrder)
 
-router.post("/placeOrder", cartController.placeOrder);
+router.get("/placeOrder", cartController.placeOrder);
 
 router.get("/orderStatus", cartController.orderStatus);
 // router.get('/search',userController.search);

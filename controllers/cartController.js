@@ -217,7 +217,7 @@ const incCart = async (req, res) => {
 };
 const checkout = async (req, res) => {
   try {
-    const email = req.session.email;
+      const email = req.session.email;
     const user = await User.findOne({ email });
     const userId = user._id;
     const cart = await Cart.findOne({ userId }).populate("items.productId");
@@ -247,26 +247,28 @@ const checkout = async (req, res) => {
 };
 const createOrder=async(req,res)=>{
   try {
-    const paymentMethod=req.body.paymentMethod
-    console.log(paymentMethod)
-    
-    const amount=2000
+    const{price,address,paymentMethod} =req.body
+    const amount=price*100
     const options={
       amount:amount,
       currency:'INR',
       receipt:'razorUser@gmail.com'
     }
-    razorpayInstance.orders.create(options,(err,order)=>{
+    razorpayInstance.orders.create(options,async(err,order)=>{
       if(!err){
+        const email=req.session.email
+        const user = await User.findOne({ email });
+        const username=user.username
+        const mobileNumber=user.mobileNumber
         res.status(200).send({
           success:true,
           msg:"Order Created",
           order_id:1234,
           amount:amount,
           key_id:"rzp_test_8qF3L1nSyCD4kf",
-          contact:"8714156151",
-          name:"ajmal cv",
-          email:"ajmalmayanad@gmail.com"
+          contact:mobileNumber,
+          name:username,
+          email:email
         })
       }else{
         res.status(400).send({success:false,msg:"something went wrong!!"})
@@ -278,26 +280,39 @@ const createOrder=async(req,res)=>{
 }
 const placeOrder = async (req, res) => {
   try {
+    const payment=req.query.paid
+    const address=req.query.add
     const email = req.session.email;
     const user = await User.findOne({ email });
     const userId = user._id;
     const cart = await Cart.findOne({ userId }).populate("items.productId");
-    const orderItems = cart.items.map((item) => ({
-      productId: item.productId._id,
-      quantity: item.quantity,
-      price: item.price,
-      userId: userId,
-    }));
-    const address = req.body.address;
+    let orderItems;
+    if(payment==1){
+      orderItems = cart.items.map((item) => ({
+        productId: item.productId._id,
+        quantity: item.quantity,
+        price: item.price,
+        userId: userId,
+        paymentMethod:"Online Payment"
+      }));
+    }else{
+        orderItems = cart.items.map((item) => ({
+        productId: item.productId._id,
+        quantity: item.quantity,
+        price: item.price,
+        userId: userId,
+        paymentMethod:"COD"
+      }));
+    }
     console.log("add", address);
     const totalPrice = cart.totalPrice;
-    const order = new Order({
-      userId,
-      items: orderItems,
-      totalPrice,
-      address,
-    });
-    await order.save();
+      const order = new Order({
+        userId,
+        items: orderItems,
+        totalPrice,
+        address,
+      });
+      await order.save();
     await Cart.deleteOne({ userId });
     res.render("user/orderSuccess");
   } catch (error) {

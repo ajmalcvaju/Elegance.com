@@ -32,8 +32,7 @@ const orderItemSchema = new mongoose.Schema({
     default: expectedDate(new Date()),
   },
   paymentMethod: {
-    type: String,
-    default: "COD",
+    type: String
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,

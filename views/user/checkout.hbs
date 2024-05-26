@@ -92,12 +92,13 @@
     <div class="container">
       <div class="payment">
         <div class="payment__info">
-          {{!-- <form action="/placeOrder" method="post" class="form"> --}}
-            <form class="form">
+          <form action="/placeOrder" method="post" class="form">
+            {{!-- <form class="form" method="post"> --}}
+              <input type="hidden" name="price" value="{{cart.totalPrice}}">
               <div style="display: flex;flex-direction: column;">
                 {{#each address}}
                 <div>
-                  <input type="radio" name="address" value="{{this._id}}" required>
+                  <input type="radio" name="address" id="address" value="{{this._id}}" required>
 
                   <label><u>{{this.addressType}}</u><br>{{this.houseName}},{{this.street}} <a
                       href="/editAddress?id={{this._id}}" style="color:blue;">Edit
@@ -112,17 +113,6 @@
               <div class="payment__title">
                 Payment Method
               </div>
-
-              {{!-- <div class="payment__types">
-                <div class="payment__type payment__type--cc active" id="cod">
-                  <i class="icon icon-credit-card"></i>Cash On Delivery
-                  <input type="hidden" name="payment_method" id="payment_method" require>
-                </div>
-                <div class="payment__type payment__type--cc active" id="online">
-                  <i class="icon icon-credit-card"></i>Online Payment
-                  <input type="hidden" name="payment_method" id="payment_method" required>
-                </div>
-              </div> --}}
               <select id="select" name="paymentMethod" class="form-control">
                 <option value="cod">Cash On Delivery</option>
                 <option value="online">Online Payment</option>
@@ -147,12 +137,15 @@
       });
     });
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     $(document).ready(function () {
       $(".form").submit(function (e) {
         e.preventDefault();
         console.log("Form submitted");
         var formData = $(this).serialize();
+        var paymentMethod = $("#select").val();
+        var address = $("#address").val();
 
         $.ajax({
           url: "/createOrder",
@@ -161,22 +154,39 @@
           success: function (res) {
             console.log("Server response:", res);
             if (res.success) {
+              if (paymentMethod === "online"){
               var options = {
                 "key": res.key_id,
                 "amount": res.amount,
                 "currency": "INR",
                 "order_id": res.orderId,
                 "handler": function (response) {
-                  alert("Payment Successful");
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Payment Successful',
+                    text: 'Your payment has been processed successfully.',
+                    confirmButtonText: 'OK'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      window.location.href = "/placeOrder?paid=1"
+                    }
+                  });
                   console.log("Payment response:", response);
                 }
               };
               var razorpayObject = new Razorpay(options);
               razorpayObject.on('payment.failed', function (response) {
-                alert("Payment Failed");
+                 Swal.fire({
+                  icon: 'error',
+                  title: 'Payment Failed',
+                  text: 'Your payment has failed. Please try again.',
+                  confirmButtonText: 'OK'
+                });
                 console.log("Payment failed response:", response);
               });
               razorpayObject.open();
+              }else if(paymentMethod === "cod") {
+                window.location.href = `/placeOrder?paid=0&add=${address}`}
             } else {
               alert(res.msg);
             }
