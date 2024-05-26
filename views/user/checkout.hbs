@@ -18,17 +18,25 @@
       text-align: left;
       border-bottom: 1px solid #ddd;
     }
-  #op{
-    text-decoration: none;
-  }
-  .payment__type {
-            cursor: pointer;
-            color: black;
-            background-color: white;
+
+    #op {
+      text-decoration: none;
+    }
+    .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            /* Colorful styles */
+            background-color: #fff; /* Background color for the select */
+            color: #333; /* Text color */
         }
-        .payment__type--cc.active {
-            background-color: aqua;
+        .form-control:focus {
+            outline: none;
+            border-color: #4CAF50; /* Border color when focused */
         }
+
     /* Responsive styles */
     @media only screen and (max-width: 600px) {
 
@@ -38,6 +46,8 @@
       }
     }
   </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 
 <body>
@@ -82,92 +92,103 @@
     <div class="container">
       <div class="payment">
         <div class="payment__info">
-          <form action="/placeOrder" method="post" class="form">
-            <div style="display: flex;flex-direction: column;">
-              {{#each address}}
-              <div>
-                <input type="radio" name="address" value="{{this._id}}" required>
+          {{!-- <form action="/placeOrder" method="post" class="form"> --}}
+            <form class="form">
+              <div style="display: flex;flex-direction: column;">
+                {{#each address}}
+                <div>
+                  <input type="radio" name="address" value="{{this._id}}" required>
 
-                <label><u>{{this.addressType}}</u><br>{{this.houseName}},{{this.street}} <a
-                    href="/editAddress?id={{this._id}}" style="color:blue;">Edit
-                    Address</a><br>{{this.district}},{{this.state}}<br>Pincode:{{this.pincode}}<br><a
-                    style="color: red;" href="/deleteAddress?id={{this._id}}">Delete</a></label>
+                  <label><u>{{this.addressType}}</u><br>{{this.houseName}},{{this.street}} <a
+                      href="/editAddress?id={{this._id}}" style="color:blue;">Edit
+                      Address</a><br>{{this.district}},{{this.state}}<br>Pincode:{{this.pincode}}<br><a
+                      style="color: red;" href="/deleteAddress?id={{this._id}}">Delete</a></label>
+                </div>
+                <br>
+
+                {{/each}}
+                <a href="/addAddress">Add New Address</a>
               </div>
-              <br>
+              <div class="payment__title">
+                Payment Method
+              </div>
 
-              {{/each}}
-              <a href="/addAddress">Add New Address</a>
-            </div>
-             <div class="payment__title">
-          Payment Method
-        </div>
-        
-        <div class="payment__types">
-          <div class="payment__type payment__type--cc active">
-            <i class="icon icon-credit-card"></i>Cash On Delivery
-          </div>
-          <div>
-          <div class="payment__type payment__type--cc active" id="onlinePayment">
-            <i class="icon icon-credit-card"></i>Online Payment
-            </a>
-          </div>
-          </div>
-          </div>
-            <div style="text-align: center;">
-              <button type="submit" class="btn btn-primary" style="margin-top: 10%;">Place Order</button>
-            </div>
-          </form>
+              {{!-- <div class="payment__types">
+                <div class="payment__type payment__type--cc active" id="cod">
+                  <i class="icon icon-credit-card"></i>Cash On Delivery
+                  <input type="hidden" name="payment_method" id="payment_method" require>
+                </div>
+                <div class="payment__type payment__type--cc active" id="online">
+                  <i class="icon icon-credit-card"></i>Online Payment
+                  <input type="hidden" name="payment_method" id="payment_method" required>
+                </div>
+              </div> --}}
+              <select id="select" name="paymentMethod" class="form-control">
+                <option value="cod">Cash On Delivery</option>
+                <option value="online">Online Payment</option>
+            </select>
+              <div style="text-align: center;">
+                <button type="submit" class="btn btn-primary" style="margin-top: 10%;">Place Order</button>
+              </div>
+            </form>
         </div>
       </div>
     </div>
   </section>
   </div>
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <script>
-        document.querySelectorAll('.payment__type').forEach(function(element) {
-            element.addEventListener('click', function() {
-                document.querySelectorAll('.payment__type').forEach(function(el) {
-                    el.classList.remove('active');
-                });
-                this.classList.add('active');
-            });
-        });
-    </script>
-    <script>
-      $(document).ready(function(){
-        $(".form").submit(function(e){
-          e.preventDefault();
-          console.log("hi")
-          var formData=$(this).serialize
 
-          $.ajax({
-            url:"/createOrder",
-            type:"POST",
-            data:formData,
-            success:function(res){
-              if(res.success){
-                var options={
-                  "key":""+res.key_id+"",
-                  "amount":""+res.amount+"",
-                  "currency":"INR",
-                  "order_id":""+res.orderId+"",
-                  "handler":function(response){
-                    alert("Payment Successfull")
-                  }
+  <script>
+    document.querySelectorAll('.payment__type').forEach(function (element) {
+      element.addEventListener('click', function () {
+        document.querySelectorAll('.payment__type').forEach(function (el) {
+          el.classList.remove('active');
+        });
+        this.classList.add('active');
+      });
+    });
+  </script>
+  <script>
+    $(document).ready(function () {
+      $(".form").submit(function (e) {
+        e.preventDefault();
+        console.log("Form submitted");
+        var formData = $(this).serialize();
+
+        $.ajax({
+          url: "/createOrder",
+          type: "POST",
+          data: formData,
+          success: function (res) {
+            console.log("Server response:", res);
+            if (res.success) {
+              var options = {
+                "key": res.key_id,
+                "amount": res.amount,
+                "currency": "INR",
+                "order_id": res.orderId,
+                "handler": function (response) {
+                  alert("Payment Successful");
+                  console.log("Payment response:", response);
                 }
-                var razorpayObject=new razorPay(options);
-                razorpayObject.on('payment.failed',function(response){
-                  alert("Payment Failed")
-                })
-                razorpayObject.open()
-              }else{
-                alert(res.msg)
-              }
+              };
+              var razorpayObject = new Razorpay(options);
+              razorpayObject.on('payment.failed', function (response) {
+                alert("Payment Failed");
+                console.log("Payment failed response:", response);
+              });
+              razorpayObject.open();
+            } else {
+              alert(res.msg);
             }
-          })
-        })
-      })
-    </script>
+          },
+          error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
+            console.error("AJAX error:", error);
+          }
+        });
+      });
+    });
+  </script>
 </body>
 
 </html>

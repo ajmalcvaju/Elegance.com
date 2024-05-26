@@ -247,6 +247,9 @@ const checkout = async (req, res) => {
 };
 const createOrder=async(req,res)=>{
   try {
+    const paymentMethod=req.body.paymentMethod
+    console.log(paymentMethod)
+    
     const amount=2000
     const options={
       amount:amount,
