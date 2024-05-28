@@ -4,6 +4,7 @@ const User = require("../model/userModel");
 const Address = require("../model/addressModel");
 const Order = require("../model/orderModel");
 const Wishlist = require("../model/wishlistModel");
+const Coupon = require("../model/couponModel");
 const Razorpay=require('razorpay')
 
 const razorpayInstance=new Razorpay({
@@ -78,12 +79,12 @@ const cart = async (req, res) => {
       const userId = user._id;
       const cart = await Cart.findOne({ userId }).populate("items.productId");
       let carts = await Cart.findOne({ userId });
-
+      const coupon = await Coupon.find({});
       if (!carts) {
-        res.render("user/cart", { noProduct: 1 });
+        res.render("user/cart", { noProduct: 1,coupon });
       } else {
         if (carts.items.length == 0) {
-          res.render("user/cart", { noProduct: 1 });
+          res.render("user/cart", { noProduct: 1,coupon });
         } else {
           const totalPrice = carts.totalPrice;
           if (totalPrice > 2000) {
@@ -91,12 +92,14 @@ const cart = async (req, res) => {
               cart,
               expensive: true,
               totalAmount: totalPrice,
+              coupon
             });
           } else {
             res.render("user/cart", {
               cart,
               expensive: false,
               totalAmount: totalPrice + 50,
+              coupon
             });
           }
         }
@@ -222,6 +225,8 @@ const checkout = async (req, res) => {
     const userId = user._id;
     const cart = await Cart.findOne({ userId }).populate("items.productId");
     let carts = await Cart.findOne({ userId });
+    
+    const discount=req.session.discount
     if (!carts) {
       res.send(`
             <script>
@@ -237,8 +242,8 @@ const checkout = async (req, res) => {
   </script>`);
       } else {
         const address = await Address.find({ userId });
-        console.log(address);
-        res.render("user/checkout", { cart, address });
+        const coupon = await Coupon.find({});
+        res.render("user/checkout", { cart, address,coupon,discount });
       }
     }
   } catch (error) {
@@ -286,32 +291,31 @@ const placeOrder = async (req, res) => {
     const user = await User.findOne({ email });
     const userId = user._id;
     const cart = await Cart.findOne({ userId }).populate("items.productId");
-    let orderItems;
-    if(payment==1){
-      orderItems = cart.items.map((item) => ({
+    const orderItems = cart.items.map((item) => ({
         productId: item.productId._id,
         quantity: item.quantity,
         price: item.price,
         userId: userId,
-        paymentMethod:"Online Payment"
       }));
-    }else{
-        orderItems = cart.items.map((item) => ({
-        productId: item.productId._id,
-        quantity: item.quantity,
-        price: item.price,
-        userId: userId,
-        paymentMethod:"COD"
-      }));
-    }
-    console.log("add", address);
     const totalPrice = cart.totalPrice;
-      const order = new Order({
+    let order;
+    if(payment==1){
+      order = new Order({
         userId,
         items: orderItems,
         totalPrice,
         address,
+        paymentMethod:"Online Payment"
       });
+    }else{
+      order = new Order({
+        userId,
+        items: orderItems,
+        totalPrice,
+        address,
+        paymentMethod:"COD"
+      });
+    }
       await order.save();
     await Cart.deleteOne({ userId });
     res.render("user/orderSuccess");

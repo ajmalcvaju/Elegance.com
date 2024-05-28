@@ -1,6 +1,7 @@
 const User = require("../model/userModel");
 const Address = require("../model/addressModel");
 const Order = require("../model/orderModel");
+const Coupon= require("../model/couponModel");
 
 const checkoutAddAddress = async (req, res) => {
   try {
@@ -63,4 +64,27 @@ const orderCancell = async (req, res) => {
   }
 };
 
-module.exports = { checkoutAddAddress, checkoutEditAddress, orderCancell };
+const orderDetails=async(req,res)=>{
+  try {
+    const orderId=req.query.orderId
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+const applyCoupon=async(req,res)=>{
+  try {
+   const couponCode=req.body.couponCode
+   const coupon=await Coupon.findOne({couponCode})
+   let discount=coupon.discount
+   if (!coupon || !coupon.isActive || new Date() > new Date(coupon.expirationDate)) {
+    return res.status(404).json({ success: false, message: 'Invalid or expired coupon' });
+}else{
+  req.session.discount=discount
+  res.json({ success: true})
+}
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+module.exports = { checkoutAddAddress, checkoutEditAddress, orderCancell,orderDetails,applyCoupon };

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Admin Category Panel</title>
+    <title>Admin Coupon Panel</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -47,7 +47,7 @@
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-light navbar-light">
                 <a href="index.html" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>Category Panel</h3>
+                    <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>User Panel</h3>
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
@@ -61,7 +61,7 @@
                         <span>Admin</span>
                     </div>
                 </div>
-                <div class="navbar-nav w-100">
+                 <div class="navbar-nav w-100">
                     <a href="/admin/dashboard" class="nav-item nav-link"><i
                             class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <a href="/admin/user" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Users</a>
@@ -172,46 +172,47 @@
                     </div>
                 </div>
             </nav>
-            <!-- Navbar End -->
 
+
+
+            <!-- Navbar End -->
             <table class="table mt-5">
                 <thead>
                     <tr>
                         <th scope="col">index</th>
-                        <th scope="col">Image</th>
-                        <th scope="col">Category Name</th>
-                        <th scope="col">Type</th>
+                        <th scope="col">Coupon Code</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Min Purchase Amount</th>
+                        <th scope="col">Discount Percentage(%)</th>
+                        <th scope="col">status</th>
+                        <th scope="col">Expiry</th>
                         <th scope="col">Edit</th>
                         <th scope="col">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each categories}}
+                    {{#each coupons}}
                     <tr>
                         <th scope="row">{{@index}}</th>
-                        <td><img id="imgs" class=" d-block img-fluid img-thumbnail" style="width: 5rem"
-                                src="/categoryImages/{{this.image}}"></td>
-                        <td>{{this.cname}}</td>
-                        <td>{{this.Type}}</td>
+                        <td>{{this.couponCode}}</td>
+                        <td>{{this.description}}</td>
+                        <td>{{this.minPurchaseAmount}}</td>
+                        <td>{{this.discount}}</td>
+                        <td>{{#if this.isActive}}Active{{else}}In Active{{/if}}</td>
+                        <td>{{this.expiryDate}}</td>
                         <td>
-                            <a href="/admin/edit-category?id={{this._id}}" class="btn btn-primary">Edit</a>
+                            <a href="/admin/edit-coupon?id={{this._id}}" class="btn btn-primary">Edit</a>
                         </td>
                         <td>
-                            {{#if this.is_deleted}}{{else}}
-                            <a href="/admin/delete-category?id={{this._id}}" class="btn btn-danger"
-                                onclick="return confirm('Are You want to Delete {{this.cname}}?')">Delete</a>
-                            {{/if}}
-                            {{#if this.is_deleted}}
-                            <a href="/admin/restore-category?id={{this._id}}" class="btn btn-success"
-                                onclick="return confirm('Are You want to Restore {{this.cname}}?')">Restrore</a>
-                            {{/if}}
+                            <a href="/admin/delete-coupon?id={{this._id}}" class="btn btn-danger">Delete</a>
                         </td>
                     </tr>
                     {{/each}}
                 </tbody>
             </table>
-            <a href="/admin/addCategory" class="btn btn-success">Add Category</a>
+            <a href="/admin/addCoupon" class="btn btn-success">Add Coupons</a>
         </div>
+
         <!-- Content End -->
 
 
@@ -233,7 +234,7 @@
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
     <script>
-        { { #each order } }
+        {{#each order}}
         const un = "{{this.userId.fname}}"
         document.getElementById("price").innerText = un;
         {{/each}}

@@ -65,9 +65,9 @@ const editCategory = async (req, res) => {
 const updatingCategory = async (req, res) => {
   const proId = req.query.id;
   console.log(req.query);
-  const { cname, Type } = req.body;
+  const { cname,discount, Type } = req.body;
 
-  await Category.updateOne({ _id: proId }, { $set: { cname, Type } });
+  await Category.updateOne({ _id: proId }, { $set: { cname,discount, Type } });
   res.redirect("/admin/category");
 };
 

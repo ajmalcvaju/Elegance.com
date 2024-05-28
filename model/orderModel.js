@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 const Address = require("../model/addressModel");
 
 const orderItemSchema = new mongoose.Schema({
-  orderId: {
-    type: String,
-    default: "#",
-  },
   productId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product",
@@ -18,21 +14,6 @@ const orderItemSchema = new mongoose.Schema({
   },
   price: {
     type: Number,
-  },
-  status: {
-    type: String,
-    default: "Pending",
-  },
-  date: {
-    type: String,
-    default: formatDate(new Date()),
-  },
-  expectedArrival: {
-    type: String,
-    default: expectedDate(new Date()),
-  },
-  paymentMethod: {
-    type: String
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -54,7 +35,23 @@ function expectedDate(date) {
   return `${day}/${month}/${year}`;
 }
 
+const counterSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    required: true,
+  },
+  seq: {
+    type: Number,
+    default: 1000,
+  },
+});
+const Counter = mongoose.model("Counter", counterSchema);
+
 const orderSchema = new mongoose.Schema({
+  orderId: {
+    type: String,
+    unique: true
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -64,11 +61,47 @@ const orderSchema = new mongoose.Schema({
   totalPrice: {
     type: Number,
   },
-
+  date: {
+    type: String,
+    default: formatDate(new Date()),
+  },
+  expectedArrival: {
+    type: String,
+    default: expectedDate(new Date()),
+  },
   address: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Address",
   },
+  status: {
+    type: String,
+    default: "Pending",
+  },paymentMethod: {
+    type: String
+  },productQuantity:{
+    type: Number
+  }
+});
+
+orderSchema.pre("save", async function (next) {
+  const order = this;
+  if (order.isNew) {
+    try {
+      const counter = await Counter.findByIdAndUpdate(
+        { _id: "orderId" },
+        { $inc: { seq: 1 } },
+        { new: true, upsert: true }
+      );
+      const orderNumber= String(counter.seq).padStart(4, "0");
+      order.orderId = `ORD${orderNumber}`;
+      order.productQuantity = order.items.reduce((sum, item) => sum + item.quantity, 0);
+      next();
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    next();
+  }
 });
 
 const Order = mongoose.model("Order", orderSchema);

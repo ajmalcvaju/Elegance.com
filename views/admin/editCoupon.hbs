@@ -3,7 +3,7 @@
 
 <head>
   <!-- Design by foolishdeveloper.com -->
-  <title>Edit Category</title>
+  <title>Edit Coupons</title>
 
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -54,7 +54,7 @@
     }
 
     form {
-      height: auto;
+      height: 520px;
       width: 400px;
       background-color: rgba(255, 255, 255, 0.13);
       position: absolute;
@@ -84,9 +84,9 @@
     }
 
     label {
-      margin-top: 10px;
       display: block;
-      font-size: 14px;
+      margin-top: 30px;
+      font-size: 16px;
       font-weight: 500;
     }
 
@@ -152,12 +152,6 @@
     option {
       color: #080710;
     }
-
-    .gender {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start;
-    }
   </style>
 </head>
 
@@ -166,27 +160,19 @@
     <div class="shape"></div>
     <div class="shape"></div>
   </div>
-  <h2 style="text-align: center;">Edit Category</h2>
-  <form action="/admin/edit-category?id={{category._id}}" method="post">
-    <label>Category Name</label>
-    <input type="text" name="cname" placeholder="Category Name" value="{{category.cname}}" required>
-     <label>Discount(%)</label>
-    <input type="number" name="discount" value="{{category.discount}}">
-    <label style="margin-top: 20%;">Gender</label>
-    <div class="gender">
-      <input type="radio" name="Type" value="Male" id="option1" required>
-      <label for="Male">Male</label><br>
-
-      <input type="radio" name="Type" value="Female" id="option2">
-      <label for="Female">Female</label><br>
-
-      <input type="radio" name="Type" value="Boy" id="option3">
-      <label for="Boy">Boy</label><br>
-
-      <input type="radio" name="Type" value="Girl" id="option4">
-      <label for="Girl">Girl</label><br>
-    </div>
-    <button type="submit">Edit Category</button>
+  <form action="/admin/edit-Coupons?id={{coupon._id}}" method="post">
+    <h3>Edit Coupons</h3>
+        <input type="text" name="couponCode" placeholder="Coupon Code" value="{{coupon.couponCode}}" required>
+        <input type="text" name="description" placeholder="Description" value="{{coupon.description}}" required>
+        <input type="number" name="minPurchaseAmount" placeholder="Min Purchase Amount" value="{{coupon.minPurchaseAmount}}" required>
+        <input type="number" name="discount" placeholder="Discount" value="{{coupon.discount}}" required>
+        <input type="date" name="expiryDate" placeholder="Expiry Date" value="{{coupon.expiryDate}}" required>
+        <label for="couponStatus">Coupon status</label>
+        <select class="form-control" id="couponSelect" name="isActive" value="{{coupon.isActive}}">
+            <option value="true">Active</option>
+            <option value="false">InActive</option>
+        </select>
+        <button type="submit">Edit Coupons</button>
   </form>
 </body>
 

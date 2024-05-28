@@ -27,6 +27,9 @@ const cartSchema = new mongoose.Schema({
   totalPrice: {
     type: Number,
   },
+  priceAfterCoupon:{
+    type: Number
+  }
 });
 
 cartItemSchema.pre("save", async function (next) {

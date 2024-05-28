@@ -22,20 +22,33 @@
     #op {
       text-decoration: none;
     }
+
     .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            /* Colorful styles */
-            background-color: #fff; /* Background color for the select */
-            color: #333; /* Text color */
-        }
-        .form-control:focus {
-            outline: none;
-            border-color: #4CAF50; /* Border color when focused */
-        }
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      /* Colorful styles */
+      background-color: #fff;
+      /* Background color for the select */
+      color: #333;
+      /* Text color */
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #4CAF50;
+      /* Border color when focused */
+    }
+
+    #coupon {
+      color: green;
+    }
+
+    .applyCoupon {
+      margin-top: 30px;
+    }
 
     /* Responsive styles */
     @media only screen and (max-width: 600px) {
@@ -79,15 +92,42 @@
             <td><b>Total Amount</b></td>
             <td></td>
             <td>
-              {{#each cart}}<b>{{this.totalPrice}}</b>{{/each}}₹
+              <b>{{cart.totalPrice}}</b>₹
             </td>
           </tr>
         </tbody>
       </table>
+      <div class="row mb-5" style="display: flex;flex-direction: column;">
+        <div class="col-md-12">
+          <h2 class="h3 mb-3 mt-3 text-black">Coupon Codes Available For You</h2>
+          <div class="p-3 p-lg-5 border bg-white">
+            <div class="input-group w-75 couponcode-wrap">
+              <select id="c_code" class="form-control me-2" aria-label="Coupon Code" aria-describedby="button-addon2">
+                {{#each coupon}}
+                {{#if this.isActive}}
+                <option value="disabled selected"><h1><ul>{{this.couponCode}}</ul></h1>:Use This Code If The Order Value above
+                  {{this.minPurchaseAmount}} You Will get {{this.discount}}% Discount </option>
+                {{/if}}
+                {{/each}}
+              </select>
+            </div>
+          </div>
 
+        </div>
+        <div class="input-group w-75 couponcode-wrap" id="applyCoupon">
+          <input type="text" class="form-control me-2" id="couponCode" placeholder="Coupon Code" aria-label="Coupon Code"
+            aria-describedby="button-addon2" style="width: auto; margin-top: 5%;">
+          <div class="input-group-append">
+            <button class="btn btn-black btn-sm" type="button" id="applyCouponButton"
+              style="margin-top: 2%;">Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
     </div>
 
-    <div class="discount"></div>
 
     <div class="container">
       <div class="payment">
@@ -116,7 +156,7 @@
               <select id="select" name="paymentMethod" class="form-control">
                 <option value="cod">Cash On Delivery</option>
                 <option value="online">Online Payment</option>
-            </select>
+              </select>
               <div style="text-align: center;">
                 <button type="submit" class="btn btn-primary" style="margin-top: 10%;">Place Order</button>
               </div>
@@ -126,7 +166,8 @@
     </div>
   </section>
   </div>
-
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     document.querySelectorAll('.payment__type').forEach(function (element) {
       element.addEventListener('click', function () {
@@ -154,39 +195,40 @@
           success: function (res) {
             console.log("Server response:", res);
             if (res.success) {
-              if (paymentMethod === "online"){
-              var options = {
-                "key": res.key_id,
-                "amount": res.amount,
-                "currency": "INR",
-                "order_id": res.orderId,
-                "handler": function (response) {
+              if (paymentMethod === "online") {
+                var options = {
+                  "key": res.key_id,
+                  "amount": res.amount,
+                  "currency": "INR",
+                  "order_id": res.orderId,
+                  "handler": function (response) {
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Payment Successful',
+                      text: 'Your payment has been processed successfully.',
+                      confirmButtonText: 'OK'
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        window.location.href = "/placeOrder?paid=1"
+                      }
+                    });
+                    console.log("Payment response:", response);
+                  }
+                };
+                var razorpayObject = new Razorpay(options);
+                razorpayObject.on('payment.failed', function (response) {
                   Swal.fire({
-                    icon: 'success',
-                    title: 'Payment Successful',
-                    text: 'Your payment has been processed successfully.',
+                    icon: 'error',
+                    title: 'Payment Failed',
+                    text: 'Your payment has failed. Please try again.',
                     confirmButtonText: 'OK'
-                  }).then((result) => {
-                    if (result.isConfirmed) {
-                      window.location.href = "/placeOrder?paid=1"
-                    }
                   });
-                  console.log("Payment response:", response);
-                }
-              };
-              var razorpayObject = new Razorpay(options);
-              razorpayObject.on('payment.failed', function (response) {
-                 Swal.fire({
-                  icon: 'error',
-                  title: 'Payment Failed',
-                  text: 'Your payment has failed. Please try again.',
-                  confirmButtonText: 'OK'
+                  console.log("Payment failed response:", response);
                 });
-                console.log("Payment failed response:", response);
-              });
-              razorpayObject.open();
-              }else if(paymentMethod === "cod") {
-                window.location.href = `/placeOrder?paid=0&add=${address}`}
+                razorpayObject.open();
+              } else if (paymentMethod === "cod") {
+                window.location.href = `/placeOrder?paid=0&add=${address}`
+              }
             } else {
               alert(res.msg);
             }
@@ -199,6 +241,60 @@
       });
     });
   </script>
+  <script>
+$(document).ready(function() {
+    $('#applyCouponButton').click(function() {
+        var couponCode = $('#couponCode').val();
+        fetch(`/applyCoupon`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({couponCode})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+              Swal.fire({
+                text: 'Coupon Added Successfully',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                customClass: {
+                    title: 'text-success',
+                    popup: 'swal2-popup-custom',
+                    confirmButton: 'btn btn-success'
+                },
+                showCancelButton: false,
+                showCloseButton: true,
+                showLoaderOnConfirm: false,
+                timer: 3000
+            });
+                setTimeout(() => {
+                    window.location.href = '/checkout';
+                }, 3000);
+            } else {
+                Swal.fire({
+                text: 'Invalid Coupon Code ',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    title: 'text-danger',
+                    popup: 'swal2-popup-custom',
+                    confirmButton: 'btn btn-danger'
+                },
+                showCancelButton: false,
+                showCloseButton: true,
+                showLoaderOnConfirm: false,
+                timer: 3000
+            });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+});
+</script>
 </body>
 
 </html>

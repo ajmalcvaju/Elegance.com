@@ -8,6 +8,7 @@ const categorySchema = new mongoose.Schema({
   },
   image: { type: String, required: true },
   Type: { type: String, required: true },
+  discount:{ type: Number, default: 0 },
   is_deleted: { type: Number, default: 0 },
   stock: {
     type: Number,

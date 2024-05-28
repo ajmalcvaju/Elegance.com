@@ -20,13 +20,22 @@ const addProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
     const pname = req.body.pname;
-    const products1 = await Product.find({ pname });
-    console.log(products1[0]);
-    if (products1[0]) {
+    const products = await Product.findOne({ pname });
+    if (products) {
       const categories = await Category.find({});
       res.render("admin/addProduct", { exist: true, categories });
     } else {
-      const DiscountedPrice = req.body.price * (1 - req.body.discount / 100);
+      let cname=req.body.category
+      const categories = await Category.findOne({cname});
+      let actualDiscount;
+      let productDiscount=req.body.discount
+      let categoryDiscount=categories.discount
+      if(productDiscount>=categoryDiscount){
+        actualDiscount=productDiscount
+      }else{
+        actualDiscount=categoryDiscount
+      }
+      DiscountedPrice = req.body.price * (1 - actualDiscount / 100);
       const imageFiles = req.files.map((file) => file.filename);
       const product = new Product({
         pname: req.body.pname,
@@ -34,6 +43,7 @@ const updateProduct = async (req, res) => {
         description: req.body.description,
         price: req.body.price,
         discount: req.body.discount,
+        actualDiscount:actualDiscount,
         purchase: req.body.purchase,
         category: req.body.category,
         discountedPrice: DiscountedPrice,

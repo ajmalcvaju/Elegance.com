@@ -133,6 +133,7 @@ router.get("/deleteAddress", async (req, res) => {
   res.redirect("/checkout");
 });
 router.get("/cancelOrder", userCheckoutOrderControll.orderCancell);
+router.get("/orderDetails", userCheckoutOrderControll.orderDetails);
 
 router.get("/addWishlist", cartController.addWishlist);
 
@@ -143,4 +144,5 @@ router.get("/add-cart", cartController.wishlistToAddCart);
 router.get("/deleteWishlist", cartController.deleteWishlist);
 
 router.get("/deleteCart", cartController.deleteCart);
+router.post("/applyCoupon",userCheckoutOrderControll.applyCoupon)
 module.exports = router;
