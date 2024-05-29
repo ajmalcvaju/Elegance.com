@@ -2,6 +2,7 @@ const User = require("../model/userModel");
 const Address = require("../model/addressModel");
 const Order = require("../model/orderModel");
 const Coupon= require("../model/couponModel");
+const Cart=require("../model/cartModel");
 
 const checkoutAddAddress = async (req, res) => {
   try {
@@ -87,4 +88,20 @@ const applyCoupon=async(req,res)=>{
   }
 }
 
-module.exports = { checkoutAddAddress, checkoutEditAddress, orderCancell,orderDetails,applyCoupon };
+const checkout=async(req,res)=>{
+  try {
+    const orderDetails=req.body
+    const email = req.session.email;
+    const user = await User.findOne({ email });
+    const userId = user._id;
+    const cart=await Cart.updateOne(
+      { userId },
+      { $set:orderDetails  }
+    );
+    res.redirect("/checkout")
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+module.exports = { checkoutAddAddress, checkoutEditAddress, orderCancell,orderDetails,applyCoupon,checkout };

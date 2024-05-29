@@ -80,6 +80,22 @@ const orderSchema = new mongoose.Schema({
     type: String
   },productQuantity:{
     type: Number
+  },totalPrice:{
+    type: Number
+  },discount:{
+    type: Number
+  },discountedPrice:{
+    type: Number
+  },gst:{
+    type: Number
+  },totalPriceIncludingGst:{
+    type: Number
+  },shippingCharge:{
+    type: Number
+  },totalAmountPay:{
+    type: Number
+  },priceAfterCoupon:{
+    type: Number
   }
 });
 

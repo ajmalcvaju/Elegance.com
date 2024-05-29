@@ -58,41 +58,72 @@
                 </div>
             </div>
             <div class="col-md-4 summary">
+                {{#if noProduct}}
+                
+                {{else}}
+                
                 <div>
                     <h5><b>Summary</b></h5>
                 </div>
                 <hr>
+                <form action="/checkout" method="post">
                 <div style="overflow: hidden;">
                     <h6 style="float: left;">Total Price:</h6>
                     <div style="float: right;">
-                        {{#each cart}}
-                        <h6 style="display: inline;"><b>{{this.totalPrice}}</b></h6>
-                        {{/each}}
+                        <h6 style="display: inline;"><b>{{totalPriceBeforeOffer}} ₹</b></h6>
+                        
                     </div>
                 </div>
-                <form>
-                    <p>SHIPPING</p>
-                    {{#if expensive}}
-                    <p>Your Order Value is above 2000,So,You are eligible for free delivery</p>
-                    {{else}}
-                    <p>Your Order Value is below 2000,So,You have to pay 50₹ as delivery charge</p>
-                    {{/if}}
-
-                    <p>GIVE CODE</p>
-                    <input id="code" placeholder="Enter your code">
-                </form>
-
+                <div style="overflow: hidden;">
+                    <h6 style="float: left;">Discount:</h6>
+                    <div style="float: right;">
+                        <h6 style="display: inline;color: green;"><b>{{offerDiscount}} ₹</b></h6>
+                        <input type="hidden" name="discount" value="{{offerDiscount}}">
+                    </div>
+                </div>
+                <div style="overflow: hidden;">
+                    <h6 style="float: left;">Discounted Price:</h6>
+                    <div style="float: right;">
+                        <h6 style="display: inline;"><b>{{totalPrice}} ₹</b></h6>
+                    </div>
+                </div>
+                <div style="overflow: hidden;">
+                    <h6 style="float: left;">GST:</h6>
+                    <div style="float: right;">
+                        <h6 style="display: inline;color: red;"><b>{{gst}} ₹</b></h6>
+                        <input type="hidden" name="gst" value="{{gst}}">
+                    </div>
+                </div>
+                <div style="overflow: hidden;">
+                    <h6 style="float: left;">Total Price Including GST</h6>
+                    <div style="float: right;">
+                        <h6 style="display: inline;"><b>{{totalPriceIncGst}} ₹</b></h6>
+                        <input type="hidden" name="totalPriceIncludingGst" value="{{totalPriceIncGst}}">
+                    </div>
+                </div>
+                <div style="overflow: hidden;">
+                    <h6 style="float: left;">Shipping Charge:</h6>
+                    <div style="float: right;">
+                        <h6 style="display: inline;color: red;"><b>{{shippingCharge}} ₹</b></h6>
+                    </div>
+                </div>
                 <div style="overflow: hidden;">
                     <h6 style="float: left;">Total Amount has to be paid:</h6>
                     <div style="float: right;">
-                        <h6 style="display: inline;"><b>{{totalAmount}}</b></h6>
+                        <h6 style="display: inline;"><b>{{totalAmountPay}} ₹</b></h6>
+                        <input type="hidden" name="totalAmountPay" value="{{totalAmountPay}}">
                     </div>
                 </div>
-                <div style="text-align: center;">
+                {{!-- <div style="text-align: center;margin-top: 20%;">
                     <a href="/checkout"
                         style="color: rgb(0, 0, 0); background-color: rgb(226, 226, 76); padding: 10px 20px; border-radius: 5px; text-decoration: none;">CHECKOUT</a>
+                </div> --}}
+                <div style="text-align: center;margin-top: 20%;">
+                <button type="submit" style="color: rgb(0, 0, 0); background-color: rgb(226, 226, 76); padding: 10px 20px; border-radius: 5px; text-decoration: none;">CHECKOUT</button>
                 </div>
+                </form>
             </div>
+            {{/if}}
         </div>
 
     </div>

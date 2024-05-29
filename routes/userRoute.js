@@ -106,6 +106,7 @@ router.get("/incrementItem", cartController.incCart);
 router.get("/decrementItem", cartController.decCart);
 
 router.get("/checkout", cartController.checkout);
+router.post("/checkout", userCheckoutOrderControll.checkout);
 router.post("/createOrder",cartController.createOrder)
 
 router.get("/placeOrder", cartController.placeOrder);
@@ -145,4 +146,8 @@ router.get("/deleteWishlist", cartController.deleteWishlist);
 
 router.get("/deleteCart", cartController.deleteCart);
 router.post("/applyCoupon",userCheckoutOrderControll.applyCoupon)
+router.get("/removeCoupon", async(req, res) => {
+  req.session.discount = null;
+  res.redirect("/checkout");
+});
 module.exports = router;

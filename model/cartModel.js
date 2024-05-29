@@ -12,6 +12,9 @@ const cartItemSchema = new mongoose.Schema({
     required: true,
     min: 1,
   },
+  priceBeforeOffer:{
+    type: Number,
+  },
   price: {
     type: Number,
   },
@@ -24,12 +27,31 @@ const cartSchema = new mongoose.Schema({
     required: true,
   },
   items: [cartItemSchema],
+  totalPriceBeforeOffer: {
+    type: Number,
+  },
   totalPrice: {
     type: Number,
   },
-  priceAfterCoupon:{
-    type: Number
-  }
+  shippingCharge: {
+    type: Number,
+    default:50
+  },
+  priceAfterCoupon: {
+    type: Number,
+  },
+  discount: {
+    type: Number,
+  },
+  gst: {
+    type: Number,
+  },
+  totalPriceIncludingGst: {
+    type: Number,
+  },
+  totalAmountPay: {
+    type: Number,
+  },
 });
 
 cartItemSchema.pre("save", async function (next) {
@@ -39,6 +61,7 @@ cartItemSchema.pre("save", async function (next) {
       throw new Error("Product not found");
     }
     this.price = product.discountedPrice * this.quantity;
+    this.priceBeforeOffer = product.price* this.quantity;
     next();
   } catch (error) {
     next(error);
@@ -51,6 +74,12 @@ cartSchema.pre("save", function (next) {
     totalPrice += item.price || 0; // If price is not set, default to 0
   });
   this.totalPrice = totalPrice;
+  let totalPriceBeforeOffer = 0;
+  this.items.forEach((item) => {
+    totalPriceBeforeOffer += item.priceBeforeOffer || 0; // If price is not set, default to 0
+  });
+  this.totalPriceBeforeOffer = totalPriceBeforeOffer;
+
   next();
 });
 

@@ -92,9 +92,60 @@
             <td><b>Total Amount</b></td>
             <td></td>
             <td>
-              <b>{{cart.totalPrice}}</b>₹
+              <b>{{cart.totalPriceBeforeOffer}}</b> ₹
             </td>
           </tr>
+          <tr>
+            <td><b>Discount</b></td>
+            <td></td>
+            <td style="color: green;">
+              <b>{{cart.discount}}</b> ₹
+            </td>
+          </tr>
+          <tr>
+            <td><b>Discounted Price</b></td>
+            <td></td>
+            <td>
+              <b>{{cart.totalPrice}}</b> ₹
+            </td>
+          </tr>
+          <tr>
+            <td><b>GST</b></td>
+            <td></td>
+            <td style="color: red;">
+              <b>{{cart.gst}}</b> ₹
+            </td>
+          </tr>
+          <tr>
+            <td><b>Price inc GST</b></td>
+            <td></td>
+            <td>
+              <b>{{cart.totalPriceIncludingGst}}</b> ₹
+            </td>
+          </tr>
+          <tr>
+            <td><b>Shipping Charge</b></td>
+            <td></td>
+            <td style="color: red;">
+              <b>{{cart.shippingCharge}}</b> ₹
+            </td>
+          </tr>
+          <tr>
+            <td><b>Total Amount Has to Pay</b></td>
+            <td></td>
+            <td>
+              <b>{{cart.totalAmountPay}}</b> ₹
+            </td>
+          </tr>
+          {{#if cart.priceAfterCoupon}}
+          <tr>
+            <td><b>Total Amount Has to Pay after Coupon</b></td>
+            <td></td>
+            <td>
+              <b>{{cart.priceAfterCoupon}}</b> ₹
+            </td>
+          </tr>
+          {{/if}}
         </tbody>
       </table>
       <div class="row mb-5" style="display: flex;flex-direction: column;">
@@ -105,18 +156,28 @@
               <select id="c_code" class="form-control me-2" aria-label="Coupon Code" aria-describedby="button-addon2">
                 {{#each coupon}}
                 {{#if this.isActive}}
-                <option value="disabled selected"><h1><ul>{{this.couponCode}}</ul></h1>:Use This Code If The Order Value above
-                  {{this.minPurchaseAmount}} You Will get {{this.discount}}% Discount </option>
+                <option value="disabled selected">
+                  <h1>
+                    <ul>{{this.couponCode}}</ul>
+                  </h1>:Use This Code If The Order Value above
+                  {{this.minPurchaseAmount}} You Will get {{this.discount}}% Discount
+                </option>
                 {{/if}}
                 {{/each}}
               </select>
             </div>
           </div>
-
+        </div>
+        <div style="overflow: hidden;margin-top: 10%;">
+        {{#if cart.priceAfterCoupon}}
+        <h1 style="float: left;">You Already Have Applied A Coupon</h1><a style="float: right;align-self: center;" class="btn btn-success" href="/removeCoupon">Delete Coupon</a>
+        {{else}}
+        <h1>Apply Coupon For Discount</h1>
+        {{/if}}
         </div>
         <div class="input-group w-75 couponcode-wrap" id="applyCoupon">
-          <input type="text" class="form-control me-2" id="couponCode" placeholder="Coupon Code" aria-label="Coupon Code"
-            aria-describedby="button-addon2" style="width: auto; margin-top: 5%;">
+          <input type="text" class="form-control me-2" id="couponCode" placeholder="Coupon Code"
+            aria-label="Coupon Code" aria-describedby="button-addon2" style="width: auto; margin-top: 5%;">
           <div class="input-group-append">
             <button class="btn btn-black btn-sm" type="button" id="applyCouponButton"
               style="margin-top: 2%;">Apply</button>
@@ -134,7 +195,18 @@
         <div class="payment__info">
           <form action="/placeOrder" method="post" class="form">
             {{!-- <form class="form" method="post"> --}}
-              <input type="hidden" name="price" value="{{cart.totalPrice}}">
+              {{#if cart.priceAfterCoupon}}
+              <input type="hidden" name="totalAmountPay" value="{{cart.totalAmountPay}}">
+              <input type="hidden" name="priceAfterCoupon" value="{{cart.priceAfterCoupon}}">
+              {{else}}
+               <input type="hidden" name="totalAmountPay" value="{{cart.totalAmountPay}}">
+              {{/if}}
+              <input type="hidden" name="totalPrice" value="{{cart.totalPriceBeforeOffer}}">
+              <input type="hidden" name="discount" value="{{cart.discount}}">
+              <input type="hidden" name="discountedPrice" value="{{cart.totalPrice}}">
+              <input type="hidden" name="gst" value="{{cart.gst}}">
+              <input type="hidden" name="totalPriceIncludingGst" value="{{cart.totalPriceIncludingGst}}">
+              <input type="hidden" name="shippingCharge" value="{{cart.shippingCharge}}">
               <div style="display: flex;flex-direction: column;">
                 {{#each address}}
                 <div>
@@ -166,8 +238,8 @@
     </div>
   </section>
   </div>
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     document.querySelectorAll('.payment__type').forEach(function (element) {
       element.addEventListener('click', function () {
@@ -242,59 +314,59 @@
     });
   </script>
   <script>
-$(document).ready(function() {
-    $('#applyCouponButton').click(function() {
+    $(document).ready(function () {
+      $('#applyCouponButton').click(function () {
         var couponCode = $('#couponCode').val();
         fetch(`/applyCoupon`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({couponCode})
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ couponCode })
         })
-        .then(response => response.json())
-        .then(data => {
+          .then(response => response.json())
+          .then(data => {
             if (data.success) {
               Swal.fire({
                 text: 'Coupon Added Successfully',
                 icon: 'success',
                 confirmButtonText: 'OK',
                 customClass: {
-                    title: 'text-success',
-                    popup: 'swal2-popup-custom',
-                    confirmButton: 'btn btn-success'
+                  title: 'text-success',
+                  popup: 'swal2-popup-custom',
+                  confirmButton: 'btn btn-success'
                 },
                 showCancelButton: false,
                 showCloseButton: true,
                 showLoaderOnConfirm: false,
                 timer: 3000
-            });
-                setTimeout(() => {
-                    window.location.href = '/checkout';
-                }, 3000);
+              });
+              setTimeout(() => {
+                window.location.href = '/checkout';
+              }, 3000);
             } else {
-                Swal.fire({
+              Swal.fire({
                 text: 'Invalid Coupon Code ',
                 icon: 'error',
                 confirmButtonText: 'OK',
                 customClass: {
-                    title: 'text-danger',
-                    popup: 'swal2-popup-custom',
-                    confirmButton: 'btn btn-danger'
+                  title: 'text-danger',
+                  popup: 'swal2-popup-custom',
+                  confirmButton: 'btn btn-danger'
                 },
                 showCancelButton: false,
                 showCloseButton: true,
                 showLoaderOnConfirm: false,
                 timer: 3000
-            });
+              });
             }
-        })
-        .catch(error => {
+          })
+          .catch(error => {
             console.error('Error:', error);
-        });
+          });
+      });
     });
-});
-</script>
+  </script>
 </body>
 
 </html>

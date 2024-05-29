@@ -86,22 +86,24 @@ const cart = async (req, res) => {
         if (carts.items.length == 0) {
           res.render("user/cart", { noProduct: 1,coupon });
         } else {
-          const totalPrice = carts.totalPrice;
-          if (totalPrice > 2000) {
+          const totalPrice =Math.round(carts.totalPrice);
+          const totalPriceBeforeOffer=Math.round(carts.totalPriceBeforeOffer)
+          const offerDiscount=Math.round(totalPriceBeforeOffer-totalPrice)
+          const gst=Math.round(totalPrice*.12)
+          const totalPriceIncGst=Math.round(totalPrice*1.12)
+          const totalAmountPay=Math.round(totalPriceIncGst+50)
+           
             res.render("user/cart", {
               cart,
-              expensive: true,
-              totalAmount: totalPrice,
-              coupon
+              totalPrice,
+              totalPriceBeforeOffer,
+              offerDiscount,
+              gst,
+              totalPriceIncGst,
+              shippingCharge:50,
+              totalAmountPay
             });
-          } else {
-            res.render("user/cart", {
-              cart,
-              expensive: false,
-              totalAmount: totalPrice + 50,
-              coupon
-            });
-          }
+          
         }
       }
     } else {
@@ -223,10 +225,19 @@ const checkout = async (req, res) => {
       const email = req.session.email;
     const user = await User.findOne({ email });
     const userId = user._id;
-    const cart = await Cart.findOne({ userId }).populate("items.productId");
     let carts = await Cart.findOne({ userId });
-    
-    const discount=req.session.discount
+    let totalPriceAfterCoupon;
+    if(req.session.discount){
+      console.log(req.session.discount)
+      const discount=req.session.discount
+      const totalPrice=carts.totalPrice
+      totalPriceAfterCoupon=Math.round(totalPrice*(1-discount/100))
+      const cart=await Cart.updateOne({userId},{$set:{priceAfterCoupon:totalPriceAfterCoupon}});
+    }else{
+      const cart=await Cart.updateOne({userId},{ $unset: { priceAfterCoupon: "" } });
+    }
+   
+
     if (!carts) {
       res.send(`
             <script>
@@ -241,9 +252,12 @@ const checkout = async (req, res) => {
     window.location.href = '/cart';
   </script>`);
       } else {
+        console.log(totalPriceAfterCoupon)
+        const cart = await Cart.findOne({ userId }).populate("items.productId");
         const address = await Address.find({ userId });
         const coupon = await Coupon.find({});
-        res.render("user/checkout", { cart, address,coupon,discount });
+          console.log(req.session.discount)
+            res.render("user/checkout", { cart, address,coupon });
       }
     }
   } catch (error) {
@@ -252,8 +266,17 @@ const checkout = async (req, res) => {
 };
 const createOrder=async(req,res)=>{
   try {
-    const{price,address,paymentMethod} =req.body
-    const amount=price*100
+    const{totalAmountPay,address,totalPrice,discount,discountedPrice,gst,totalPriceIncludingGst,shippingCharge,priceAfterCoupon,paymentMethod} =req.body
+    const email = req.session.email;
+      console.log(email);
+      const user = await User.findOne({ email });
+      const userId = user._id;
+    let amount;
+    if(priceAfterCoupon){
+      amount=priceAfterCoupon*100
+    }else{
+      amount=totalAmountPay*100
+    }
     const options={
       amount:amount,
       currency:'INR',
