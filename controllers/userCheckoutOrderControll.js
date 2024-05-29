@@ -27,6 +27,7 @@ const checkoutAddAddress = async (req, res) => {
     res.redirect("/checkout");
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
     res.status(500).send("Internal Server Error");
   }
 };
@@ -47,29 +48,32 @@ const checkoutEditAddress = async (req, res) => {
     res.redirect("/checkout");
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const orderCancell = async (req, res) => {
   try {
     const orderId = req.query.orderId;
-    const productId = req.query.productId;
-    console.log(orderId);
-    console.log(productId);
     const order = await Order.updateOne(
-      { _id: orderId, "items.productId": productId },
-      { $set: { "items.$.status": "Cancelled" } }
+      { _id: orderId },
+      { $set: { "status": "Cancelled" } }
     );
     res.redirect("/orderStatus");
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 
 const orderDetails=async(req,res)=>{
   try {
     const orderId=req.query.orderId
+    const order=await Order.findOne({orderId}).populate("items.productId");
+    
+    res.render("user/orderDetails",{order})
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 }
 const applyCoupon=async(req,res)=>{
@@ -85,6 +89,7 @@ const applyCoupon=async(req,res)=>{
 }
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 }
 
@@ -101,6 +106,7 @@ const checkout=async(req,res)=>{
     res.redirect("/checkout")
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 }
 

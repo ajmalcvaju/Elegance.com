@@ -31,6 +31,7 @@ const shop = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const home = async (req, res) => {
@@ -51,6 +52,7 @@ const home = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const sendVerifyMail = async (fname, lname, email, Otp) => {
@@ -87,6 +89,7 @@ const sendVerifyMail = async (fname, lname, email, Otp) => {
     });
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 
@@ -95,6 +98,7 @@ const loadRegister = async (req, res) => {
     res.render("user/signup");
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const insertUser = async (req, res) => {
@@ -146,6 +150,7 @@ const insertUser = async (req, res) => {
       }
     } catch (error) {
       console.log(error.message);
+    res.redirect("/error") 
     }
   }
 };
@@ -180,6 +185,7 @@ const verifyMail = async (req, res) => {
     res.render("admin/User");
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const reset = async (req, res) => {
@@ -187,6 +193,7 @@ const reset = async (req, res) => {
     res.render("user/forgetPassword");
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const resetPass = async (req, res) => {
@@ -210,6 +217,7 @@ const resetPass = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const changePassword = async (req, res) => {
@@ -245,6 +253,7 @@ const changePassword = async (req, res) => {
     res.render("home");
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const updatePassword = async (req, res) => {
@@ -264,6 +273,7 @@ const updatePassword = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 
@@ -497,6 +507,7 @@ const advanceSearch = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
     res.status(500).send("Internal Server Error");
   }
 };
@@ -524,6 +535,7 @@ const checkoutAddAddress = async (req, res) => {
     res.redirect("/checkout");
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
     res.status(500).send("Internal Server Error");
   }
 };

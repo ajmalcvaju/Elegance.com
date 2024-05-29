@@ -68,6 +68,7 @@ const addToCart = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 
@@ -111,6 +112,7 @@ const cart = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error")  
   }
 };
 const decCart = async (req, res) => {
@@ -161,6 +163,7 @@ const decCart = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const incCart = async (req, res) => {
@@ -218,6 +221,7 @@ const incCart = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const checkout = async (req, res) => {
@@ -262,15 +266,12 @@ const checkout = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const createOrder=async(req,res)=>{
   try {
-    const{totalAmountPay,address,totalPrice,discount,discountedPrice,gst,totalPriceIncludingGst,shippingCharge,priceAfterCoupon,paymentMethod} =req.body
-    const email = req.session.email;
-      console.log(email);
-      const user = await User.findOne({ email });
-      const userId = user._id;
+    const{totalAmountPay,priceAfterCoupon,paymentMethod} =req.body
     let amount;
     if(priceAfterCoupon){
       amount=priceAfterCoupon*100
@@ -304,12 +305,13 @@ const createOrder=async(req,res)=>{
     })
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 }
 const placeOrder = async (req, res) => {
   try {
     const payment=req.query.paid
-    const address=req.query.add
+    const addressId=req.query.add
     const email = req.session.email;
     const user = await User.findOne({ email });
     const userId = user._id;
@@ -320,14 +322,29 @@ const placeOrder = async (req, res) => {
         price: item.price,
         userId: userId,
       }));
-    const totalPrice = cart.totalPrice;
+      console.log(cart)
+      totalPrice=cart.totalPriceBeforeOffer,
+      discount=cart.discount,
+      discountedPrice=cart.totalPrice,
+      gst=cart.gst,
+      totalPriceIncludingGst=cart.totalPriceIncludingGst,
+      shippingCharge=cart.shippingCharge,
+      totalAmountPay=cart.totalAmountPay,
+      priceAfterCoupon=cart.priceAfterCoupon
     let order;
     if(payment==1){
       order = new Order({
         userId,
         items: orderItems,
         totalPrice,
-        address,
+        addressId,
+        discount,
+        discountedPrice,
+        gst,
+        totalPriceIncludingGst,
+        shippingCharge,
+        totalAmountPay,
+        priceAfterCoupon,
         paymentMethod:"Online Payment"
       });
     }else{
@@ -335,7 +352,14 @@ const placeOrder = async (req, res) => {
         userId,
         items: orderItems,
         totalPrice,
-        address,
+        addressId,
+        discount,
+        discountedPrice,
+        gst,
+        totalPriceIncludingGst,
+        shippingCharge,
+        totalAmountPay,
+        priceAfterCoupon,
         paymentMethod:"COD"
       });
     }
@@ -344,6 +368,8 @@ const placeOrder = async (req, res) => {
     res.render("user/orderSuccess");
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
+
   }
 };
 const orderStatus = async (req, res) => {
@@ -356,6 +382,7 @@ const orderStatus = async (req, res) => {
     res.render("user/orderStatus", { order });
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const addWishlist = async (req, res) => {
@@ -400,6 +427,7 @@ const addWishlist = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const myWishlist = async (req, res) => {
@@ -423,6 +451,7 @@ const myWishlist = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const wishlistToAddCart = async (req, res) => {
@@ -476,6 +505,7 @@ const wishlistToAddCart = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const deleteWishlist = async (req, res) => {
@@ -493,6 +523,7 @@ const deleteWishlist = async (req, res) => {
     res.redirect("/myWishlist");
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const deleteCart = async (req, res) => {
@@ -512,6 +543,7 @@ const deleteCart = async (req, res) => {
     res.redirect("/cart");
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 

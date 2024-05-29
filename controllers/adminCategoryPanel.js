@@ -5,14 +5,15 @@ const adminCategory = async (req, res) => {
     const categories = await Category.find({});
     res.render("admin/category", { categories });
   } catch {
-    console.log(error.message);
+    console.log(error.message)
+    res.redirect("/admin/error") 
   }
 };
 const addCategory = async (req, res) => {
   try {
     res.render("admin/addCategory");
   } catch {
-    console.log(error.message);
+    res.redirect("/admin/error");
   }
 };
 const updateCategory = async (req, res) => {
@@ -39,6 +40,7 @@ const updateCategory = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
+    res.redirect("/admin/error") 
   }
 };
 const deleteCategory = async (req, res) => {

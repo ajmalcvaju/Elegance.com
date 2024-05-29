@@ -13,6 +13,7 @@ const openProfile = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const addAddress = async (req, res) => {
@@ -36,6 +37,7 @@ const addAddress = async (req, res) => {
     res.redirect("/myProfile");
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const editAddress = async (req, res) => {
@@ -56,6 +58,7 @@ const editAddress = async (req, res) => {
     res.redirect("/myProfile");
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const changePassword = async (req, res) => {
@@ -63,6 +66,7 @@ const changePassword = async (req, res) => {
     res.render("user/changePasswordProfile");
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 const updatePassword = async (req, res) => {
@@ -83,6 +87,7 @@ const updatePassword = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
+    res.redirect("/error") 
   }
 };
 

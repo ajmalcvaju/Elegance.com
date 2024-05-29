@@ -150,4 +150,6 @@ router.get("/removeCoupon", async(req, res) => {
   req.session.discount = null;
   res.redirect("/checkout");
 });
+router.get("/error", userauth.error);
+
 module.exports = router;

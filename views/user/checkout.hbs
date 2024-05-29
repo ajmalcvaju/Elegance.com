@@ -281,7 +281,7 @@
                       confirmButtonText: 'OK'
                     }).then((result) => {
                       if (result.isConfirmed) {
-                        window.location.href = "/placeOrder?paid=1"
+                        window.location.href = `/placeOrder?paid=1&add=${address}`
                       }
                     });
                     console.log("Payment response:", response);

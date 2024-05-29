@@ -5,6 +5,7 @@ const adminUser = async (req, res) => {
     res.render("admin/User", { users });
   } catch {
     console.log(error.message);
+    res.redirect("/admin/error") 
   }
 };
 
@@ -14,6 +15,7 @@ const adminCategory = async (req, res) => {
     res.render("admin/category", { users });
   } catch {
     console.log(error.message);
+    res.redirect("/admin/error") 
   }
 };
 
@@ -22,6 +24,7 @@ const addUser = async (req, res) => {
     res.render("admin/addUser");
   } catch {
     console.log(error.message);
+    res.redirect("/admin/error") 
   }
 };
 const updateUser = async (req, res) => {
@@ -59,6 +62,7 @@ const updateUser = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
+    res.redirect("/admin/error") 
   }
 };
 const blockUser = async (req, res) => {

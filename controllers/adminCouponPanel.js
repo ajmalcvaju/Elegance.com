@@ -5,6 +5,7 @@ const manageCoupon=async(req,res)=>{
         res.render("admin/coupons",{coupons})
     } catch (error) {
         console.log(error.message);
+    res.redirect("/admin/error") 
     }
 }
 const editCoupon=async(req,res)=>{
@@ -14,6 +15,7 @@ const editCoupon=async(req,res)=>{
         res.render("admin/editCoupon",{coupon})
     } catch (error) {
         console.log(error.message);
+    res.redirect("/admin/error") 
     }
 }
 const deleteCoupon=async(req,res)=>{
@@ -23,6 +25,7 @@ const deleteCoupon=async(req,res)=>{
       res.redirect("/admin/coupons")
     } catch (error) {
         console.log(error.message);
+    res.redirect("/admin/error") 
     }
 }
 const addCoupon=async(req,res)=>{
@@ -30,6 +33,7 @@ const addCoupon=async(req,res)=>{
        res.render("admin/addCoupon")
     } catch (error) {
         console.log(error.message);
+    res.redirect("/admin/error") 
     }
 }
 const editingCoupon=async(req,res)=>{
@@ -40,6 +44,7 @@ const editingCoupon=async(req,res)=>{
        res.redirect("/admin/coupons")
     } catch (error) {
         console.log(error.message);
+    res.redirect("/admin/error") 
     }
 }
 const addingCoupon=async(req,res)=>{
@@ -50,6 +55,7 @@ const addingCoupon=async(req,res)=>{
         res.redirect("/admin/coupons")
     } catch (error) {
         console.log(error.message);
+    res.redirect("/admin/error") 
     }
 }
 module.exports={manageCoupon,editCoupon,deleteCoupon,addCoupon,editingCoupon,addingCoupon}

@@ -178,31 +178,34 @@
                     <tr>
                         <th scope="col">Order Id</th>
                         <th scope="col">Date</th>
-                        <th scope="col">Product</th>
                         <th scope="col">Quantity</th>
                         <th scope="col">User</th>
                         <th scope="col">Price</th>
                         <th scope="col">Status</th>
                         <th scope="col">Expected Arrival</th>
+                        <th scope="col">Order Details</th>
                         <th scope="col">Manage</th>
                     </tr>
                 </thead>
                 <tbody>
                     {{#each order}}
-                    {{#each this.items}}
                     <tr>
                         <th scope="row">{{this.orderId}}</th>
                         <td>{{this.date}}</td>
-                        <td>{{this.productId.pname}}</td>
-                        <td>{{this.quantity}}</td>
+                        <td>{{this.productQuantity}}</td>
                         <td>{{this.userId.fname}} {{this.userId.lname}}</td>
-                        <td>{{this.price}}</td>
+                        {{#if this.priceAfterCoupon}}
+                        <td>{{this.priceAfterCoupon}}</td>
+                        {{else}}
+                        <td>{{this.totalAmountPay}}</td>
+                        {{/if}}
                         <td>{{this.status}}</td>
                         <td>{{this.expectedArrival}}</td>
-                        <td> <a href="/admin/manage?orderId={{../_id}}&productId={{this.productId._id}}"
+                        <td><a href="/admin/orderDetails?orderId={{this.orderId}}"
+                            class="btn btn-info">Order Details</a></td>
+                        <td> <a href="/admin/manage?orderId={{this.orderId}}"
                                 class="btn btn-danger">Manage</a></td>
                     </tr>
-                    {{/each}}
                     {{/each}}
                 </tbody>
             </table>

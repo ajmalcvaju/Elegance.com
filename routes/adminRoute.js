@@ -97,5 +97,7 @@ router.post("/edit-coupons",adminCouponPanel.editingCoupon);
 router.get("/delete-coupon",adminCouponPanel.deleteCoupon);
 router.get("/addCoupon",adminCouponPanel.addCoupon);
 router.post("/addCoupons",adminCouponPanel.addingCoupon);
+router.get("/orderDetails",adminOrderPanel.orderDetails);
+router.get("/error",adminOrderPanel.error)
 
 module.exports = router;

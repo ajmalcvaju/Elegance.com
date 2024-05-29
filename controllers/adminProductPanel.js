@@ -7,6 +7,7 @@ const adminProduct = async (req, res) => {
     res.render("admin/product", { products });
   } catch {
     console.log(error.message);
+    res.redirect("/admin/error") 
   }
 };
 const addProduct = async (req, res) => {
@@ -15,6 +16,7 @@ const addProduct = async (req, res) => {
     res.render("admin/addProduct", { categories });
   } catch {
     console.log(error.message);
+    res.redirect("/admin/error") 
   }
 };
 const updateProduct = async (req, res) => {
@@ -59,6 +61,7 @@ const updateProduct = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
+    res.redirect("/admin/error") 
   }
 };
 const deleteUser = async (req, res) => {

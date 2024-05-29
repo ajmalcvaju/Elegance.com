@@ -16,5 +16,9 @@ const login = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+const error=async(req,res)=>{
+    res.render("user/errorPage")
+  }
 
-module.exports = { login };
+
+module.exports = { login,error };

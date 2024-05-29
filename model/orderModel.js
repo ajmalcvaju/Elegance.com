@@ -69,7 +69,7 @@ const orderSchema = new mongoose.Schema({
     type: String,
     default: expectedDate(new Date()),
   },
-  address: {
+  addressId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Address",
   },
