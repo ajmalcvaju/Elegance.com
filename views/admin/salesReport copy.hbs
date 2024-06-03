@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sales Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .filter {
+            margin-bottom: 20px;
+        }
+        .filter label {
+            margin-right: 10px;
+        }
+        .filter input, .filter select {
+            margin-right: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .summary {
+            margin-top: 20px;
+        }
+        .summary div {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sales Report</h1>
+
+        <div class="filter">
+            <label for="date-range">Custom Date Range:</label>
+            <input type="date" id="start-date"> to 
+            <input type="date" id="end-date">
+            <button onclick="filterReport()">Filter</button>
+        </div>
+
+        <div class="filter">
+            <label for="preset-range">Preset Date Range:</label>
+            <select id="preset-range" onchange="presetFilter()">
+                <option value="1-day">1 Day</option>
+                <option value="1-week">1 Week</option>
+                <option value="1-month">1 Month</option>
+            </select>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Order Amount</th>
+                    <th>Discount</th>
+                    <th>Coupon Deduction</th>
+                    <th>Final Amount</th>
+                </tr>
+            </thead>
+            <tbody id="sales-data">
+                <!-- Sales data will be populated here -->
+            </tbody>
+        </table>
+
+        <div class="summary">
+            <div id="overall-sales-count">Overall Sales Count: 0</div>
+            <div id="overall-order-amount">Overall Order Amount: $0.00</div>
+            <div id="overall-discount">Overall Discount: $0.00</div>
+        </div>
+    </div>
+
+    <script>
+        // Mock sales data
+        const salesData = [
+            {orderId: '001', date: '2024-06-01', customer: 'John Doe', orderAmount: 100, discount: 10, coupon: 5},
+            {orderId: '002', date: '2024-06-02', customer: 'Jane Smith', orderAmount: 200, discount: 20, coupon: 10},
+            // Add more sales data as needed
+        ];
+
+        // Function to display sales data
+        function displaySales(data) {
+            const salesDataContainer = document.getElementById('sales-data');
+            salesDataContainer.innerHTML = '';
+
+            let totalSalesCount = 0;
+            let totalOrderAmount = 0;
+            let totalDiscount = 0;
+
+            data.forEach(sale => {
+                totalSalesCount++;
+                totalOrderAmount += sale.orderAmount;
+                totalDiscount += sale.discount;
+
+                const finalAmount = sale.orderAmount - sale.discount - sale.coupon;
+
+                const row = `
+                    <tr>
+                        <td>${sale.orderId}</td>
+                        <td>${sale.date}</td>
+                        <td>${sale.customer}</td>
+                        <td>$${sale.orderAmount.toFixed(2)}</td>
+                        <td>$${sale.discount.toFixed(2)}</td>
+                        <td>$${sale.coupon.toFixed(2)}</td>
+                        <td>$${finalAmount.toFixed(2)}</td>
+                    </tr>
+                `;
+                salesDataContainer.innerHTML += row;
+            });
+
+            document.getElementById('overall-sales-count').innerText = `Overall Sales Count: ${totalSalesCount}`;
+            document.getElementById('overall-order-amount').innerText = `Overall Order Amount: $${totalOrderAmount.toFixed(2)}`;
+            document.getElementById('overall-discount').innerText = `Overall Discount: $${totalDiscount.toFixed(2)}`;
+        }
+
+        // Function to filter sales data by custom date range
+        function filterReport() {
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
+            const filteredData = salesData.filter(sale => {
+                return sale.date >= startDate && sale.date <= endDate;
+            });
+            displaySales(filteredData);
+        }
+
+        // Function to filter sales data by preset date range
+        function presetFilter() {
+            const range = document.getElementById('preset-range').value;
+            let filteredData;
+
+            const today = new Date();
+            if (range === '1-day') {
+                const oneDayAgo = new Date(today.setDate(today.getDate() - 1)).toISOString().split('T')[0];
+                filteredData = salesData.filter(sale => sale.date >= oneDayAgo);
+            } else if (range === '1-week') {
+                const oneWeekAgo = new Date(today.setDate(today.getDate() - 7)).toISOString().split('T')[0];
+                filteredData = salesData.filter(sale => sale.date >= oneWeekAgo);
+            } else if (range === '1-month') {
+                const oneMonthAgo = new Date(today.setMonth(today.getMonth() - 1)).toISOString().split('T')[0];
+                filteredData = salesData.filter(sale => sale.date >= oneMonthAgo);
+            }
+
+            displaySales(filteredData);
+        }
+
+        // Initial display of all sales data
+        displaySales(salesData);
+    </script>
+</body>
+</html>

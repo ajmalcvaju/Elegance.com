@@ -52,6 +52,9 @@ const cartSchema = new mongoose.Schema({
   totalAmountPay: {
     type: Number,
   },
+  couponDiscount:{
+    type: Number
+  }
 });
 
 cartItemSchema.pre("save", async function (next) {

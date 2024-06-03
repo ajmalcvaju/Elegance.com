@@ -94,7 +94,11 @@ const orderSchema = new mongoose.Schema({
     type: Number
   },totalAmountPay:{
     type: Number
-  },priceAfterCoupon:{
+  },
+  couponDiscount:{
+    type: Number
+  },
+  priceAfterCoupon:{
     type: Number
   }
 });

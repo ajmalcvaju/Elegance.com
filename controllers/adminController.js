@@ -1,6 +1,6 @@
 const admin = {
-  email: "ajmalcvaju97@gmail.com",
-  password: "Ajmal12@",
+  email: process.env.adminEmail,
+  password: process.env.adminPassword
 };
 const loginLoad = async (req, res) => {
   try {

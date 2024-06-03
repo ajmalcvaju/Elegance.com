@@ -6,6 +6,7 @@ const adminProductPanel = require("../controllers/adminProductPanel");
 const adminCategoryPanel = require("../controllers/adminCategoryPanel");
 const adminOrderPanel = require("../controllers/adminOrderPanel");
 const adminCouponPanel = require("../controllers/adminCouponPanel");
+const adminsalesReportPanel=require("../controllers/adminsalesReportPanel");
 const multer = require("multer");
 const path = require("path");
 const middleware = require("../middlewares/middlewares");
@@ -98,6 +99,9 @@ router.get("/delete-coupon",adminCouponPanel.deleteCoupon);
 router.get("/addCoupon",adminCouponPanel.addCoupon);
 router.post("/addCoupons",adminCouponPanel.addingCoupon);
 router.get("/orderDetails",adminOrderPanel.orderDetails);
+router.get("/salesReport",adminsalesReportPanel.salesReport)
+
+
 router.get("/error",adminOrderPanel.error)
 
 module.exports = router;

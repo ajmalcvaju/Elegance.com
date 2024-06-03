@@ -7,9 +7,14 @@ const Wishlist = require("../model/wishlistModel");
 const Coupon = require("../model/couponModel");
 const Razorpay=require('razorpay')
 
+// const razorpayInstance=new Razorpay({
+//   key_id:"rzp_test_8qF3L1nSyCD4kf",
+//   key_secret:"XKCeAFQwm8d8xEv8684Sgqsh"
+// })
+
 const razorpayInstance=new Razorpay({
-  key_id:"rzp_test_8qF3L1nSyCD4kf",
-  key_secret:"XKCeAFQwm8d8xEv8684Sgqsh"
+  key_id:process.env.key_id,
+  key_secret:process.env.key_secret
 })
 
 const addToCart = async (req, res) => {
@@ -231,12 +236,15 @@ const checkout = async (req, res) => {
     const userId = user._id;
     let carts = await Cart.findOne({ userId });
     let totalPriceAfterCoupon;
+    let couponDiscount;
     if(req.session.discount){
       console.log(req.session.discount)
       const discount=req.session.discount
       const totalPrice=carts.totalPrice
       totalPriceAfterCoupon=Math.round(totalPrice*(1-discount/100))
-      const cart=await Cart.updateOne({userId},{$set:{priceAfterCoupon:totalPriceAfterCoupon}});
+      couponDiscount=Math.round(totalPrice*discount/100)
+      console.log(couponDiscount) 
+      const cart=await Cart.updateOne({userId},{$set:{priceAfterCoupon:totalPriceAfterCoupon,couponDiscount:couponDiscount}});
     }else{
       const cart=await Cart.updateOne({userId},{ $unset: { priceAfterCoupon: "" } });
     }
@@ -331,6 +339,7 @@ const placeOrder = async (req, res) => {
       shippingCharge=cart.shippingCharge,
       totalAmountPay=cart.totalAmountPay,
       priceAfterCoupon=cart.priceAfterCoupon
+      couponDiscount=cart.couponDiscount
     let order;
     if(payment==1){
       order = new Order({
@@ -345,7 +354,8 @@ const placeOrder = async (req, res) => {
         shippingCharge,
         totalAmountPay,
         priceAfterCoupon,
-        paymentMethod:"Online Payment"
+        couponDiscount,
+        paymentMethod:"Online Payment" 
       });
     }else{
       order = new Order({
