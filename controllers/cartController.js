@@ -246,7 +246,8 @@ const checkout = async (req, res) => {
       console.log(couponDiscount) 
       const cart=await Cart.updateOne({userId},{$set:{priceAfterCoupon:totalPriceAfterCoupon,couponDiscount:couponDiscount}});
     }else{
-      const cart=await Cart.updateOne({userId},{ $unset: { priceAfterCoupon: "" } });
+      let cart=await Cart.updateOne({userId},{ $unset: { priceAfterCoupon: "" }});
+      cart=await Cart.updateOne({userId},{$set:{couponDiscount:0}})
     }
    
 
@@ -318,8 +319,9 @@ const createOrder=async(req,res)=>{
 }
 const placeOrder = async (req, res) => {
   try {
-    const payment=req.query.paid
+    const paid=req.query.paid
     const addressId=req.query.add
+    const payment=req.query.paymentStatus
     const email = req.session.email;
     const user = await User.findOne({ email });
     const userId = user._id;
@@ -328,6 +330,7 @@ const placeOrder = async (req, res) => {
         productId: item.productId._id,
         quantity: item.quantity,
         price: item.price,
+        priceBeforeOffer:item.priceBeforeOffer,
         userId: userId,
       }));
       console.log(cart)
@@ -341,7 +344,13 @@ const placeOrder = async (req, res) => {
       priceAfterCoupon=cart.priceAfterCoupon
       couponDiscount=cart.couponDiscount
     let order;
-    if(payment==1){
+    let paymentStatus;
+    if(paid==1){
+      if(payment==1){
+        paymentStatus="Successfull"
+      }else{
+        paymentStatus="Faied"
+      }
       order = new Order({
         userId,
         items: orderItems,
@@ -355,9 +364,11 @@ const placeOrder = async (req, res) => {
         totalAmountPay,
         priceAfterCoupon,
         couponDiscount,
+        paymentStatus,
         paymentMethod:"Online Payment" 
       });
     }else{
+        paymentStatus="Pending"
       order = new Order({
         userId,
         items: orderItems,
@@ -370,12 +381,18 @@ const placeOrder = async (req, res) => {
         shippingCharge,
         totalAmountPay,
         priceAfterCoupon,
+        couponDiscount,
+        paymentStatus,
         paymentMethod:"COD"
       });
     }
       await order.save();
     await Cart.deleteOne({ userId });
-    res.render("user/orderSuccess");
+    if(paymentStatus == "Pending" || paymentStatus == "Successful") {
+    res.render("user/orderSuccess",{paid:1});
+  }else{
+    res.render("user/orderSuccess",{paid:0});
+  }
   } catch (error) {
     console.log(error.message);
     res.redirect("/error") 

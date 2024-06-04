@@ -12,16 +12,13 @@ const path = require("path");
 const middleware = require("../middlewares/middlewares");
 
 router.get("/", middleware.checkSession3, adminController.loginLoad);
-router.get("/dashboard", async (req, res) => {
-  res.render("admin/admindashboard");
-});
+
 router.get("/adminLogin", adminController.loginLoad);
 router.post("/adminLogin", adminController.verifyLogin);
 
 router.get("/orders", adminOrderPanel.adminOrder);
 router.get("/block-user", adminUserPanel.blockUser);
 router.get("/unblock-user", adminUserPanel.unBlockUser);
-router.get("/admindashboard", adminController.loadDashboard);
 
 router.get("/product", adminProductPanel.adminProduct);
 router.get("/addProduct", adminProductPanel.addProduct);
@@ -100,7 +97,7 @@ router.get("/addCoupon",adminCouponPanel.addCoupon);
 router.post("/addCoupons",adminCouponPanel.addingCoupon);
 router.get("/orderDetails",adminOrderPanel.orderDetails);
 router.get("/salesReport",adminsalesReportPanel.salesReport)
-
+router.get("/dashboard",adminsalesReportPanel.dashboard);
 
 router.get("/error",adminOrderPanel.error)
 

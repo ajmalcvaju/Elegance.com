@@ -238,8 +238,8 @@
             </select>
         </div>
    
-   <h1>{{order}}</h1>
    
+   <h1 id="order" style="display: none;">{{{orders}}}</h1>
         <table>
             <thead>
                 <tr>
@@ -249,6 +249,7 @@
                     <th>Order Amount</th>
                     <th>Discount</th>
                     <th>Coupon Deduction</th>
+                    <th>GST Amount</th>
                     <th>Final Amount</th>
                 </tr>
             </thead>
@@ -259,8 +260,11 @@
 
         <div class="summary">
             <div id="overall-sales-count">Overall Sales Count: 0</div>
-            <div id="overall-order-amount">Overall Order Amount: $0.00</div>
-            <div id="overall-discount">Overall Discount: $0.00</div>
+            <div id="overall-order-amount">Overall Order Amount: 0.00 ₹</div>
+            <div id="overall-discount">Overall Discount: 0.00 ₹</div>
+            <div id="overall-coupon-discount">Overall Coupon Discount: 0.00 ₹</div>
+            <div id="overall-gst">Overall GST Amount: 0.00 ₹</div>
+            <div id="overall-revenue">Overall Revenue: 0.00 ₹</div>
         </div>
 
     <!-- JavaScript Libraries -->
@@ -277,20 +281,15 @@
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
     <script>
-        {{#each order}}
-        const un = "{{this.userId.fname}}"
-        document.getElementById("price").innerText = un;
-        {{/each}}
-    </script>
-    <script>
         // Mock sales data
-        const salesData = [
+        {{!-- const salesData = [
             {orderId: '001', date: '2024-06-01', customer: 'John Doe', orderAmount: 100, discount: 10, coupon: 5},
             {orderId: '002', date: '2024-06-02', customer: 'Jane Smith', orderAmount: 200, discount: 20, coupon: 10},
             // Add more sales data as needed
-        ];
-
-        // Function to display sales data
+        ]; --}}
+          const salesDatas = document.getElementById("order").innerHTML;
+          const cleanedSalesData = salesDatas.trim();
+          const salesData = JSON.parse(cleanedSalesData);
         function displaySales(data) {
             const salesDataContainer = document.getElementById('sales-data');
             salesDataContainer.innerHTML = '';
@@ -298,31 +297,41 @@
             let totalSalesCount = 0;
             let totalOrderAmount = 0;
             let totalDiscount = 0;
+            let totalCouponDiscount=0;
+            let totalGst=0;
+            let totalRevenue=0;
 
             data.forEach(sale => {
                 totalSalesCount++;
-                totalOrderAmount += sale.orderAmount;
+                totalOrderAmount += sale.totalPrice;
                 totalDiscount += sale.discount;
-
-                const finalAmount = sale.orderAmount - sale.discount - sale.coupon;
+                totalGst+=sale.gst;
+                totalCouponDiscount += sale.couponDiscount;
+                totalGst += sale.gst;
+                totalRevenue += sale.totalAmountPay;
 
                 const row = `
                     <tr>
                         <td>${sale.orderId}</td>
                         <td>${sale.date}</td>
-                        <td>${sale.customer}</td>
-                        <td>$${sale.orderAmount.toFixed(2)}</td>
-                        <td>$${sale.discount.toFixed(2)}</td>
-                        <td>$${sale.coupon.toFixed(2)}</td>
-                        <td>$${finalAmount.toFixed(2)}</td>
+                        <td>${sale.userId.fname} ${sale.userId.lname}</td>
+                        <td>${sale.totalPrice}</td>
+                        <td>${sale.discount}</td>
+                        <td>${sale.couponDiscount}</td>
+                        <td>${sale.gst}</td>
+                        <td>${sale.totalAmountPay}</td>
                     </tr>
                 `;
                 salesDataContainer.innerHTML += row;
             });
 
             document.getElementById('overall-sales-count').innerText = `Overall Sales Count: ${totalSalesCount}`;
-            document.getElementById('overall-order-amount').innerText = `Overall Order Amount: $${totalOrderAmount.toFixed(2)}`;
-            document.getElementById('overall-discount').innerText = `Overall Discount: $${totalDiscount.toFixed(2)}`;
+            document.getElementById('overall-order-amount').innerText = `Overall Order Amount: ${totalOrderAmount} ₹`;
+            document.getElementById('overall-discount').innerText = `Overall Discount: ${totalDiscount} ₹`;
+            document.getElementById('overall-coupon-discount').innerText = `Overall Coupon Discount: ${totalCouponDiscount} ₹`;
+             document.getElementById('overall-gst').innerText = `Overall GST Amount: ${totalGst} ₹`
+             document.getElementById('overall-revenue').innerText = `Overall Revenue: ${totalRevenue} ₹`
+            
         }
 
         // Function to filter sales data by custom date range

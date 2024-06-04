@@ -5,51 +5,85 @@
     <title>Sales Report</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f4f4f4;
+            background-color: #e9ecef;
         }
         .container {
             max-width: 1000px;
             margin: auto;
-            background: #fff;
+            background: #ffffff;
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         h1 {
             text-align: center;
+            color: #343a40;
             margin-bottom: 20px;
         }
         .filter {
             margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
         }
         .filter label {
             margin-right: 10px;
         }
-        .filter input, .filter select {
+        .filter input, .filter select, .filter button {
+            padding: 8px 12px;
             margin-right: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+        .filter button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .filter button:hover {
+            background-color: #0056b3;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
         }
         table, th, td {
-            border: 1px solid #ddd;
+            border: 1px solid #dee2e6;
         }
         th, td {
             padding: 10px;
             text-align: left;
         }
         th {
+            background-color: #f8f9fa;
+            color: #495057;
+        }
+        tr:nth-child(even) {
             background-color: #f2f2f2;
         }
         .summary {
             margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
         }
         .summary div {
             margin-bottom: 10px;
+            flex: 1;
+            text-align: center;
+            font-weight: bold;
+            color: #495057;
         }
     </style>
 </head>
@@ -58,19 +92,21 @@
         <h1>Sales Report</h1>
 
         <div class="filter">
-            <label for="date-range">Custom Date Range:</label>
-            <input type="date" id="start-date"> to 
-            <input type="date" id="end-date">
-            <button onclick="filterReport()">Filter</button>
-        </div>
-
-        <div class="filter">
-            <label for="preset-range">Preset Date Range:</label>
-            <select id="preset-range" onchange="presetFilter()">
-                <option value="1-day">1 Day</option>
-                <option value="1-week">1 Week</option>
-                <option value="1-month">1 Month</option>
-            </select>
+            <div>
+                <label for="start-date">Start Date:</label>
+                <input type="date" id="start-date">
+                <label for="end-date">End Date:</label>
+                <input type="date" id="end-date">
+                <button onclick="filterReport()">Filter</button>
+            </div>
+            <div>
+                <label for="preset-range">Preset Date Range:</label>
+                <select id="preset-range" onchange="presetFilter()">
+                    <option value="1-day">1 Day</option>
+                    <option value="1-week">1 Week</option>
+                    <option value="1-month">1 Month</option>
+                </select>
+            </div>
         </div>
 
         <table>

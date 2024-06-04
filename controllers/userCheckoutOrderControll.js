@@ -68,7 +68,7 @@ const orderCancell = async (req, res) => {
 const orderDetails=async(req,res)=>{
   try {
     const orderId=req.query.orderId
-    const order=await Order.findOne({orderId}).populate("items.productId");
+    const order=await Order.findOne({orderId}).populate("items.productId").populate("userId").populate("addressId");
     
     res.render("user/orderDetails",{order})
   } catch (error) {

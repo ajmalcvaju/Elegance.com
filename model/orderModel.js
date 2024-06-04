@@ -15,6 +15,9 @@ const orderItemSchema = new mongoose.Schema({
   price: {
     type: Number,
   },
+  priceBeforeOffer: {
+    type: Number,
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -26,7 +29,7 @@ function formatDate(date) {
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
+  return `${year}-${month}-${day}`;
 }
 function expectedDate(date) {
   const day = String(date.getDate() + 3).padStart(2, "0");
@@ -78,7 +81,10 @@ const orderSchema = new mongoose.Schema({
     default: "Pending",
   },paymentMethod: {
     type: String
-  },productQuantity:{
+  },paymentStatus:{
+    type: String
+  },
+  productQuantity:{
     type: Number
   },totalPrice:{
     type: Number

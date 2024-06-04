@@ -169,11 +169,12 @@
           </div>
         </div>
         <div style="overflow: hidden;margin-top: 10%;">
-        {{#if cart.priceAfterCoupon}}
-        <h1 style="float: left;">You Already Have Applied A Coupon</h1><a style="float: right;align-self: center;" class="btn btn-success" href="/removeCoupon">Delete Coupon</a>
-        {{else}}
-        <h1>Apply Coupon For Discount</h1>
-        {{/if}}
+          {{#if cart.priceAfterCoupon}}
+          <h1 style="float: left;">You Already Have Applied A Coupon</h1><a style="float: right;align-self: center;"
+            class="btn btn-success" href="/removeCoupon">Delete Coupon</a>
+          {{else}}
+          <h1>Apply Coupon For Discount</h1>
+          {{/if}}
         </div>
         <div class="input-group w-75 couponcode-wrap" id="applyCoupon">
           <input type="text" class="form-control me-2" id="couponCode" placeholder="Coupon Code"
@@ -197,9 +198,9 @@
             {{!-- <form class="form" method="post"> --}}
               {{#if cart.priceAfterCoupon}}
               <input type="hidden" name="totalAmountPay" value="{{cart.totalAmountPay}}">
-              <input type="hidden" name="priceAfterCoupon" value="{{cart.priceAfterCoupon}}">
+              <input type="hidden" id="totalAmountPay" name="priceAfterCoupon" value="{{cart.priceAfterCoupon}}">
               {{else}}
-               <input type="hidden" name="totalAmountPay" value="{{cart.totalAmountPay}}">
+              <input type="hidden" id="totalAmountPay" name="totalAmountPay" value="{{cart.totalAmountPay}}">
               {{/if}}
               <input type="hidden" name="totalPrice" value="{{cart.totalPriceBeforeOffer}}">
               <input type="hidden" name="discount" value="{{cart.discount}}">
@@ -259,6 +260,7 @@
         var formData = $(this).serialize();
         var paymentMethod = $("#select").val();
         var address = $("#address").val();
+        var totalAmountPay = document.getElementById("totalAmountPay").value
 
         $.ajax({
           url: "/createOrder",
@@ -281,7 +283,7 @@
                       confirmButtonText: 'OK'
                     }).then((result) => {
                       if (result.isConfirmed) {
-                        window.location.href = `/placeOrder?paid=1&add=${address}`
+                        window.location.href = `/placeOrder?paid=1&paymentStatus=1&add=${address}`
                       }
                     });
                     console.log("Payment response:", response);
@@ -289,17 +291,21 @@
                 };
                 var razorpayObject = new Razorpay(options);
                 razorpayObject.on('payment.failed', function (response) {
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Payment Failed',
-                    text: 'Your payment has failed. Please try again.',
-                    confirmButtonText: 'OK'
-                  });
+                  window.location.href = `/placeOrder?paid=1&paymentStatus=0&add=${address}`
                   console.log("Payment failed response:", response);
                 });
                 razorpayObject.open();
               } else if (paymentMethod === "cod") {
-                window.location.href = `/placeOrder?paid=0&add=${address}`
+                if (totalAmountPay > 1000) {
+                  Swal.fire({
+                    title: "Error!",
+                    text: "The maximum order amount avaialable for Cash On Delivery is ₹1000.",
+                    icon: 'error',
+                    confirmButtonText: 'Continue Shopping'
+                  })
+                }else{
+                   window.location.href = `/placeOrder?paid=0&add=${address}`
+                }
               }
             } else {
               alert(res.msg);
