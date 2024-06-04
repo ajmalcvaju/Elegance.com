@@ -112,7 +112,7 @@
                                 <th scope="col">Product Quantity</th>
                                 <th scope="col">Total Price</th>
                                 <th scope="col">Status</th>
-                                <th scope="col">Expected Arrival</th>
+                                <th scope="col">Payment Status</th>
                                 <th scope="col">Payment Method</th>
                                 <th scope="col">Product Detail</th>
                                 <th scope="col">Cancell/Return</th>
@@ -127,7 +127,7 @@
                     <td>{{this.productQuantity}}</td>
                     <td>{{#if this.priceAfterCoupon}}{{this.priceAfterCoupon}}{{else}}{{this.totalAmountPay}}{{/if}}</td>
                     <td>{{this.status}}</td>
-                    <td>{{this.expectedArrival}}</td>
+                    <td>{{this.paymentStatus}}</td>
                     <td>{{this.paymentMethod}}</td>
                     <td><a href="/orderDetails?orderId={{this.orderId}}"
                             class="btn btn-info">Order Details</a></td>

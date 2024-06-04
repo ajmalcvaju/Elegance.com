@@ -129,34 +129,6 @@ const decCart = async (req, res) => {
     const carts = await Cart.findOne({ userId });
     const item = carts.items.find((item) => item._id.toString() === proId);
     let quantity = item.quantity;
-    let lessCount = false;
-    if (quantity == 1) {
-      let lessCount = true;
-      res.send(`
-      <html>
-          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-      <body>
-          <script>
-             
-              function failMessage() {
-                  Swal.fire({
-                      title: 'Product Quantity',
-                      text: 'Product quantity will be atleast one,Otherwise,Delete Product From Cart',
-                      icon: 'error',
-                      confirmButtonText: 'OK'
-                  }).then((result) => {
-                    if (result.isConfirmed) {
-                      window.location.href = '/cart';
-                    }
-                });
-              }
-              failMessage();
-          </script>
-      </body>
-      </html>
-  `);
-    
-    } else {
       await Cart.updateOne(
         { userId, "items._id": proId },
         { $inc: { "items.$.quantity": -1 } }
@@ -165,7 +137,6 @@ const decCart = async (req, res) => {
       console.log(cart);
       const cartData = await cart.save();
       res.redirect("/cart");
-    }
   } catch (error) {
     console.log(error.message);
     res.redirect("/error") 
@@ -174,56 +145,21 @@ const decCart = async (req, res) => {
 const incCart = async (req, res) => {
   try {
     const proId = req.query.id;
-    console.log(proId);
     const email = req.session.email;
     const user = await User.findOne({ email });
     const userId = user._id;
     const carts = await Cart.findOne({ userId });
     const item = carts.items.find((item) => item._id.toString() === proId);
     let quantity = item.quantity;
-    let productId = item.productId;
-    console.log(quantity);
-    console.log(productId);
-    const product = await Product.findOne({ _id: productId });
-    const stock = product.purchase;
-    let outOfStock = false;
-    if (stock == quantity) {
-      res.send(`
-      <html>
-          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-      <body>
-          <script>
-             
-              function failMessage() {
-                  Swal.fire({
-                      title: 'Product Quantity',
-                      text: 'Product Become Out of Stock.',
-                      icon: 'error',
-                      confirmButtonText: 'OK'
-                  }).then((result) => {
-                    if (result.isConfirmed) {
-                      window.location.href = '/cart';
-                    }
-                });
-              }
-              failMessage();
-          </script>
-      </body>
-      </html>
-  `);
-    } else {
       await Cart.updateOne(
         { userId, "items._id": proId },
         { $inc: { "items.$.quantity": 1 } }
       );
       let cart = await Cart.findOne({ userId });
+      console.log(cart);
+      await Product.updateOne({ _id: productId }, { $inc: { purchase: -1 } });
       const cartData = await cart.save();
       res.redirect("/cart");
-    }
-    res.json({
-      success: true,
-      outOfStock,
-    });
   } catch (error) {
     console.log(error.message);
     res.redirect("/error") 
@@ -349,7 +285,7 @@ const placeOrder = async (req, res) => {
       if(payment==1){
         paymentStatus="Successfull"
       }else{
-        paymentStatus="Faied"
+        paymentStatus="Failed"
       }
       order = new Order({
         userId,

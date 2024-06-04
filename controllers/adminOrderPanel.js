@@ -48,7 +48,7 @@ const updateOrder = async (req, res) => {
 const orderDetails=async(req,res)=>{
   try {
     const orderId=req.query.orderId
-    const order=await Order.findOne({orderId}).populate("items.productId").populate("addressId");
+    const order=await Order.findOne({orderId}).populate("items.productId").populate("userId").populate("addressId");
     res.render("admin/orderDetails",{order})
   } catch (error) {
     console.log(error.message);

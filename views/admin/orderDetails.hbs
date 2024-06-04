@@ -3,185 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Details Page</title>
-    <style>
-        body {
-    background: rgb(213, 217, 233);
-    min-height: 100vh;
-    vertical-align: middle;
-    display: flex;
-    font-family: Muli;
-    font-size: 14px
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<style>
+    .invoice-title h2, .invoice-title h3 {
+    display: inline-block;
 }
 
-.card {
-    margin: auto;
-    width: 320px;
-    max-width: 600px;
-    border-radius: 20px
+.table > tbody > tr > .no-line {
+    border-top: none;
 }
 
-.mt-50{
-    margin-top:50px;
+.table > thead > tr > .no-line {
+    border-bottom: none;
 }
 
-.mb-50{
-    margin-bottom:50px;
+.table > tbody > tr > .thick-line {
+    border-top: 2px solid;
 }
-
-@media(max-width:767px) {
-    .card {
-        width: 80%
-    }
-}
-
-@media(height:1366px) {
-    .card {
-        width: 75%
-    }
-}
-
-#orderno {
-    padding: 1vh 2vh 0;
-    font-size: smaller
-}
-
-.gap .col-2 {
-    background-color: rgb(213, 217, 233);
-    width: 1.2rem;
-    padding: 1.2rem;
-    margin-top: -2.5rem;
-    border-radius: 1.2rem
-}
-
-.title {
-    display: flex;
-    text-align: center;
-    font-size: 2rem;
-    font-weight: bold;
-    padding: 12%
-}
-
-.main {
-    padding: 0 2rem
-}
-
-.main img {
-    border-radius: 7px
-}
-
-.main p {
-    margin-bottom: 0;
-    font-size: 0.75rem
-}
-
-#sub-title p {
-    margin: 1vh 0 2vh 0;
-    font-size: 1rem
-}
-
-.row-main {
-    padding: 1.5vh 0;
-    align-items: center
-}
-
-hr {
-    margin: 1rem -1vh;
-    border-top: 1px solid rgb(214, 214, 214)
-}
-
-.total {
-    font-size: 1rem
-}
-
-@media(height: 1366px) {
-    .main p {
-        margin-bottom: 0;
-        font-size: 1.2rem
-    }
-
-    .total {
-        font-size: 1.5rem
-    }
-}
-
-.btn {
-    background-color: rgb(3, 122, 219);
-    border-color: rgb(3, 122, 219);
-    color: white;
-    margin: 7vh 0;
-    border-radius: 7px;
-    width: 60%;
-    font-size: 0.8rem;
-    padding: 0.8rem;
-    justify-content: center
-}
-
-.btn:focus {
-    box-shadow: none;
-    outline: none;
-    box-shadow: none;
-    color: white;
-    -webkit-box-shadow: none;
-    -webkit-user-select: none;
-    transition: none
-}
-
-.btn:hover {
-    color: white
-}
-    </style>
+</style>
+    <title>Order Details</title>
 </head>
 <body>
-    <div class="card mt-50 mb-50">
-    <div class="gap">
-        <div class="col-2 d-flex mx-auto"> </div>
+   <div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+    		<div class="invoice-title">
+    			<h2>Invoice</h2><h3 class="pull-right">Order {{order.orderId}}</h3>
+    		</div>
+    		<hr>
+    		<div class="row">
+    			<div class="col-xs-6">
+    				<address>
+    				<strong>Billed To:</strong><br>
+    					{{order.userId.fname}} {{order.userId.lname}}<br>
+    					{{order.addressId.houseName}},{{order.addressId.street}}<br>
+    					{{order.addressId.district}},{{order.addressId.state}}<br>
+    					Pincode:{{order.addressId.pincode}}
+    				</address>
+    			</div>
+    			<div class="col-xs-6 text-right">
+    				<address>
+    				<strong>Billed To:</strong><br>
+    					{{order.userId.fname}} {{order.userId.lname}}<br>
+    					{{order.addressId.houseName}},{{order.addressId.street}}<br>
+    					{{order.addressId.district}},{{order.addressId.state}}<br>
+    					Pincode:{{order.addressId.pincode}}
+    				</address>
+    			</div>
+    		</div>
+    		<div class="row">
+    			<div class="col-xs-6">
+    				<address>
+    					<strong>Payment Method:</strong><br>
+    					{{order.paymentMethod}}<br>
+    					<strong>Payment Status:</strong><br>
+    					{{order.paymentStatus}}
+    				</address>
+    			</div>
+    			<div class="col-xs-6 text-right">
+    				<address>
+    					<strong>Order Date:</strong><br>
+    					{{order.date}}<br>
+    				</address>
+    			</div>
+    		</div>
+    	</div>
     </div>
-    <div class="title mx-auto"> Order Details of {{order.orderId}} </div>
-    <div class="main"> <span id="sub-title">
-        </span>
-        
-        {{#each order.items}}
-        <div class="row row-main">
-            <div class="col-3 "> <img class="img-fluid" > </div>
-            <div class="col-6">
-                <div class="row d-flex">
-                    <h3><b>Product Name:{{this.productId.pname}}</b></h3>
-                </div>
-                <div class="row d-flex">
-                    <h3 class="text-muted">Category Name:{{this.productId.category}}</h3>
-                </div>
-                <div class="row d-flex">
-                    <h3 class="text-muted">Product Quantity:{{this.quantity}}</h3>
-                </div>
-                <div class="row d-flex">
-                    <h3 class="text-muted">Product Price:{{this.price}}</h3>
-                </div>
-            </div>
-        </div>
-        {{/each}}
-        <hr>
-        <div class="Price">
-            <h3>Total Price: {{order.totalPrice}}</h3>
-            <h3 style="color: green;">Discount: {{order.discount}}</h3>
-            <h3 style="color: red;">GST: {{order.gst}}</h3>
-            <h3 style="color: red;">Shipping Charge: {{order.shippingCharge}}</h3>
-            {{#if order.priceAfterCoupon}}
-            <h2 >Amount has to pay: {{order.priceAfterCoupon}}</h2>
-            {{else}}
-            <h2 >Amount has to pay: {{order.totalAmountPay}}</h2>
-            {{/if}}
-            <h2>Deliver Address:{{order.address}}</h2>
-        </div>
-        <div>
-            <h2>Address:</h2>
-            <h3>{{order.addressId.houseName}}, {{order.addressId.street}},<br>{{order.addressId.district}}, {{order.addressId.state}}<br> Pincode:{{order.addressId.pincode}} </h3>
-        </div>
-        <div class="total">
-            <div class="row">
-            </div><a href="/admin/orders" class="btn btn-info">Order Status</a>
-        </div>
+    
+    <div class="row">
+    	<div class="col-md-12">
+    		<div class="panel panel-default">
+    			<div class="panel-heading">
+    				<h3 class="panel-title"><strong>Order summary</strong></h3>
+    			</div>
+    			<div class="panel-body">
+    				<div class="table-responsive">
+    					<table class="table table-condensed">
+    						<thead>
+                                <tr>
+        							<td><strong>Item</strong></td>
+                                    <td><strong>Category</strong></td>
+        							<td class="text-center"><strong>Price</strong></td>
+        							<td class="text-center"><strong>Quantity</strong></td>
+        							<td class="text-right"><strong>Total Price</strong></td>
+                                </tr>
+    						</thead>
+    						<tbody>
+    							<!-- foreach ($order->lineItems as $line) or some such thing here -->
+                                {{#each order.items}}
+    							<tr>
+    								<td>{{this.productId.pname}}</td>
+                                    <td>{{this.productId.category}}</td>
+    								<td class="text-center">₹{{this.productId.price}}</td>
+    								<td class="text-center">{{this.quantity}}</td>
+    								<td class="text-right">₹{{this.priceBeforeOffer}}</td>
+    							</tr>
+                                {{/each}}
+                                <tr>
+    								<td class="thick-line"></td>
+    								<td class="thick-line"></td>
+                                    <td class="thick-line"></td>
+    								<td class="thick-line text-center"><strong>Subtotal</strong></td>
+    								<td class="thick-line text-right">₹{{order.totalPrice}}</td>
+    							</tr>
+                                 <tr>
+    								<td></td>
+    								<td></td>
+                                    <td></td>
+    								<td class="thick-line text-center"><strong>Offer Discount</strong></td>
+    								<td class="thick-line text-right">₹{{order.discount}}</td>
+    							</tr>
+                                <tr>
+    								<td></td>
+    								<td></td>
+                                    <td></td>
+    								<td class="thick-line text-center"><strong>Coupon Discount</strong></td>
+    								<td class="thick-line text-right">₹{{order.couponDiscount}}</td>
+    							</tr>
+                                 <tr>
+    								<td ></td>
+    								<td ></td>
+                                    <td ></td>
+    								<td class="thick-line text-center"><strong>Total Gst Amount</strong></td>
+    								<td class="thick-line text-right">₹{{order.gst}}</td>
+    							</tr>
+                                <tr>
+    								<td ></td>
+    								<td ></td>
+                                    <td ></td>
+    								<td class="thick-line text-center"><strong>Shipping Charge</strong></td>
+    								<td class="thick-line text-right">₹{{order.shippingCharge}}</td>
+    							</tr>
+                                 <tr>
+    								<td ></td>
+    								<td ></td>
+                                    <td ></td>
+    								<td class="thick-line text-center"><strong>Total Amount has to Pay</strong></td>
+                                    {{#if order.priceAfterCoupon}}
+                                    <td class="thick-line text-right">₹{{order.priceAfterCoupon}}</td>
+                                    {{else}}
+                                    <td class="thick-line text-right">₹{{order.totalAmountPay}}</td>
+                                    {{/if}}
+    							</tr>
+                                <tr>
+    								<td ></td>
+    								<td ></td>
+                                    <td ></td>
+                                    <td></td>
+                                    <td class="thick-line text-center"></td>
+                                    </tr>
+    						</tbody>
+    					</table>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
     </div>
-</div>
+</div> 
 </body>
 </html>
+
+
