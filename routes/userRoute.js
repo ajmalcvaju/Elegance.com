@@ -150,6 +150,12 @@ router.get("/removeCoupon", async(req, res) => {
   req.session.discount = null;
   res.redirect("/checkout");
 });
+router.post("/repayOrder",userCheckoutOrderControll.repayOrder)
+router.get("/repay",userCheckoutOrderControll.repay)
+
+
+
+
 router.get("/error", userauth.error);
 
 module.exports = router;

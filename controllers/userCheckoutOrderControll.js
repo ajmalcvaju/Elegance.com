@@ -3,6 +3,12 @@ const Address = require("../model/addressModel");
 const Order = require("../model/orderModel");
 const Coupon= require("../model/couponModel");
 const Cart=require("../model/cartModel");
+const Razorpay=require('razorpay')
+
+const razorpayInstance=new Razorpay({
+  key_id:process.env.key_id,
+  key_secret:process.env.key_secret
+})
 
 const checkoutAddAddress = async (req, res) => {
   try {
@@ -109,5 +115,58 @@ const checkout=async(req,res)=>{
     res.redirect("/error") 
   }
 }
+const repayOrder=async(req,res)=>{
+  try {
+    let amount=req.body.totalAmountPay
+    amount=amount*100
+    const options={
+      amount:amount,
+      currency:'INR',
+      receipt:'razorUser@gmail.com'
+    }
+    razorpayInstance.orders.create(options,async(err,order)=>{
+      if(!err){
+        const email=req.session.email
+        const user = await User.findOne({ email });
+        const username=user.username
+        const mobileNumber=user.mobileNumber
+        res.status(200).send({
+          success:true,
+          msg:"Order Created",
+          order_id:1234,
+          amount:amount,
+          key_id:process.env.key_id,
+          contact:mobileNumber,
+          name:username,
+          email:email
+        })
+      }else{
+        res.status(400).send({success:false,msg:"something went wrong!!"})
+      }
+    })
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error") 
+  }
+}
 
-module.exports = { checkoutAddAddress, checkoutEditAddress, orderCancell,orderDetails,applyCoupon,checkout };
+const repay=async(req,res)=>{
+  try {
+    let paid=req.query.paid
+    let orderId=req.query.orderId
+    if(paid==1){
+      const order = await Order.updateOne({orderId},{paymentStatus:"Successfull"})
+      res.redirect("/orderStatus")
+    }else{
+     res.redirect("/orderStatus")
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error") 
+  }
+}
+
+
+
+
+module.exports = { checkoutAddAddress, checkoutEditAddress, orderCancell,orderDetails,applyCoupon,checkout,repayOrder,repay };

@@ -37,8 +37,8 @@
                             <div class="row">{{this.productId.category}} </a></div>
                         </div>
                         <div class="col">
-                            <a href="/decrementItem?id={{this._id}}">-</a></a>{{this.quantity}}</a><a
-                                href="/incrementItem?id={{this._id}}">+</a>
+                            <a href="/decrementItem?id={{this._id}}&proId={{this.productId._id}}">-</a></a>{{this.quantity}}</a><a
+                                href="/incrementItem?id={{this._id}}&proId={{this.productId._id}}">+</a>
 
                             {{#if lessProduct}} <p>Product quantity must be Atleast One</p>
                             {{/if}}

@@ -44,9 +44,6 @@ const addToCart = async (req, res) => {
         cart = new Cart({ userId, items: [{ productId, quantity: 1 }] });
         const cartData = await cart.save();
         console.log(cartData);
-        await Product.updateOne({ _id: productId }, { $inc: { purchase: -1 } });
-        let product = await Product.findOne({ _id: productId });
-        const productData = await product.save();
       } else {
         const index = cart.items.findIndex(
           (item) => item.productId.toString() === productId
@@ -122,21 +119,48 @@ const cart = async (req, res) => {
 };
 const decCart = async (req, res) => {
   try {
-    const proId = req.query.id;
+    const productId = req.query.id;
     const email = req.session.email;
     const user = await User.findOne({ email });
     const userId = user._id;
     const carts = await Cart.findOne({ userId });
-    const item = carts.items.find((item) => item._id.toString() === proId);
+    const item = carts.items.find((item) => item._id.toString() === productId);
     let quantity = item.quantity;
+    if (quantity == 1) {
+      res.send(`
+      <html>
+          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <body>
+          <script>
+             
+              function failMessage() {
+                  Swal.fire({
+                      title: 'Product Quantity',
+                      text: 'Product quantity will be atleast one,Otherwise,Delete Product From Cart',
+                      icon: 'error',
+                      confirmButtonText: 'OK'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      window.location.href = '/cart';
+                    }
+                });
+              }
+              failMessage();
+          </script>
+      </body>
+      </html>
+  `);
+    
+    }else{
       await Cart.updateOne(
-        { userId, "items._id": proId },
+        { userId, "items._id":productId },
         { $inc: { "items.$.quantity": -1 } }
       );
       let cart = await Cart.findOne({ userId });
       console.log(cart);
       const cartData = await cart.save();
       res.redirect("/cart");
+    }
   } catch (error) {
     console.log(error.message);
     res.redirect("/error") 
@@ -144,22 +168,53 @@ const decCart = async (req, res) => {
 };
 const incCart = async (req, res) => {
   try {
-    const proId = req.query.id;
+    const productId = req.query.id;
+    const proId= req.query.proId
     const email = req.session.email;
     const user = await User.findOne({ email });
     const userId = user._id;
     const carts = await Cart.findOne({ userId });
-    const item = carts.items.find((item) => item._id.toString() === proId);
+    const item = carts.items.find((item) => item._id.toString() === productId);
+    const product = await Product.findOne({ _id: proId });
     let quantity = item.quantity;
+    let stock=product.purchase
+    console.log(quantity)
+    console.log(req.query.id)
+    if (stock == quantity) {
+      res.send(`
+      <html>
+          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <body>
+          <script>
+             
+              function failMessage() {
+                  Swal.fire({
+                      title: 'Product Quantity',
+                      text: 'Product Become Out of Stock.',
+                      icon: 'error',
+                      confirmButtonText: 'OK'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      window.location.href = '/cart';
+                    }
+                });
+              }
+              failMessage();
+          </script>
+      </body>
+      </html>
+  `);
+    } 
+    else {
       await Cart.updateOne(
-        { userId, "items._id": proId },
+        { userId, "items._id": productId },
         { $inc: { "items.$.quantity": 1 } }
       );
       let cart = await Cart.findOne({ userId });
-      console.log(cart);
-      await Product.updateOne({ _id: productId }, { $inc: { purchase: -1 } });
+     
       const cartData = await cart.save();
-      res.redirect("/cart");
+     
+      res.redirect("/cart");}
   } catch (error) {
     console.log(error.message);
     res.redirect("/error") 
@@ -239,7 +294,7 @@ const createOrder=async(req,res)=>{
           msg:"Order Created",
           order_id:1234,
           amount:amount,
-          key_id:"rzp_test_8qF3L1nSyCD4kf",
+          key_id:process.env.key_id,
           contact:mobileNumber,
           name:username,
           email:email

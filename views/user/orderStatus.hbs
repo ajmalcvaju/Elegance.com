@@ -5,7 +5,8 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -84,11 +85,11 @@
             height: 100px;
         }
 
-        .btn .btn-danger {
+        .btn-danger {
             width: 100%;
         }
 
-        .btn .btn-danger {
+        .btn-success {
             width: 100%;
         }
     </style>
@@ -100,11 +101,10 @@
             <div id="aPanel">
                 <h3>Order Status</h3>
             </div>
-           
 
             <div id="aPanel2">
                 <div class="aPanel2-r">
-                    <table class="table mt-5" style="">
+                    <table class="table mt-5">
                         <thead>
                             <tr>
                                 <th scope="col">Order Id</th>
@@ -115,44 +115,57 @@
                                 <th scope="col">Payment Status</th>
                                 <th scope="col">Payment Method</th>
                                 <th scope="col">Product Detail</th>
-                                <th scope="col">Cancell/Return</th>
+                                <th scope="col">Cancel/Return</th>
+                                {{#if (eq this.paymentStatus "Failed")}}
+                                <th scope="col">Repay</th>
+                                {{/if}}
                             </tr>
                         </thead>
-                       <tbody>
-                {{#each order}}
-                
-                <tr>
-                    <td>{{this.orderId}}</td>
-                    <td>{{this.date}}</td>
-                    <td>{{this.productQuantity}}</td>
-                    <td>{{#if this.priceAfterCoupon}}{{this.priceAfterCoupon}}{{else}}{{this.totalAmountPay}}{{/if}}</td>
-                    <td>{{this.status}}</td>
-                    <td>{{this.paymentStatus}}</td>
-                    <td>{{this.paymentMethod}}</td>
-                    <td><a href="/orderDetails?orderId={{this.orderId}}"
-                            class="btn btn-info">Order Details</a></td>
-                    <td><a href="/cancelOrder?orderId={{this._id}}"
-                            class="btn btn-danger"
-                            onclick="return confirm('Do You want to Cancel {{this.orderId}}?')">Cancel</a>
-                    </td>
+                        <tbody>
+                            {{#each order}}
+                            <tr>
+                                <td>{{this.orderId}}</td>
+                                <td>{{this.date}}</td>
+                                <td>{{this.productQuantity}}</td>
+                                <td>
+                                    {{this.totalAmountPay}}
+                                </td>
+                                <td>{{this.status}}</td>
+                                <td>{{this.paymentStatus}}</td>
+                                <td>{{this.paymentMethod}}</td>
+                                <td>
+                                    <a href="/orderDetails?orderId={{this.orderId}}" class="btn btn-info">Order
+                                        Details</a>
+                                </td>
+                                <td>
+                                    <a href="/cancelOrder?orderId={{this._id}}" class="btn btn-danger"
+                                        onclick="return confirm('Do you want to cancel {{this.orderId}}?')">Cancel</a>
+                                </td>
+                                {{#if (eq this.paymentStatus "Failed")}}
+                                <td>
+                                    {{!-- <a href="/repayOrder?orderId={{this.orderId}}"
+                                        class="btn btn-success">Repay</a> --}}
+                                    <form action="/repay" method="post" class="form">
 
-                </tr>
-                <tr>
-                    
-                    {{/each}}
+                                        <input type="hidden" id="totalAmountPay" name="totalAmountPay"
+                                            value="{{this.totalAmountPay}}">
+                                        <input type="hidden" id="orderId" name="orderId" value="{{this.orderId}}">
+                                        <button type="submit" class="btn btn-success">Repay</button>
 
-            </tbody>
+                                    </form>
+                                </td>
+                                {{/if}}
+                            </tr>
+
+                            {{/each}}
+                        </tbody>
                     </table>
-
                 </div>
             </div>
         </div>
-        </div>
-
-
-
-
-
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -165,9 +178,63 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    $(document).ready(function () {
+      $(".form").submit(function (e) {
+        e.preventDefault();
+        console.log("Form submitted");
+        var formData = $(this).serialize();
+        var totalAmountPay = document.getElementById("totalAmountPay").value
+        var orderId = document.getElementById("orderId").value
 
-        
-
+        $.ajax({
+          url: "/repayOrder",
+          type: "POST",
+          data: formData,
+          success: function (res) {
+            console.log("Server response:", res);
+            if (res.success) {
+                var options = {
+                  "key": res.key_id,
+                  "amount": res.amount,
+                  "currency": "INR",
+                  "order_id": res.orderId,
+                  "handler": function (response) {
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Payment Successful',
+                      text: 'Your payment has been processed successfully.',
+                      confirmButtonText: 'OK'
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        window.location.href = `/repay?paid=1&orderId=${orderId}`
+                      }
+                    });
+                    console.log("Payment response:", response);
+                  }
+                };
+                var razorpayObject = new Razorpay(options);
+                razorpayObject.on('payment.failed', function (response) {
+                  window.location.href = `/repay?paid=0&orderId=${orderId}`
+                  console.log("Payment failed response:", response);
+                });
+                razorpayObject.open();
+              
+            } else {
+              alert(res.msg);
+            }
+          },
+          error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
+            console.error("AJAX error:", error);
+          }
+        });
+      });
+    });
+  </script>
 </body>
 
 </html>
