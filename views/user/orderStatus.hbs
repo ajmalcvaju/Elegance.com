@@ -143,8 +143,6 @@
                                 </td>
                                 {{#if (eq this.paymentStatus "Failed")}}
                                 <td>
-                                    {{!-- <a href="/repayOrder?orderId={{this.orderId}}"
-                                        class="btn btn-success">Repay</a> --}}
                                     <form action="/repay" method="post" class="form">
 
                                         <input type="hidden" id="totalAmountPay" name="totalAmountPay"
@@ -153,6 +151,11 @@
                                         <button type="submit" class="btn btn-success">Repay</button>
 
                                     </form>
+                                </td>
+                                {{/if}}
+                                {{#if (eq this.status "Delivered")}}
+                                <td>
+                                    <a href="/invoice?orderId={{this.orderId}}" class="btn btn-warning">Invoice</a>
                                 </td>
                                 {{/if}}
                             </tr>
@@ -179,62 +182,62 @@
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>
-    $(document).ready(function () {
-      $(".form").submit(function (e) {
-        e.preventDefault();
-        console.log("Form submitted");
-        var formData = $(this).serialize();
-        var totalAmountPay = document.getElementById("totalAmountPay").value
-        var orderId = document.getElementById("orderId").value
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            $(document).ready(function () {
+                $(".form").submit(function (e) {
+                    e.preventDefault();
+                    console.log("Form submitted");
+                    var formData = $(this).serialize();
+                    var totalAmountPay = document.getElementById("totalAmountPay").value
+                    var orderId = document.getElementById("orderId").value
 
-        $.ajax({
-          url: "/repayOrder",
-          type: "POST",
-          data: formData,
-          success: function (res) {
-            console.log("Server response:", res);
-            if (res.success) {
-                var options = {
-                  "key": res.key_id,
-                  "amount": res.amount,
-                  "currency": "INR",
-                  "order_id": res.orderId,
-                  "handler": function (response) {
-                    Swal.fire({
-                      icon: 'success',
-                      title: 'Payment Successful',
-                      text: 'Your payment has been processed successfully.',
-                      confirmButtonText: 'OK'
-                    }).then((result) => {
-                      if (result.isConfirmed) {
-                        window.location.href = `/repay?paid=1&orderId=${orderId}`
-                      }
+                    $.ajax({
+                        url: "/repayOrder",
+                        type: "POST",
+                        data: formData,
+                        success: function (res) {
+                            console.log("Server response:", res);
+                            if (res.success) {
+                                var options = {
+                                    "key": res.key_id,
+                                    "amount": res.amount,
+                                    "currency": "INR",
+                                    "order_id": res.orderId,
+                                    "handler": function (response) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Payment Successful',
+                                            text: 'Your payment has been processed successfully.',
+                                            confirmButtonText: 'OK'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                window.location.href = `/repay?paid=1&orderId=${orderId}`
+                                            }
+                                        });
+                                        console.log("Payment response:", response);
+                                    }
+                                };
+                                var razorpayObject = new Razorpay(options);
+                                razorpayObject.on('payment.failed', function (response) {
+                                    window.location.href = `/repay?paid=0&orderId=${orderId}`
+                                    console.log("Payment failed response:", response);
+                                });
+                                razorpayObject.open();
+
+                            } else {
+                                alert(res.msg);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert("An error occurred: " + error);
+                            console.error("AJAX error:", error);
+                        }
                     });
-                    console.log("Payment response:", response);
-                  }
-                };
-                var razorpayObject = new Razorpay(options);
-                razorpayObject.on('payment.failed', function (response) {
-                  window.location.href = `/repay?paid=0&orderId=${orderId}`
-                  console.log("Payment failed response:", response);
                 });
-                razorpayObject.open();
-              
-            } else {
-              alert(res.msg);
-            }
-          },
-          error: function (xhr, status, error) {
-            alert("An error occurred: " + error);
-            console.error("AJAX error:", error);
-          }
-        });
-      });
-    });
-  </script>
+            });
+        </script>
 </body>
 
 </html>

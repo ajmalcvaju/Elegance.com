@@ -135,6 +135,7 @@ router.get("/deleteAddress", async (req, res) => {
 });
 router.get("/cancelOrder", userCheckoutOrderControll.orderCancell);
 router.get("/orderDetails", userCheckoutOrderControll.orderDetails);
+router.get("/invoice", userCheckoutOrderControll.invoice);
 
 router.get("/addWishlist", cartController.addWishlist);
 
@@ -146,12 +147,9 @@ router.get("/deleteWishlist", cartController.deleteWishlist);
 
 router.get("/deleteCart", cartController.deleteCart);
 router.post("/applyCoupon",userCheckoutOrderControll.applyCoupon)
-router.get("/removeCoupon", async(req, res) => {
-  req.session.discount = null;
-  res.redirect("/checkout");
-});
+router.get("/removeCoupon",userCheckoutOrderControll.removeCoupon);
 router.post("/repayOrder",userCheckoutOrderControll.repayOrder)
-router.get("/repay",userCheckoutOrderControll.repay)
+router.get("/repay",userCheckoutOrderControll.removeCoupon)
 
 
 

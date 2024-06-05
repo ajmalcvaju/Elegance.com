@@ -84,12 +84,32 @@ const orderDetails=async(req,res)=>{
 }
 const applyCoupon=async(req,res)=>{
   try {
+   const email = req.session.email;
+   const user = await User.findOne({ email });
+   const userId = user._id;
    const couponCode=req.body.couponCode
-   const coupon=await Coupon.findOne({couponCode})
+   console.log(couponCode)
+   const coupon = await Coupon.findOne({ couponCode });
+   const couponId= coupon._id
    let discount=coupon.discount
-   if (!coupon || !coupon.isActive || new Date() > new Date(coupon.expirationDate)) {
+   let cart = await Cart.findOne({ userId });
+   cart.couponId = couponId;
+   await cart.save();
+   const coupons = await Coupon.findOne({
+    couponCode: couponCode,
+    usedUsers: { $in: [userId] }
+  });
+   if (!coupon || !coupon.isActive || new Date() > new Date(coupon.expiryDate)) {
     return res.status(404).json({ success: false, message: 'Invalid or expired coupon' });
-}else{
+}else if(coupons){
+  return res.status(404).json({ fail: true, message: 'Already Used Coupon' });
+}
+else{
+  const updatedCoupon = await Coupon.findOneAndUpdate(
+    { couponCode: couponCode },
+    { $addToSet: { usedUsers: userId } },
+    { new: true } 
+  );
   req.session.discount=discount
   res.json({ success: true})
 }
@@ -166,7 +186,34 @@ const repay=async(req,res)=>{
   }
 }
 
+const invoice=async(req,res)=>{
+  try {
+    const orderId=req.query.orderId
+    const order=await Order.findOne({orderId}).populate("items.productId").populate("userId").populate("addressId");
+    res.render("user/invoice",{order})
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error") 
+  }
+}
+
+const removeCoupon= async(req, res) => {
+  try {
+    req.session.discount = null;
+    const email = req.session.email;
+   const user = await User.findOne({ email });
+   const userId = user._id;
+   const couponId=req.query.couponId
+   await Coupon.findOneAndUpdate(
+    { _id: couponId },
+    { $pull: { usedUsers: userId} },
+    { new: true })
+    res.redirect("/checkout");
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error") 
+  }
+}
 
 
-
-module.exports = { checkoutAddAddress, checkoutEditAddress, orderCancell,orderDetails,applyCoupon,checkout,repayOrder,repay };
+module.exports = { checkoutAddAddress, checkoutEditAddress, orderCancell,orderDetails,applyCoupon,checkout,repayOrder,repay,invoice,removeCoupon };
