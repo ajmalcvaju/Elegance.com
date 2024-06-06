@@ -7,9 +7,9 @@ const login = async (req, res) => {
       res.render("user/login", { blocked: true });
     } else if (user && password === user.password) {
       req.session.email = email;
-      res.render("user/home", { login: true });
+      res.redirect("/")
     } else {
-      res.render("user/login", { invalid: true });
+      res.redirect("/")
     }
   } catch (error) {
     console.error("Error:", error);

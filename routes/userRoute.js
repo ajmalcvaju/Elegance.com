@@ -20,9 +20,7 @@ const userCheckoutOrderControll = require("../controllers/userCheckoutOrderContr
 const Cart = require("../model/cartModel");
 
 router.get("/", userController.home);
-router.get("/login", middleware.checkSession, async (req, res) => {
-  res.render("user/login");
-});
+router.get("/login", middleware.checkSession,userController.login);
 router.post("/login", userauth.login);
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -48,17 +46,7 @@ router.get("/shop", userController.shop);
 router.get("/home", async (req, res) => {
   res.render("user/home");
 });
-router.get("/product-details", async (req, res) => {
-  if (req.session && req.session.email) {
-    const Products = await Product.find({ _id: req.query.id });
-    const product = Products[0];
-    res.render("user/product-details", { product, login: 1 });
-  } else {
-    const Products = await Product.find({ _id: req.query.id });
-    const product = Products[0];
-    res.render("user/product-details", { product, login: 0 });
-  }
-});
+router.get("/product-details",userController.productDetails);
 router.get("/myProfile", userProfile.openProfile);
 
 router.get("/myProfile/add-address", async (req, res) => {

@@ -5,6 +5,17 @@ const Product = require("../model/productModel");
 const Category = require("../model/categoryModel");
 const Address = require("../model/addressModel");
 
+
+
+const login=async (req, res) => {
+  try {
+    res.render("user/login");
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error") 
+  }
+  
+}
 const shop = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -56,6 +67,22 @@ const home = async (req, res) => {
     res.redirect("/error") 
   }
 };
+const productDetails= async (req, res) => {
+  try {
+  if (req.session && req.session.email) {
+    const Products = await Product.find({ _id: req.query.id });
+    const product = Products[0];
+    res.render("user/product-details", { product, login: 1 });
+  } else {
+    const Products = await Product.find({ _id: req.query.id });
+    const product = Products[0];
+    res.render("user/product-details", { product, login: 0 });
+  }
+} catch (error) {
+  console.log(error.message);
+  res.redirect("/error") 
+}
+}
 const sendVerifyMail = async (fname, lname, email, Otp) => {
   try {
     const transporter = nodemailer.createTransport({
@@ -551,4 +578,6 @@ module.exports = {
   updatePassword,
   advanceSearch,
   shop,
+  login,
+  productDetails
 };
