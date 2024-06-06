@@ -37,18 +37,19 @@ const shop = async (req, res) => {
 const home = async (req, res) => {
   try {
     if (req.session && req.session.email) {
-      const featured = await Product.find({});
-      const topDeal = await Product.find({ discount: { $gt: 30 } });
-      console.log(topDeal);
-      const topRated = await Product.find({});
-      const newArrival = await Product.find({});
-      res.render("user/home", { login: 1, topDeal });
+      // const featured = await Product.find({});
+      const topDeal = await Product.find({ discount: { $gt:10 } }).sort({discount:-1}).limit(10);
+      const newArrival = await Product.find({}).sort({PurchaseDate:-1}).limit(10);
+      const bestSellerProduct= await Product.find({}).sort({soldCount:-1}).limit(10)
+      console.log(bestSellerProduct)
+      res.render("user/home", { login: 1,bestSellerProduct,newArrival,topDeal });
     } else {
-      const featured = await Product.find({});
-      const topDeal = await Product.find({ discount: { $gt: 30 } });
-      const topRated = await Product.find({});
-      const newArrival = await Product.find({});
-      res.render("user/home", { login: 0, topDeal });
+      // const featured = await Product.find({});
+      const topDeal = await Product.find({ discount: { $gt: 10 } }).sort({discount:-1}).limit(10);
+      const newArrival = await Product.find({}).sort({PurchaseDate:-1}).limit(10);
+      const bestSellerProduct= await Product.find({}).sort({soldCount:-1}).limit(10)
+      console.log(bestSellerProduct)
+      res.render("user/home", { login: 0,bestSellerProduct,newArrival,topDeal });
     }
   } catch (error) {
     console.log(error.message);

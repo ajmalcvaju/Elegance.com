@@ -5,6 +5,7 @@ const Address = require("../model/addressModel");
 const Order = require("../model/orderModel");
 const Wishlist = require("../model/wishlistModel");
 const Coupon = require("../model/couponModel");
+const Category = require("../model/categoryModel");
 const Razorpay=require('razorpay')
 
 // const razorpayInstance=new Razorpay({
@@ -319,12 +320,23 @@ const placeOrder = async (req, res) => {
     const cart = await Cart.findOne({ userId }).populate("items.productId");
     const orderItems = cart.items.map((item) => ({
         productId: item.productId._id,
+        category:item.productId.category,
         quantity: item.quantity,
         price: item.price,
         priceBeforeOffer:item.priceBeforeOffer,
         userId: userId,
       }));
-      console.log(cart)
+      for (const item of orderItems) {
+        await Product.updateOne(
+          { _id: item.productId },
+          { $inc: { soldCount: item.quantity } }
+        );}
+        for (const item of orderItems) {
+          await Category.updateOne(
+            { cname: item.category },
+            { $inc: { soldCount: item.quantity } }
+          );}
+      
       totalPrice=cart.totalPriceBeforeOffer,
       discount=cart.discount,
       discountedPrice=cart.totalPrice,
