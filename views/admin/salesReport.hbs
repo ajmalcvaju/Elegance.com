@@ -266,6 +266,8 @@
             <div id="overall-gst">Overall GST Amount: 0.00 ₹</div>
             <div id="overall-revenue">Overall Revenue: 0.00 ₹</div>
         </div>
+<button onclick="downloadPDF()" class="btn btn-danger">Download PDF</button>
+<button onclick="downloadAsExcel()" class="btn btn-warning">Download as Excel</button>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -277,16 +279,12 @@
     <script src="lib/tempusdominus/js/moment.min.js"></script>
     <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    {{!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script> --}}
 
-    <!-- Template Javascript -->
     <script src="js/main.js"></script>
     <script>
-        // Mock sales data
-        {{!-- const salesData = [
-            {orderId: '001', date: '2024-06-01', customer: 'John Doe', orderAmount: 100, discount: 10, coupon: 5},
-            {orderId: '002', date: '2024-06-02', customer: 'Jane Smith', orderAmount: 200, discount: 20, coupon: 10},
-            // Add more sales data as needed
-        ]; --}}
+        
           const salesDatas = document.getElementById("order").innerHTML;
           const cleanedSalesData = salesDatas.trim();
           const salesData = JSON.parse(cleanedSalesData);
@@ -367,6 +365,111 @@
         // Initial display of all sales data
         displaySales(salesData);
     </script>
+    <script>
+    async function downloadPDF() {
+        const { jsPDF } = window.jspdf;
+
+        const doc = new jsPDF();
+
+        let yPosition = 10;
+
+        // Add title
+        doc.setFontSize(20);
+        doc.text('Sales Report', 105, yPosition, null, null, 'center');
+        yPosition += 10;
+
+        // Add filters
+        const startDate = document.getElementById('start-date').value;
+        const endDate = document.getElementById('end-date').value;
+        const range = document.getElementById('preset-range').value;
+
+        doc.setFontSize(12);
+        doc.text(`Custom Date Range: ${startDate} to ${endDate}`, 10, yPosition);
+        yPosition += 10;
+        doc.text(`Preset Date Range: ${range}`, 10, yPosition);
+        yPosition += 10;
+
+        // Add table headers
+        doc.setFontSize(10);
+        const headers = ["Order ID", "Date", "Customer", "Order Amount", "Discount", "Coupon Deduction", "GST Amount", "Final Amount"];
+        headers.forEach((header, index) => {
+            doc.text(header, 10 + (index * 25), yPosition);
+        });
+        yPosition += 10;
+
+        // Add table data
+        const salesData = document.getElementById('sales-data').getElementsByTagName('tr');
+        for (let i = 0; i < salesData.length; i++) {
+            const cells = salesData[i].getElementsByTagName('td');
+            for (let j = 0; j < cells.length; j++) {
+                doc.text(cells[j].innerText, 10 + (j * 25), yPosition);
+            }
+            yPosition += 10;
+        }
+
+        // Add summary
+        yPosition += 10;
+        doc.setFontSize(12);
+        doc.text(document.getElementById('overall-sales-count').innerText, 10, yPosition);
+        yPosition += 10;
+        doc.text(document.getElementById('overall-order-amount').innerText, 10, yPosition);
+        yPosition += 10;
+        doc.text(document.getElementById('overall-discount').innerText, 10, yPosition);
+        yPosition += 10;
+        doc.text(document.getElementById('overall-coupon-discount').innerText, 10, yPosition);
+        yPosition += 10;
+        doc.text(document.getElementById('overall-gst').innerText, 10, yPosition);
+        yPosition += 10;
+        doc.text(document.getElementById('overall-revenue').innerText, 10, yPosition);
+
+        // Save the PDF
+        doc.save('sales_report.pdf');
+    }
+</script>
+<script>
+    function downloadAsExcel() {
+    // Extract data from the sales table
+    const table = document.getElementById('sales-data');
+    const rows = table.querySelectorAll('tr');
+    const salesData = [];
+
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        const rowData = [];
+        cells.forEach(cell => rowData.push(cell.innerText));
+        salesData.push(rowData);
+    });
+
+    // Create a workbook and add the sales data
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([
+        ['Order ID', 'Date', 'Customer', 'Order Amount', 'Discount', 'Coupon Deduction', 'GST Amount', 'Final Amount'],
+        ...salesData
+    ]);
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Sales Data');
+
+    // Create a binary string representation of the workbook
+    const wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
+
+    // Convert the binary string to a Blob
+    function s2ab(s) {
+        const buf = new ArrayBuffer(s.length);
+        const view = new Uint8Array(buf);
+        for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+        return buf;
+    }
+
+    // Trigger the download
+    const blob = new Blob([s2ab(wbout)], {type: 'application/octet-stream'});
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'sales_data.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+</script>
 
 </body>
 

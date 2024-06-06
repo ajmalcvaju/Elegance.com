@@ -28,7 +28,7 @@
     <title>Order Details</title>
 </head>
 <body>
-   <div class="container" id="pdfContainer">
+   <div class="container">
     <div class="row">
         <div class="col-xs-12">
             <div class="invoice-title">
@@ -161,39 +161,38 @@
     <button id="downloadPdf" class="btn btn-primary">Download PDF</button>
 </div> 
 <script>
-document.getElementById('downloadPdf').addEventListener('click', function () {
-    var downloadButton = document.getElementById('downloadPdf');
-    
-    // Hide the download button
-    downloadButton.style.display = 'none';
+    document.getElementById('downloadPdf').addEventListener('click', function () {
+        var downloadButton = document.getElementById('downloadPdf');
+        
+        // Hide the download button
+        downloadButton.style.display = 'none';
 
-    html2canvas(document.getElementById('pdfContainer')).then(function (canvas) {
-        var imgData = canvas.toDataURL('image/png');
-        var pdf = new jsPDF('p', 'mm', 'a4');
-        var imgWidth = 210;
-        var pageHeight = 297;
-        var imgHeight = canvas.height * imgWidth / canvas.width;
-        var heightLeft = imgHeight;
+        html2canvas(document.body).then(function (canvas) {
+            var imgData = canvas.toDataURL('image/png');
+            var pdf = new jsPDF('p', 'mm', 'a4');
+            var imgWidth = 210;
+            var pageHeight = 210;
+            var imgHeight = canvas.height * imgWidth / canvas.width;
+            var heightLeft = imgHeight;
 
-        var position = 0;
+            var position = 0;
 
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-
-        while (heightLeft >= 0) {
-            position = heightLeft - imgHeight;
-            pdf.addPage();
             pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
             heightLeft -= pageHeight;
-        }
 
-        pdf.save('order-details.pdf');
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
 
-        // Show the download button again
-        downloadButton.style.display = 'block';
+            pdf.save('order-details.pdf');
+
+            // Show the download button again
+            downloadButton.style.display = 'block';
+        });
     });
-});
-
 </script>
 </body>
 </html>

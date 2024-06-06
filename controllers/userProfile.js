@@ -90,6 +90,52 @@ const updatePassword = async (req, res) => {
     res.redirect("/error") 
   }
 };
+const changeAddress=async (req, res) => {
+  try {
+    const addId = req.query.id;
+    const address = await Address.findOne({ _id: addId });
+    res.render("user/edit-address", { address, checkout: 0 });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error") 
+  }
+}
+
+deleteAddress=async (req, res) => {
+  try {
+    const addId = req.query.id;
+    console.log(addId);
+    await Address.deleteOne({ _id: addId });
+    res.redirect("/myProfile");
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error")
+  }
+}
+const editProfile=async (req, res) => {
+  try {
+    const email = req.session.email;
+  const user = await User.findOne({ email });
+  res.render("user/edit-profile", { user });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error")
+  }
+}
+const updateProfile=async (req, res) => {
+  try {
+    const userId = req.query.id;
+    const { username, fname, lname, mobileNumber } = req.body;
+    await User.updateOne(
+      { _id: userId },
+      { $set: { username, fname, lname, mobileNumber } }
+    );
+    res.redirect("/myProfile");
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error")
+  }
+}
 
 module.exports = {
   openProfile,
@@ -97,4 +143,8 @@ module.exports = {
   editAddress,
   changePassword,
   updatePassword,
+  changeAddress,
+  deleteAddress,
+  editProfile,
+  updateProfile
 };

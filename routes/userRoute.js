@@ -53,34 +53,13 @@ router.get("/myProfile/add-address", async (req, res) => {
   res.render("user/add-address", { checkout: 0 });
 });
 router.post("/myProfile/add-address", userProfile.addAddress);
-router.get("/edit-address", async (req, res) => {
-  const addId = req.query.id;
-  const address = await Address.findOne({ _id: addId });
-  res.render("user/edit-address", { address, checkout: 0 });
-});
+router.get("/edit-address", userProfile.changeAddress);
 router.get("/myProfile/changePassword", userProfile.changePassword);
 router.post("/myProfile/changePassword", userProfile.updatePassword);
 router.post("/edit-address", userProfile.editAddress);
-router.get("/delete-address", async (req, res) => {
-  const addId = req.query.id;
-  console.log(addId);
-  await Address.deleteOne({ _id: addId });
-  res.redirect("/myProfile");
-});
-router.get("/edit-profile", async (req, res) => {
-  const email = req.session.email;
-  const user = await User.findOne({ email });
-  res.render("user/edit-profile", { user });
-});
-router.post("/edit-profile", async (req, res) => {
-  const userId = req.query.id;
-  const { username, fname, lname, mobileNumber } = req.body;
-  await User.updateOne(
-    { _id: userId },
-    { $set: { username, fname, lname, mobileNumber } }
-  );
-  res.redirect("/myProfile");
-});
+router.get("/delete-address", userProfile.deleteAddress);
+router.get("/edit-profile",  userProfile.editProfile);
+router.post("/edit-profile",userProfile.updateProfile);
 
 const hbs = require("hbs");
 hbs.registerHelper("incrementIndex", function (index) {
