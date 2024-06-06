@@ -70,6 +70,19 @@ const orderCancell = async (req, res) => {
     res.redirect("/error") 
   }
 };
+const returnOrder=async (req, res) => {
+  try {
+    const orderId = req.query.orderId;
+    const order = await Order.updateOne(
+      { _id: orderId },
+      { $set: { "status": "Return Pending" } }
+    );
+    res.redirect("/orderStatus");
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error") 
+  }
+};
 
 const orderDetails=async(req,res)=>{
   try {
@@ -90,11 +103,6 @@ const applyCoupon=async(req,res)=>{
    const couponCode=req.body.couponCode
    console.log(couponCode)
    const coupon = await Coupon.findOne({ couponCode });
-   const couponId= coupon._id
-   let discount=coupon.discount
-   let cart = await Cart.findOne({ userId });
-   cart.couponId = couponId;
-   await cart.save();
    const coupons = await Coupon.findOne({
     couponCode: couponCode,
     usedUsers: { $in: [userId] }
@@ -104,7 +112,11 @@ const applyCoupon=async(req,res)=>{
 }else if(coupons){
   return res.status(404).json({ fail: true, message: 'Already Used Coupon' });
 }
-else{
+else{const couponId= coupon._id
+  let discount=coupon.discount
+  let cart = await Cart.findOne({ userId });
+  cart.couponId = couponId;
+  await cart.save();
   const updatedCoupon = await Coupon.findOneAndUpdate(
     { couponCode: couponCode },
     { $addToSet: { usedUsers: userId } },
@@ -216,4 +228,4 @@ const removeCoupon= async(req, res) => {
 }
 
 
-module.exports = { checkoutAddAddress, checkoutEditAddress, orderCancell,orderDetails,applyCoupon,checkout,repayOrder,repay,invoice,removeCoupon };
+module.exports = { checkoutAddAddress, checkoutEditAddress, orderCancell,orderDetails,applyCoupon,checkout,repayOrder,repay,invoice,removeCoupon,returnOrder };

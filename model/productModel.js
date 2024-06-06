@@ -11,6 +11,7 @@ const productSchema = new mongoose.Schema({
   category: { type: String, required: true },
   discountedPrice: { type: Number, required: true },
   is_deleted: { type: Number, default: 0 },
+  soldCount: { type: Number},
   PurchaseDate: { type: Date, default: Date.now },
 });
 

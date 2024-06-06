@@ -14,6 +14,7 @@ const categorySchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  soldCount: { type: Number}
 });
 
 const Category = new mongoose.model("Category", categorySchema);

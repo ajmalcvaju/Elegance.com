@@ -134,6 +134,8 @@ router.get("/deleteAddress", async (req, res) => {
   res.redirect("/checkout");
 });
 router.get("/cancelOrder", userCheckoutOrderControll.orderCancell);
+router.get("/returnOrder", userCheckoutOrderControll.returnOrder);
+
 router.get("/orderDetails", userCheckoutOrderControll.orderDetails);
 router.get("/invoice", userCheckoutOrderControll.invoice);
 
