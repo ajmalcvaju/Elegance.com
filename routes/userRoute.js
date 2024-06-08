@@ -42,6 +42,9 @@ router.get("/home", async (req, res) => {
   res.render("user/home");
 });
 router.get("/product-details", userController.productDetails);
+router.post("/rate",userController.rating)
+router.get("/reviews",userController.review)
+
 router.get("/myProfile", userProfile.openProfile);
 
 router.get("/myProfile/add-address", async (req, res) => {

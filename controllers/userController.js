@@ -4,6 +4,7 @@ const OTPcode = require("../model/otpModel");
 const Product = require("../model/productModel");
 const Category = require("../model/categoryModel");
 const Address = require("../model/addressModel");
+const Review = require("../model/reviewModel");
 
 const login = async (req, res) => {
   try {
@@ -88,14 +89,24 @@ const home = async (req, res) => {
 };
 const productDetails = async (req, res) => {
   try {
+    const productId = req.query.id;
+    const product = await Product.findOne({ _id: productId });
+    const category = product.category;
+    console.log(category);
+    const suggestedProducts = await Product.find({ category }).limit(4);
+    console.log(suggestedProducts);
     if (req.session && req.session.email) {
-      const Products = await Product.find({ _id: req.query.id });
-      const product = Products[0];
-      res.render("user/product-details", { product, login: 1 });
+      res.render("user/product-details", {
+        product,
+        suggestedProducts,
+        login: 1,
+      });
     } else {
-      const Products = await Product.find({ _id: req.query.id });
-      const product = Products[0];
-      res.render("user/product-details", { product, login: 0 });
+      res.render("user/product-details", {
+        product,
+        suggestedProducts,
+        login: 0,
+      });
     }
   } catch (error) {
     console.log(error.message);
@@ -586,6 +597,47 @@ const checkoutAddAddress = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+const rating = async (req, res) => {
+  try {
+    if (req.session.email) {
+      const email = req.session.email;
+      const user = await User.findOne({ email });
+      const userId = user._id;
+      const productId = req.body.productId;
+      const existingReview = await Review.findOne({ userId, productId });
+      if (existingReview) {
+        return res.json({
+          alreadyExist: true,
+          message: "You have already reviewed this product.",
+        });
+      }
+      const newRating = new Review({
+        rating: req.body.rating,
+        userId: userId,
+        productId: productId,
+        comment: req.body.comment,
+      });
+      newRating.save();
+      res.json({ success: true });
+    } else {
+      res.json({ notLoggedIn: true });
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
+  }
+};
+const review= async (req, res) => {
+  try {
+      const productId = req.query.productId;
+      const reviews = await Review.find({ productId }).populate('userId')
+      res.json({ success: true, reviews });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
+  }
+}
+
 module.exports = {
   home,
   loadRegister,
@@ -599,4 +651,6 @@ module.exports = {
   shop,
   login,
   productDetails,
+  review,
+  rating
 };

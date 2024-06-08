@@ -8,14 +8,15 @@ const noCache = require("nocache");
 const mongoose = require("mongoose");
 require("dotenv").config()
 const Razorpay=require('razorpay')
-
-
+const cors = require('cors');
 
 
 var usersRouter = require("./routes/userRoute");
 var adminRouter = require("./routes/adminRoute");
 
 var app = express();
+
+app.use(cors());
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
