@@ -7,7 +7,7 @@ const adminProduct = async (req, res) => {
     res.render("admin/product", { products });
   } catch {
     console.log(error.message);
-    res.redirect("/admin/error") 
+    res.redirect("/admin/error");
   }
 };
 const addProduct = async (req, res) => {
@@ -16,7 +16,7 @@ const addProduct = async (req, res) => {
     res.render("admin/addProduct", { categories });
   } catch {
     console.log(error.message);
-    res.redirect("/admin/error") 
+    res.redirect("/admin/error");
   }
 };
 const updateProduct = async (req, res) => {
@@ -27,15 +27,15 @@ const updateProduct = async (req, res) => {
       const categories = await Category.find({});
       res.render("admin/addProduct", { exist: true, categories });
     } else {
-      let cname=req.body.category
-      const categories = await Category.findOne({cname});
+      let cname = req.body.category;
+      const categories = await Category.findOne({ cname });
       let actualDiscount;
-      let productDiscount=req.body.discount
-      let categoryDiscount=categories.discount
-      if(productDiscount>=categoryDiscount){
-        actualDiscount=productDiscount
-      }else{
-        actualDiscount=categoryDiscount
+      let productDiscount = req.body.discount;
+      let categoryDiscount = categories.discount;
+      if (productDiscount >= categoryDiscount) {
+        actualDiscount = productDiscount;
+      } else {
+        actualDiscount = categoryDiscount;
       }
       DiscountedPrice = req.body.price * (1 - actualDiscount / 100);
       const imageFiles = req.files.map((file) => file.filename);
@@ -45,7 +45,7 @@ const updateProduct = async (req, res) => {
         description: req.body.description,
         price: req.body.price,
         discount: req.body.discount,
-        actualDiscount:actualDiscount,
+        actualDiscount: actualDiscount,
         purchase: req.body.purchase,
         category: req.body.category,
         discountedPrice: DiscountedPrice,
@@ -61,7 +61,7 @@ const updateProduct = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
-    res.redirect("/admin/error") 
+    res.redirect("/admin/error");
   }
 };
 const deleteUser = async (req, res) => {

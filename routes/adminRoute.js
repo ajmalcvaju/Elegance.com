@@ -6,7 +6,7 @@ const adminProductPanel = require("../controllers/adminProductPanel");
 const adminCategoryPanel = require("../controllers/adminCategoryPanel");
 const adminOrderPanel = require("../controllers/adminOrderPanel");
 const adminCouponPanel = require("../controllers/adminCouponPanel");
-const adminsalesReportPanel=require("../controllers/adminsalesReportPanel");
+const adminsalesReportPanel = require("../controllers/adminsalesReportPanel");
 const multer = require("multer");
 const path = require("path");
 const middleware = require("../middlewares/middlewares");
@@ -89,16 +89,16 @@ router.post("/edit-category", adminCategoryPanel.updatingCategory);
 router.get("/manage", adminOrderPanel.manageOrder);
 router.post("/manage", adminOrderPanel.updateOrder);
 
-router.get("/coupons",adminCouponPanel.manageCoupon);
-router.get("/edit-coupon",adminCouponPanel.editCoupon);
-router.post("/edit-coupons",adminCouponPanel.editingCoupon);
-router.get("/delete-coupon",adminCouponPanel.deleteCoupon);
-router.get("/addCoupon",adminCouponPanel.addCoupon);
-router.post("/addCoupons",adminCouponPanel.addingCoupon);
-router.get("/orderDetails",adminOrderPanel.orderDetails);
-router.get("/salesReport",adminsalesReportPanel.salesReport)
-router.get("/dashboard",adminsalesReportPanel.dashboard);
+router.get("/coupons", adminCouponPanel.manageCoupon);
+router.get("/edit-coupon", adminCouponPanel.editCoupon);
+router.post("/edit-coupons", adminCouponPanel.editingCoupon);
+router.get("/delete-coupon", adminCouponPanel.deleteCoupon);
+router.get("/addCoupon", adminCouponPanel.addCoupon);
+router.post("/addCoupons", adminCouponPanel.addingCoupon);
+router.get("/orderDetails", adminOrderPanel.orderDetails);
+router.get("/salesReport", adminsalesReportPanel.salesReport);
+router.get("/dashboard", adminsalesReportPanel.dashboard);
 
-router.get("/error",adminOrderPanel.error)
+router.get("/error", adminOrderPanel.error);
 
 module.exports = router;

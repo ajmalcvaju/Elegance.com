@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Product = require("../model/productModel");
-const Coupon= require("../model/couponModel");
+const Coupon = require("../model/couponModel");
 
 const cartItemSchema = new mongoose.Schema({
   productId: {
@@ -13,7 +13,7 @@ const cartItemSchema = new mongoose.Schema({
     required: true,
     min: 1,
   },
-  priceBeforeOffer:{
+  priceBeforeOffer: {
     type: Number,
   },
   price: {
@@ -36,7 +36,7 @@ const cartSchema = new mongoose.Schema({
   },
   shippingCharge: {
     type: Number,
-    default:50
+    default: 50,
   },
   priceAfterCoupon: {
     type: Number,
@@ -53,13 +53,13 @@ const cartSchema = new mongoose.Schema({
   totalAmountPay: {
     type: Number,
   },
-  couponDiscount:{
-    type: Number
+  couponDiscount: {
+    type: Number,
   },
   couponId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Coupon"
-  }
+    ref: "Coupon",
+  },
 });
 
 cartItemSchema.pre("save", async function (next) {
@@ -69,7 +69,7 @@ cartItemSchema.pre("save", async function (next) {
       throw new Error("Product not found");
     }
     this.price = product.discountedPrice * this.quantity;
-    this.priceBeforeOffer = product.price* this.quantity;
+    this.priceBeforeOffer = product.price * this.quantity;
     next();
   } catch (error) {
     next(error);

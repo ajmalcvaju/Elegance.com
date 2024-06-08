@@ -5,17 +5,14 @@ const Product = require("../model/productModel");
 const Category = require("../model/categoryModel");
 const Address = require("../model/addressModel");
 
-
-
-const login=async (req, res) => {
+const login = async (req, res) => {
   try {
     res.render("user/login");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
-  
-}
+};
 const shop = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -42,47 +39,69 @@ const shop = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
 };
 const home = async (req, res) => {
   try {
     if (req.session && req.session.email) {
       // const featured = await Product.find({});
-      const topDeal = await Product.find({ discount: { $gt:10 } }).sort({discount:-1}).limit(10);
-      const newArrival = await Product.find({}).sort({PurchaseDate:-1}).limit(10);
-      const bestSellerProduct= await Product.find({}).sort({soldCount:-1}).limit(10)
-      console.log(bestSellerProduct)
-      res.render("user/home", { login: 1,bestSellerProduct,newArrival,topDeal });
+      const topDeal = await Product.find({ discount: { $gt: 10 } })
+        .sort({ discount: -1 })
+        .limit(10);
+      const newArrival = await Product.find({})
+        .sort({ PurchaseDate: -1 })
+        .limit(10);
+      const bestSellerProduct = await Product.find({})
+        .sort({ soldCount: -1 })
+        .limit(10);
+      console.log(bestSellerProduct);
+      res.render("user/home", {
+        login: 1,
+        bestSellerProduct,
+        newArrival,
+        topDeal,
+      });
     } else {
       // const featured = await Product.find({});
-      const topDeal = await Product.find({ discount: { $gt: 10 } }).sort({discount:-1}).limit(10);
-      const newArrival = await Product.find({}).sort({PurchaseDate:-1}).limit(10);
-      const bestSellerProduct= await Product.find({}).sort({soldCount:-1}).limit(10)
-      console.log(bestSellerProduct)
-      res.render("user/home", { login: 0,bestSellerProduct,newArrival,topDeal });
+      const topDeal = await Product.find({ discount: { $gt: 10 } })
+        .sort({ discount: -1 })
+        .limit(10);
+      const newArrival = await Product.find({})
+        .sort({ PurchaseDate: -1 })
+        .limit(10);
+      const bestSellerProduct = await Product.find({})
+        .sort({ soldCount: -1 })
+        .limit(10);
+      console.log(bestSellerProduct);
+      res.render("user/home", {
+        login: 0,
+        bestSellerProduct,
+        newArrival,
+        topDeal,
+      });
     }
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
 };
-const productDetails= async (req, res) => {
+const productDetails = async (req, res) => {
   try {
-  if (req.session && req.session.email) {
-    const Products = await Product.find({ _id: req.query.id });
-    const product = Products[0];
-    res.render("user/product-details", { product, login: 1 });
-  } else {
-    const Products = await Product.find({ _id: req.query.id });
-    const product = Products[0];
-    res.render("user/product-details", { product, login: 0 });
+    if (req.session && req.session.email) {
+      const Products = await Product.find({ _id: req.query.id });
+      const product = Products[0];
+      res.render("user/product-details", { product, login: 1 });
+    } else {
+      const Products = await Product.find({ _id: req.query.id });
+      const product = Products[0];
+      res.render("user/product-details", { product, login: 0 });
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
   }
-} catch (error) {
-  console.log(error.message);
-  res.redirect("/error") 
-}
-}
+};
 const sendVerifyMail = async (fname, lname, email, Otp) => {
   try {
     const transporter = nodemailer.createTransport({
@@ -117,7 +136,7 @@ const sendVerifyMail = async (fname, lname, email, Otp) => {
     });
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
 };
 
@@ -126,7 +145,7 @@ const loadRegister = async (req, res) => {
     res.render("user/signup");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
 };
 const insertUser = async (req, res) => {
@@ -178,7 +197,7 @@ const insertUser = async (req, res) => {
       }
     } catch (error) {
       console.log(error.message);
-    res.redirect("/error") 
+      res.redirect("/error");
     }
   }
 };
@@ -213,7 +232,7 @@ const verifyMail = async (req, res) => {
     res.render("admin/User");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
 };
 const reset = async (req, res) => {
@@ -221,7 +240,7 @@ const reset = async (req, res) => {
     res.render("user/forgetPassword");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
 };
 const resetPass = async (req, res) => {
@@ -245,7 +264,7 @@ const resetPass = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
 };
 const changePassword = async (req, res) => {
@@ -281,7 +300,7 @@ const changePassword = async (req, res) => {
     res.render("home");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
 };
 const updatePassword = async (req, res) => {
@@ -301,7 +320,7 @@ const updatePassword = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
 };
 
@@ -535,7 +554,7 @@ const advanceSearch = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
     res.status(500).send("Internal Server Error");
   }
 };
@@ -563,7 +582,7 @@ const checkoutAddAddress = async (req, res) => {
     res.redirect("/checkout");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
     res.status(500).send("Internal Server Error");
   }
 };
@@ -579,5 +598,5 @@ module.exports = {
   advanceSearch,
   shop,
   login,
-  productDetails
+  productDetails,
 };

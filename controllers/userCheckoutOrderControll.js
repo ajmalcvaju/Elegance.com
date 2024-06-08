@@ -1,14 +1,14 @@
 const User = require("../model/userModel");
 const Address = require("../model/addressModel");
 const Order = require("../model/orderModel");
-const Coupon= require("../model/couponModel");
-const Cart=require("../model/cartModel");
-const Razorpay=require('razorpay')
+const Coupon = require("../model/couponModel");
+const Cart = require("../model/cartModel");
+const Razorpay = require("razorpay");
 
-const razorpayInstance=new Razorpay({
-  key_id:process.env.key_id,
-  key_secret:process.env.key_secret
-})
+const razorpayInstance = new Razorpay({
+  key_id: process.env.key_id,
+  key_secret: process.env.key_secret,
+});
 
 const checkoutAddAddress = async (req, res) => {
   try {
@@ -33,7 +33,7 @@ const checkoutAddAddress = async (req, res) => {
     res.redirect("/checkout");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
     res.status(500).send("Internal Server Error");
   }
 };
@@ -54,7 +54,7 @@ const checkoutEditAddress = async (req, res) => {
     res.redirect("/checkout");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
 };
 const orderCancell = async (req, res) => {
@@ -62,170 +62,196 @@ const orderCancell = async (req, res) => {
     const orderId = req.query.orderId;
     const order = await Order.updateOne(
       { _id: orderId },
-      { $set: { "status": "Cancelled" } }
+      { $set: { status: "Cancelled" } }
     );
     res.redirect("/orderStatus");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
 };
-const returnOrder=async (req, res) => {
+const returnOrder = async (req, res) => {
   try {
     const orderId = req.query.orderId;
     const order = await Order.updateOne(
       { _id: orderId },
-      { $set: { "status": "Return Pending" } }
+      { $set: { status: "Return Pending" } }
     );
     res.redirect("/orderStatus");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
 };
 
-const orderDetails=async(req,res)=>{
+const orderDetails = async (req, res) => {
   try {
-    const orderId=req.query.orderId
-    const order=await Order.findOne({orderId}).populate("items.productId").populate("userId").populate("addressId");
-    
-    res.render("user/orderDetails",{order})
-  } catch (error) {
-    console.log(error.message);
-    res.redirect("/error") 
-  }
-}
-const applyCoupon=async(req,res)=>{
-  try {
-   const email = req.session.email;
-   const user = await User.findOne({ email });
-   const userId = user._id;
-   const couponCode=req.body.couponCode
-   console.log(couponCode)
-   const coupon = await Coupon.findOne({ couponCode });
-   const coupons = await Coupon.findOne({
-    couponCode: couponCode,
-    usedUsers: { $in: [userId] }
-  });
-   if (!coupon || !coupon.isActive || new Date() > new Date(coupon.expiryDate)) {
-    return res.status(404).json({ success: false, message: 'Invalid or expired coupon' });
-}else if(coupons){
-  return res.status(404).json({ fail: true, message: 'Already Used Coupon' });
-}
-else{const couponId= coupon._id
-  let discount=coupon.discount
-  let cart = await Cart.findOne({ userId });
-  cart.couponId = couponId;
-  await cart.save();
-  const updatedCoupon = await Coupon.findOneAndUpdate(
-    { couponCode: couponCode },
-    { $addToSet: { usedUsers: userId } },
-    { new: true } 
-  );
-  req.session.discount=discount
-  res.json({ success: true})
-}
-  } catch (error) {
-    console.log(error.message);
-    res.redirect("/error") 
-  }
-}
+    const orderId = req.query.orderId;
+    const order = await Order.findOne({ orderId })
+      .populate("items.productId")
+      .populate("userId")
+      .populate("addressId");
 
-const checkout=async(req,res)=>{
+    res.render("user/orderDetails", { order });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
+  }
+};
+const applyCoupon = async (req, res) => {
   try {
-    const orderDetails=req.body
     const email = req.session.email;
     const user = await User.findOne({ email });
     const userId = user._id;
-    const cart=await Cart.updateOne(
-      { userId },
-      { $set:orderDetails  }
-    );
-    res.redirect("/checkout")
-  } catch (error) {
-    console.log(error.message);
-    res.redirect("/error") 
-  }
-}
-const repayOrder=async(req,res)=>{
-  try {
-    let amount=req.body.totalAmountPay
-    amount=amount*100
-    const options={
-      amount:amount,
-      currency:'INR',
-      receipt:'razorUser@gmail.com'
-    }
-    razorpayInstance.orders.create(options,async(err,order)=>{
-      if(!err){
-        const email=req.session.email
-        const user = await User.findOne({ email });
-        const username=user.username
-        const mobileNumber=user.mobileNumber
-        res.status(200).send({
-          success:true,
-          msg:"Order Created",
-          order_id:1234,
-          amount:amount,
-          key_id:process.env.key_id,
-          contact:mobileNumber,
-          name:username,
-          email:email
-        })
-      }else{
-        res.status(400).send({success:false,msg:"something went wrong!!"})
-      }
-    })
-  } catch (error) {
-    console.log(error.message);
-    res.redirect("/error") 
-  }
-}
-
-const repay=async(req,res)=>{
-  try {
-    let paid=req.query.paid
-    let orderId=req.query.orderId
-    if(paid==1){
-      const order = await Order.updateOne({orderId},{paymentStatus:"Successfull"})
-      res.redirect("/orderStatus")
-    }else{
-     res.redirect("/orderStatus")
+    const couponCode = req.body.couponCode;
+    console.log(couponCode);
+    const coupon = await Coupon.findOne({ couponCode });
+    const coupons = await Coupon.findOne({
+      couponCode: couponCode,
+      usedUsers: { $in: [userId] },
+    });
+    if (
+      !coupon ||
+      !coupon.isActive ||
+      new Date() > new Date(coupon.expiryDate)
+    ) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Invalid or expired coupon" });
+    } else if (coupons) {
+      return res
+        .status(404)
+        .json({ fail: true, message: "Already Used Coupon" });
+    } else {
+      const couponId = coupon._id;
+      let discount = coupon.discount;
+      let cart = await Cart.findOne({ userId });
+      cart.couponId = couponId;
+      await cart.save();
+      const updatedCoupon = await Coupon.findOneAndUpdate(
+        { couponCode: couponCode },
+        { $addToSet: { usedUsers: userId } },
+        { new: true }
+      );
+      req.session.discount = discount;
+      res.json({ success: true });
     }
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
-}
+};
 
-const invoice=async(req,res)=>{
+const checkout = async (req, res) => {
   try {
-    const orderId=req.query.orderId
-    const order=await Order.findOne({orderId}).populate("items.productId").populate("userId").populate("addressId");
-    res.render("user/invoice",{order})
-  } catch (error) {
-    console.log(error.message);
-    res.redirect("/error") 
-  }
-}
-
-const removeCoupon= async(req, res) => {
-  try {
-    req.session.discount = null;
+    const orderDetails = req.body;
     const email = req.session.email;
-   const user = await User.findOne({ email });
-   const userId = user._id;
-   const couponId=req.query.couponId
-   await Coupon.findOneAndUpdate(
-    { _id: couponId },
-    { $pull: { usedUsers: userId} },
-    { new: true })
+    const user = await User.findOne({ email });
+    const userId = user._id;
+    const cart = await Cart.updateOne({ userId }, { $set: orderDetails });
     res.redirect("/checkout");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
-}
+};
+const repayOrder = async (req, res) => {
+  try {
+    let amount = req.body.totalAmountPay;
+    amount = amount * 100;
+    const options = {
+      amount: amount,
+      currency: "INR",
+      receipt: "razorUser@gmail.com",
+    };
+    razorpayInstance.orders.create(options, async (err, order) => {
+      if (!err) {
+        const email = req.session.email;
+        const user = await User.findOne({ email });
+        const username = user.username;
+        const mobileNumber = user.mobileNumber;
+        res.status(200).send({
+          success: true,
+          msg: "Order Created",
+          order_id: 1234,
+          amount: amount,
+          key_id: process.env.key_id,
+          contact: mobileNumber,
+          name: username,
+          email: email,
+        });
+      } else {
+        res.status(400).send({ success: false, msg: "something went wrong!!" });
+      }
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
+  }
+};
 
+const repay = async (req, res) => {
+  try {
+    let paid = req.query.paid;
+    let orderId = req.query.orderId;
+    if (paid == 1) {
+      const order = await Order.updateOne(
+        { orderId },
+        { paymentStatus: "Successfull" }
+      );
+      res.redirect("/orderStatus");
+    } else {
+      res.redirect("/orderStatus");
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
+  }
+};
 
-module.exports = { checkoutAddAddress, checkoutEditAddress, orderCancell,orderDetails,applyCoupon,checkout,repayOrder,repay,invoice,removeCoupon,returnOrder };
+const invoice = async (req, res) => {
+  try {
+    const orderId = req.query.orderId;
+    const order = await Order.findOne({ orderId })
+      .populate("items.productId")
+      .populate("userId")
+      .populate("addressId");
+    res.render("user/invoice", { order });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
+  }
+};
+
+const removeCoupon = async (req, res) => {
+  try {
+    req.session.discount = null;
+    const email = req.session.email;
+    const user = await User.findOne({ email });
+    const userId = user._id;
+    const couponId = req.query.couponId;
+    await Coupon.findOneAndUpdate(
+      { _id: couponId },
+      { $pull: { usedUsers: userId } },
+      { new: true }
+    );
+    res.redirect("/checkout");
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
+  }
+};
+
+module.exports = {
+  checkoutAddAddress,
+  checkoutEditAddress,
+  orderCancell,
+  orderDetails,
+  applyCoupon,
+  checkout,
+  repayOrder,
+  repay,
+  invoice,
+  removeCoupon,
+  returnOrder,
+};

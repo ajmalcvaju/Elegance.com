@@ -1,8 +1,3 @@
-// var express = require('express');
-// const user_route=express()
-// const userController=require("../controllers/userController")
-// user_route.get("/register",userController.loadRegister)
-// module.exports=user_route;
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
@@ -20,7 +15,7 @@ const userCheckoutOrderControll = require("../controllers/userCheckoutOrderContr
 const Cart = require("../model/cartModel");
 
 router.get("/", userController.home);
-router.get("/login", middleware.checkSession,userController.login);
+router.get("/login", middleware.checkSession, userController.login);
 router.post("/login", userauth.login);
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -46,7 +41,7 @@ router.get("/shop", userController.shop);
 router.get("/home", async (req, res) => {
   res.render("user/home");
 });
-router.get("/product-details",userController.productDetails);
+router.get("/product-details", userController.productDetails);
 router.get("/myProfile", userProfile.openProfile);
 
 router.get("/myProfile/add-address", async (req, res) => {
@@ -58,8 +53,8 @@ router.get("/myProfile/changePassword", userProfile.changePassword);
 router.post("/myProfile/changePassword", userProfile.updatePassword);
 router.post("/edit-address", userProfile.editAddress);
 router.get("/delete-address", userProfile.deleteAddress);
-router.get("/edit-profile",  userProfile.editProfile);
-router.post("/edit-profile",userProfile.updateProfile);
+router.get("/edit-profile", userProfile.editProfile);
+router.post("/edit-profile", userProfile.updateProfile);
 
 const hbs = require("hbs");
 hbs.registerHelper("incrementIndex", function (index) {
@@ -74,12 +69,11 @@ router.get("/decrementItem", cartController.decCart);
 
 router.get("/checkout", cartController.checkout);
 router.post("/checkout", userCheckoutOrderControll.checkout);
-router.post("/createOrder",cartController.createOrder)
+router.post("/createOrder", cartController.createOrder);
 
 router.get("/placeOrder", cartController.placeOrder);
 
 router.get("/orderStatus", cartController.orderStatus);
-// router.get('/search',userController.search);
 
 router.get("/advanceSearch", userController.advanceSearch);
 
@@ -115,13 +109,10 @@ router.get("/add-cart", cartController.wishlistToAddCart);
 router.get("/deleteWishlist", cartController.deleteWishlist);
 
 router.get("/deleteCart", cartController.deleteCart);
-router.post("/applyCoupon",userCheckoutOrderControll.applyCoupon)
-router.get("/removeCoupon",userCheckoutOrderControll.removeCoupon);
-router.post("/repayOrder",userCheckoutOrderControll.repayOrder)
-router.get("/repay",userCheckoutOrderControll.removeCoupon)
-
-
-
+router.post("/applyCoupon", userCheckoutOrderControll.applyCoupon);
+router.get("/removeCoupon", userCheckoutOrderControll.removeCoupon);
+router.post("/repayOrder", userCheckoutOrderControll.repayOrder);
+router.get("/repay", userCheckoutOrderControll.repay);
 
 router.get("/error", userauth.error);
 

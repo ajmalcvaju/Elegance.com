@@ -8,13 +8,13 @@ const categorySchema = new mongoose.Schema({
   },
   image: { type: String, required: true },
   Type: { type: String, required: true },
-  discount:{ type: Number, default: 0 },
+  discount: { type: Number, default: 0 },
   is_deleted: { type: Number, default: 0 },
   stock: {
     type: Number,
     default: 0,
   },
-  soldCount: { type: Number}
+  soldCount: { type: Number },
 });
 
 const Category = new mongoose.model("Category", categorySchema);

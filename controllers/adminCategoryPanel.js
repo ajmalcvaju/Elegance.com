@@ -5,8 +5,8 @@ const adminCategory = async (req, res) => {
     const categories = await Category.find({});
     res.render("admin/category", { categories });
   } catch {
-    console.log(error.message)
-    res.redirect("/admin/error") 
+    console.log(error.message);
+    res.redirect("/admin/error");
   }
 };
 const addCategory = async (req, res) => {
@@ -40,7 +40,7 @@ const updateCategory = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
-    res.redirect("/admin/error") 
+    res.redirect("/admin/error");
   }
 };
 const deleteCategory = async (req, res) => {
@@ -67,9 +67,9 @@ const editCategory = async (req, res) => {
 const updatingCategory = async (req, res) => {
   const proId = req.query.id;
   console.log(req.query);
-  const { cname,discount, Type } = req.body;
+  const { cname, discount, Type } = req.body;
 
-  await Category.updateOne({ _id: proId }, { $set: { cname,discount, Type } });
+  await Category.updateOne({ _id: proId }, { $set: { cname, discount, Type } });
   res.redirect("/admin/category");
 };
 

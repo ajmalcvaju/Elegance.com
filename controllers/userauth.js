@@ -7,18 +7,17 @@ const login = async (req, res) => {
       res.render("user/login", { blocked: true });
     } else if (user && password === user.password) {
       req.session.email = email;
-      res.redirect("/")
+      res.redirect("/");
     } else {
-      res.redirect("/")
+      res.redirect("/");
     }
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("Internal Server Error");
   }
 };
-const error=async(req,res)=>{
-    res.render("user/errorPage")
-  }
+const error = async (req, res) => {
+  res.render("user/errorPage");
+};
 
-
-module.exports = { login,error };
+module.exports = { login, error };

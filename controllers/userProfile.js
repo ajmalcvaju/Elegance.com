@@ -13,7 +13,7 @@ const openProfile = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
 };
 const addAddress = async (req, res) => {
@@ -37,7 +37,7 @@ const addAddress = async (req, res) => {
     res.redirect("/myProfile");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
 };
 const editAddress = async (req, res) => {
@@ -58,7 +58,7 @@ const editAddress = async (req, res) => {
     res.redirect("/myProfile");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
 };
 const changePassword = async (req, res) => {
@@ -66,7 +66,7 @@ const changePassword = async (req, res) => {
     res.render("user/changePasswordProfile");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
 };
 const updatePassword = async (req, res) => {
@@ -87,21 +87,21 @@ const updatePassword = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
 };
-const changeAddress=async (req, res) => {
+const changeAddress = async (req, res) => {
   try {
     const addId = req.query.id;
     const address = await Address.findOne({ _id: addId });
     res.render("user/edit-address", { address, checkout: 0 });
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error") 
+    res.redirect("/error");
   }
-}
+};
 
-deleteAddress=async (req, res) => {
+deleteAddress = async (req, res) => {
   try {
     const addId = req.query.id;
     console.log(addId);
@@ -109,20 +109,20 @@ deleteAddress=async (req, res) => {
     res.redirect("/myProfile");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error")
+    res.redirect("/error");
   }
-}
-const editProfile=async (req, res) => {
+};
+const editProfile = async (req, res) => {
   try {
     const email = req.session.email;
-  const user = await User.findOne({ email });
-  res.render("user/edit-profile", { user });
+    const user = await User.findOne({ email });
+    res.render("user/edit-profile", { user });
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error")
+    res.redirect("/error");
   }
-}
-const updateProfile=async (req, res) => {
+};
+const updateProfile = async (req, res) => {
   try {
     const userId = req.query.id;
     const { username, fname, lname, mobileNumber } = req.body;
@@ -133,9 +133,9 @@ const updateProfile=async (req, res) => {
     res.redirect("/myProfile");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/error")
+    res.redirect("/error");
   }
-}
+};
 
 module.exports = {
   openProfile,
@@ -146,5 +146,5 @@ module.exports = {
   changeAddress,
   deleteAddress,
   editProfile,
-  updateProfile
+  updateProfile,
 };

@@ -7,8 +7,8 @@ const orderItemSchema = new mongoose.Schema({
     ref: "Product",
     required: true,
   },
-  category:{
-    type: String
+  category: {
+    type: String,
   },
   quantity: {
     type: Number,
@@ -56,7 +56,7 @@ const Counter = mongoose.model("Counter", counterSchema);
 const orderSchema = new mongoose.Schema({
   orderId: {
     type: String,
-    unique: true
+    unique: true,
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -82,34 +82,43 @@ const orderSchema = new mongoose.Schema({
   status: {
     type: String,
     default: "Pending",
-  },paymentMethod: {
-    type: String
-  },paymentStatus:{
-    type: String
   },
-  productQuantity:{
-    type: Number
-  },totalPrice:{
-    type: Number
-  },discount:{
-    type: Number
-  },discountedPrice:{
-    type: Number
-  },gst:{
-    type: Number
-  },totalPriceIncludingGst:{
-    type: Number
-  },shippingCharge:{
-    type: Number
-  },totalAmountPay:{
-    type: Number
+  paymentMethod: {
+    type: String,
   },
-  couponDiscount:{
-    type: Number
+  paymentStatus: {
+    type: String,
   },
-  priceAfterCoupon:{
-    type: Number
-  }
+  productQuantity: {
+    type: Number,
+  },
+  totalPrice: {
+    type: Number,
+  },
+  discount: {
+    type: Number,
+  },
+  discountedPrice: {
+    type: Number,
+  },
+  gst: {
+    type: Number,
+  },
+  totalPriceIncludingGst: {
+    type: Number,
+  },
+  shippingCharge: {
+    type: Number,
+  },
+  totalAmountPay: {
+    type: Number,
+  },
+  couponDiscount: {
+    type: Number,
+  },
+  priceAfterCoupon: {
+    type: Number,
+  },
 });
 
 orderSchema.pre("save", async function (next) {
@@ -121,9 +130,12 @@ orderSchema.pre("save", async function (next) {
         { $inc: { seq: 1 } },
         { new: true, upsert: true }
       );
-      const orderNumber= String(counter.seq).padStart(4, "0");
+      const orderNumber = String(counter.seq).padStart(4, "0");
       order.orderId = `ORD${orderNumber}`;
-      order.productQuantity = order.items.reduce((sum, item) => sum + item.quantity, 0);
+      order.productQuantity = order.items.reduce(
+        (sum, item) => sum + item.quantity,
+        0
+      );
       next();
     } catch (error) {
       next(error);

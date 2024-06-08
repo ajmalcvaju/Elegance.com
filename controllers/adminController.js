@@ -1,13 +1,13 @@
 const admin = {
   email: process.env.adminEmail,
-  password: process.env.adminPassword
+  password: process.env.adminPassword,
 };
 const loginLoad = async (req, res) => {
   try {
     res.render("admin/adminLogin");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/admin/error") 
+    res.redirect("/admin/error");
   }
 };
 
@@ -23,7 +23,7 @@ const verifyLogin = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
-    res.redirect("/admin/error") 
+    res.redirect("/admin/error");
   }
 };
 const loadDashboard = async (req, res) => {
@@ -31,7 +31,7 @@ const loadDashboard = async (req, res) => {
     res.render("admin/admindashboard");
   } catch (error) {
     console.log(error.message);
-    res.redirect("/admin/error") 
+    res.redirect("/admin/error");
   }
 };
 
