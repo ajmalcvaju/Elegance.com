@@ -6,6 +6,7 @@ const Category = require("../model/categoryModel");
 const Address = require("../model/addressModel");
 const Review = require("../model/reviewModel");
 
+
 const login = async (req, res) => {
   try {
     res.render("user/login");
@@ -298,22 +299,46 @@ const changePassword = async (req, res) => {
         res.render("user/changePassword", { UserId });
       } else {
         res.render("user/otpForgetPassword", { invalid: true, UserId });
+        console.log("2")
       }
     } else {
       res.render("user/otpForgetPassword", { expire: true, UserId });
+      console.log("3")
     }
 
-    updateInfo = await User.updateOne(
-      { _id: req.query.id },
-      { $set: { is_verified: 1 } }
-    );
-    console.log(updateInfo);
-    res.render("home");
+    // updateInfo = await User.updateOne(
+    //   { _id: req.query.id },
+    //   { $set: { is_verified: 1 } }
+    // );
+    // console.log(updateInfo);
+    // res.render("home");
   } catch (error) {
     console.log(error.message);
     res.redirect("/error");
   }
 };
+
+const resendOtp=async(req,res)=>{
+  try {
+    const userId= req.body.userId
+      const OTP = Math.floor(100000 + Math.random() * 900000);
+      const otp = new OTPcode({
+        userId: userId,
+        otp: OTP,
+        createdAt: Date.now(),
+        expiresAt: Date.now() + 300000,
+      });
+      const otpData = await otp.save();
+    const user = await User.findOne({_id:userId});
+    console.log(user)
+    sendVerifyMail(user.fname, user.lname, user.email, OTP);
+    res.json({success:true})
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
+  }
+}
+
 const updatePassword = async (req, res) => {
   try {
     const { password, confirmPassword, UserId } = req.body;
@@ -323,7 +348,7 @@ const updatePassword = async (req, res) => {
       console.log(UserId);
       updateInfo = await User.updateOne(
         { _id: UserId },
-        { $set: { password: password } }
+        { $set: { password: password,is_verified: 1 } }
       );
       res.redirect("/");
     } else {
@@ -652,5 +677,6 @@ module.exports = {
   login,
   productDetails,
   review,
-  rating
+  rating,
+  resendOtp
 };

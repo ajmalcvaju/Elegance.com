@@ -34,6 +34,8 @@ router.post("/signup/verify", userController.verifyMail);
 
 router.get("/reset", userController.reset);
 router.post("/reset", userController.resetPass);
+router.post("/resendOtp", userController.resendOtp);
+
 router.post("/reset/verify", userController.changePassword);
 router.post("/reset/new-password", userController.updatePassword);
 
