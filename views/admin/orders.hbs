@@ -69,7 +69,6 @@
                     <a href="/admin/category" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Categories</a>
                     <a href="/admin/orders" class="nav-item nav-link active"><i class="fa fa-shopping-cart" title="Sales"></i>Orders</a>
                     <a href="/admin/coupons" class="nav-item nav-link"><i class="fa fa-tag" title="Offers"></i>Coupons</a>
-                    <a href="/admin/offers" class="nav-item nav-link"><i class="fas fa-percent icon-discount"></i>Offers</a>
                     <a href="/admin/salesReport" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Sales Report</a>
                     <a href="/signout" class="signOut nav-item nav-link">Sign Out</a>
                 </div>
@@ -182,7 +181,7 @@
                         <th scope="col">User</th>
                         <th scope="col">Price</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Expected Arrival</th>
+                        <th scope="col">Payment Status</th>
                         <th scope="col">Order Details</th>
                         <th scope="col">Manage</th>
                     </tr>
@@ -196,7 +195,7 @@
                         <td>{{this.userId.fname}} {{this.userId.lname}}</td>
                         <td>{{this.totalAmountPay}}</td>
                         <td>{{this.status}}</td>
-                        <td>{{this.expectedArrival}}</td>
+                        <td>{{this.paymentStatus}}</td>
                         <td><a href="/admin/orderDetails?orderId={{this.orderId}}"
                             class="btn btn-info">Order Details</a></td>
                         <td> <a href="/admin/manage?orderId={{this.orderId}}"

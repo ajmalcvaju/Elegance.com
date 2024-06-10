@@ -337,8 +337,13 @@ const placeOrder = async (req, res) => {
     for (const item of orderItems) {
       await Product.updateOne(
         { _id: item.productId },
-        { $inc: { soldCount: item.quantity } }
-      );
+        { 
+          $inc: { 
+            soldCount: item.quantity, 
+            quantity: -item.quantity 
+          } 
+        }
+      )
     }
     for (const item of orderItems) {
       await Category.updateOne(
@@ -401,7 +406,8 @@ const placeOrder = async (req, res) => {
     }
     await order.save();
     await Cart.deleteOne({ userId });
-    if (paymentStatus == "Pending" || paymentStatus == "Successful") {
+    req.session.discount = null;
+    if (paymentStatus == "Pending" || paymentStatus == "Successfull") {
       res.render("user/orderSuccess", { paid: 1 });
     } else {
       res.render("user/orderSuccess", { paid: 0 });

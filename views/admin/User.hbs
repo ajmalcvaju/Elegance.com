@@ -61,16 +61,18 @@
                         <span>Admin</span>
                     </div>
                 </div>
-                 <div class="navbar-nav w-100">
+                <div class="navbar-nav w-100">
                     <a href="/admin/dashboard" class="nav-item nav-link"><i
                             class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <a href="/admin/user" class="nav-item nav-link active"><i class="fa fa-th me-2"></i>Users</a>
                     <a href="/admin/product" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Products</a>
                     <a href="/admin/category" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Categories</a>
-                    <a href="/admin/orders" class="nav-item nav-link"><i class="fa fa-shopping-cart" title="Sales"></i>Orders</a>
-                    <a href="/admin/coupons" class="nav-item nav-link"><i class="fa fa-tag" title="Offers"></i>Coupons</a>
-                    <a href="/admin/offers" class="nav-item nav-link"><i class="fas fa-percent icon-discount"></i>Offers</a>
-                    <a href="/admin/salesReport" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Sales Report</a>
+                    <a href="/admin/orders" class="nav-item nav-link"><i class="fa fa-shopping-cart"
+                            title="Sales"></i>Orders</a>
+                    <a href="/admin/coupons" class="nav-item nav-link"><i class="fa fa-tag"
+                            title="Offers"></i>Coupons</a>
+                    <a href="/admin/salesReport" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Sales
+                        Report</a>
                     <a href="/signout" class="signOut nav-item nav-link">Sign Out</a>
                 </div>
             </nav>
@@ -173,8 +175,9 @@
                 </div>
             </nav>
 
-
-
+           <div style="display: flex; justify-content: flex-end;">
+    <a href="/admin/addUser" class="btn btn-success">Add Users</a>
+</div>
             <!-- Navbar End -->
             <table class="table mt-5">
                 <thead>
@@ -205,20 +208,19 @@
                             <a href="/admin/edit-user?id={{this._id}}" class="btn btn-primary">Edit</a>
                         </td>
                         <td>
-                            {{#if this.is_blocked}}{{else}}
-                            <a href="/admin/block-user?id={{this._id}}" class="btn btn-danger"
-                                onclick="return confirm('Are You want to Block {{this.username}}?')">Block</a>
-                            {{/if}}
                             {{#if this.is_blocked}}
-                            <a href="/admin/unblock-user?id={{this._id}}" class="btn btn-success"
-                                onclick="return confirm('Are You want to Unblock {{this.username}}?')">Unblock</a>
+                            <a href="javascript:void(0);" class="btn btn-success"
+                                onclick="unblockUser('{{this._id}}', '{{this.username}}')">Unblock</a>
+                            {{else}}
+                            <a href="javascript:void(0);" class="btn btn-danger"
+                                onclick="blockUser('{{this._id}}', '{{this.username}}')">Block</a>
                             {{/if}}
                         </td>
                     </tr>
                     {{/each}}
                 </tbody>
             </table>
-            <a href="/admin/addUser" class="btn btn-success">Add Users</a>
+
         </div>
 
         <!-- Content End -->
@@ -241,11 +243,39 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        {{#each order}}
-        const un = "{{this.userId.fname}}"
-        document.getElementById("price").innerText = un;
-        {{/each}}
+        function blockUser(id, username) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `Do you want to block ${username}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, block it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = `/admin/block-user?id=${id}`;
+                }
+            });
+        }
+
+        function unblockUser(id, username) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `Do you want to unblock ${username}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, unblock it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = `/admin/unblock-user?id=${id}`;
+                }
+            });
+        }
     </script>
 </body>
 

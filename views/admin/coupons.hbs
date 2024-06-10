@@ -29,6 +29,9 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.17/dist/sweetalert2.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -61,7 +64,7 @@
                         <span>Admin</span>
                     </div>
                 </div>
-                 <div class="navbar-nav w-100">
+                <div class="navbar-nav w-100">
                     <a href="/admin/dashboard" class="nav-item nav-link"><i
                             class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <a href="/admin/user" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Users</a>
@@ -69,7 +72,6 @@
                     <a href="/admin/category" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Categories</a>
                     <a href="/admin/orders" class="nav-item nav-link"><i class="fa fa-shopping-cart" title="Sales"></i>Orders</a>
                     <a href="/admin/coupons" class="nav-item nav-link active"><i class="fa fa-tag" title="Offers"></i>Coupons</a>
-                    <a href="/admin/offers" class="nav-item nav-link"><i class="fas fa-percent icon-discount"></i>Offers</a>
                     <a href="/admin/salesReport" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Sales Report</a>
                     <a href="/signout" class="signOut nav-item nav-link">Sign Out</a>
                 </div>
@@ -137,7 +139,7 @@
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="fa fa-bell me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Notificatin</span>
+                            <span class="d-none d-lg-inline-flex">Notification</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item">
@@ -172,19 +174,19 @@
                     </div>
                 </div>
             </nav>
-
-
-
-            <!-- Navbar End -->
+<!-- Navbar End -->
+<div style="display: flex; justify-content: flex-end;">
+            <a href="/admin/addCoupon" class="btn btn-success">Add Coupons</a>
+            </div>
             <table class="table mt-5">
                 <thead>
                     <tr>
-                        <th scope="col">index</th>
+                        <th scope="col">Index</th>
                         <th scope="col">Coupon Code</th>
                         <th scope="col">Description</th>
                         <th scope="col">Min Purchase Amount</th>
                         <th scope="col">Discount Percentage(%)</th>
-                        <th scope="col">status</th>
+                        <th scope="col">Status</th>
                         <th scope="col">Expiry</th>
                         <th scope="col">Edit</th>
                         <th scope="col">Delete</th>
@@ -204,13 +206,12 @@
                             <a href="/admin/edit-coupon?id={{this._id}}" class="btn btn-primary">Edit</a>
                         </td>
                         <td>
-                            <a href="/admin/delete-coupon?id={{this._id}}" class="btn btn-danger">Delete</a>
+                            <a href="javascript:void(0);" onclick="confirmDelete('/admin/delete-coupon?id={{this._id}}')" class="btn btn-danger">Delete</a>
                         </td>
                     </tr>
                     {{/each}}
                 </tbody>
             </table>
-            <a href="/admin/addCoupon" class="btn btn-success">Add Coupons</a>
         </div>
 
         <!-- Content End -->
@@ -231,13 +232,28 @@
     <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.17/dist/sweetalert2.min.js"></script>
+
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+
     <script>
-        {{#each order}}
-        const un = "{{this.userId.fname}}"
-        document.getElementById("price").innerText = un;
-        {{/each}}
+        function confirmDelete(url) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            })
+        }
     </script>
 </body>
 

@@ -1,168 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<style>
-    .invoice-title h2, .invoice-title h3 {
-    display: inline-block;
-}
-
-.table > tbody > tr > .no-line {
-    border-top: none;
-}
-
-.table > thead > tr > .no-line {
-    border-bottom: none;
-}
-
-.table > tbody > tr > .thick-line {
-    border-top: 2px solid;
-}
-</style>
-    <title>Order Details</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Order Details</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/cart.css">
+	<style>
+		.back-to-shop {
+			cursor: pointer;
+		}
+	</style>
 </head>
+
 <body>
-   <div class="container">
-    <div class="row">
-        <div class="col-xs-12">
-    		<div class="invoice-title">
-    			<h2>Invoice</h2><h3 class="pull-right">Order {{order.orderId}}</h3>
-    		</div>
-    		<hr>
-    		<div class="row">
-    			<div class="col-xs-6">
-    				<address>
-    				<strong>Billed To:</strong><br>
-    					{{order.userId.fname}} {{order.userId.lname}}<br>
-    					{{order.addressId.houseName}},{{order.addressId.street}}<br>
-    					{{order.addressId.district}},{{order.addressId.state}}<br>
-    					Pincode:{{order.addressId.pincode}}
-    				</address>
-    			</div>
-    			<div class="col-xs-6 text-right">
-    				<address>
-    				<strong>Billed To:</strong><br>
-    					{{order.userId.fname}} {{order.userId.lname}}<br>
-    					{{order.addressId.houseName}},{{order.addressId.street}}<br>
-    					{{order.addressId.district}},{{order.addressId.state}}<br>
-    					Pincode:{{order.addressId.pincode}}
-    				</address>
-    			</div>
-    		</div>
-    		<div class="row">
-    			<div class="col-xs-6">
-    				<address>
-    					<strong>Payment Method:</strong><br>
-    					{{order.paymentMethod}}<br>
-    					<strong>Payment Status:</strong><br>
-    					{{order.paymentStatus}}
-    				</address>
-    			</div>
-    			<div class="col-xs-6 text-right">
-    				<address>
-    					<strong>Order Date:</strong><br>
-    					{{order.date}}<br>
-    				</address>
-    			</div>
-    		</div>
-    	</div>
-    </div>
-    
-    <div class="row">
-    	<div class="col-md-12">
-    		<div class="panel panel-default">
-    			<div class="panel-heading">
-    				<h3 class="panel-title"><strong>Order summary</strong></h3>
-    			</div>
-    			<div class="panel-body">
-    				<div class="table-responsive">
-    					<table class="table table-condensed">
-    						<thead>
-                                <tr>
-        							<td><strong>Item</strong></td>
-                                    <td><strong>Category</strong></td>
-        							<td class="text-center"><strong>Price</strong></td>
-        							<td class="text-center"><strong>Quantity</strong></td>
-        							<td class="text-right"><strong>Total Price</strong></td>
-                                </tr>
-    						</thead>
-    						<tbody>
-    							<!-- foreach ($order->lineItems as $line) or some such thing here -->
-                                {{#each order.items}}
-    							<tr>
-    								<td>{{this.productId.pname}}</td>
-                                    <td>{{this.productId.category}}</td>
-    								<td class="text-center">₹{{this.productId.price}}</td>
-    								<td class="text-center">{{this.quantity}}</td>
-    								<td class="text-right">₹{{this.priceBeforeOffer}}</td>
-    							</tr>
-                                {{/each}}
-                                <tr>
-    								<td class="thick-line"></td>
-    								<td class="thick-line"></td>
-                                    <td class="thick-line"></td>
-    								<td class="thick-line text-center"><strong>Subtotal</strong></td>
-    								<td class="thick-line text-right">₹{{order.totalPrice}}</td>
-    							</tr>
-                                 <tr>
-    								<td></td>
-    								<td></td>
-                                    <td></td>
-    								<td class="thick-line text-center"><strong>Offer Discount</strong></td>
-    								<td class="thick-line text-right">₹{{order.discount}}</td>
-    							</tr>
-                                <tr>
-    								<td></td>
-    								<td></td>
-                                    <td></td>
-    								<td class="thick-line text-center"><strong>Coupon Discount</strong></td>
-    								<td class="thick-line text-right">₹{{order.couponDiscount}}</td>
-    							</tr>
-                                 <tr>
-    								<td ></td>
-    								<td ></td>
-                                    <td ></td>
-    								<td class="thick-line text-center"><strong>Total Gst Amount</strong></td>
-    								<td class="thick-line text-right">₹{{order.gst}}</td>
-    							</tr>
-                                <tr>
-    								<td ></td>
-    								<td ></td>
-                                    <td ></td>
-    								<td class="thick-line text-center"><strong>Shipping Charge</strong></td>
-    								<td class="thick-line text-right">₹{{order.shippingCharge}}</td>
-    							</tr>
-                                 <tr>
-    								<td ></td>
-    								<td ></td>
-                                    <td ></td>
-    								<td class="thick-line text-center"><strong>Total Amount has to Pay</strong></td>
-                                    {{#if order.priceAfterCoupon}}
-                                    <td class="thick-line text-right">₹{{order.priceAfterCoupon}}</td>
-                                    {{else}}
-                                    <td class="thick-line text-right">₹{{order.totalAmountPay}}</td>
-                                    {{/if}}
-    							</tr>
-                                <tr>
-    								<td ></td>
-    								<td ></td>
-                                    <td ></td>
-                                    <td></td>
-                                    <td class="thick-line text-center"></td>
-                                    </tr>
-    						</tbody>
-    					</table>
-    				</div>
-    			</div>
-    		</div>
-    	</div>
-    </div>
-</div> 
+	<div class="card">
+		<div class="row">
+			<div class="col-md-8 cart">
+				<div class="title">
+					<div class="row">
+						<div class="col">
+							<h4><b>Order Details</b></h4>
+						</div>
+					</div>
+				</div>
+
+
+				{{#each order.items}}
+				<div class="row border-top border-bottom">
+					<div class="row main align-items-center">
+						<div class="col-2"><img class="img-fluid" src="/productImages/{{this.productId.image.[0]}}">
+						</div>
+						<div class="col">
+							<div class="row text-muted">{{this.productId.pname}}</div>
+							<div class="row">{{this.productId.category}} </a></div>
+						</div>
+						<div class="col">
+							</a>{{this.quantity}}</a>
+						</div>
+						<div class="col">
+							</a>{{this.productId.price}}</a>
+						</div>
+						<div class="col">
+							</a>{{this.priceBeforeOffer}}</a>
+						</div>
+					</div>
+				</div>
+				{{/each}}
+				<div class="back-to-shop">
+					<h5>Address:</h5>
+					<p>{{order.addressId.houseName}},{{order.addressId.street}}
+						<br>{{order.addressId.district}},{{order.addressId.state}}<br>Pincode:{{order.addressId.pincode}}
+					</p>
+				</div>
+			</div>
+
+			<div class="col-md-4 summary">
+
+				<div>
+					<h5><b>Summary</b></h5>
+				</div>
+				<hr>
+				<form action="/checkout" method="post">
+					<div style="overflow: hidden;">
+						<h6 style="float: left;">Total Price:</h6>
+						<div style="float: right;">
+							<h6 style="display: inline;"><b>{{order.totalPrice}} ₹</b></h6>
+
+						</div>
+					</div>
+					<div style="overflow: hidden;">
+						<h6 style="float: left;">Discount:</h6>
+						<div style="float: right;">
+							<h6 style="display: inline;color: green;"><b>{{order.discount}} ₹</b></h6>
+						</div>
+					</div>
+					<div style="overflow: hidden;">
+						<h6 style="float: left;">Coupon Discount:</h6>
+						<div style="float: right;">
+							<h6 style="display: inline;color: green;"><b>{{order.couponDiscount}} ₹</b></h6>
+						</div>
+					</div>
+					<div style="overflow: hidden;">
+						<h6 style="float: left;">GST:</h6>
+						<div style="float: right;">
+							<h6 style="display: inline;color: red;"><b>{{order.gst}} ₹</b></h6>
+						</div>
+					</div>
+					<div style="overflow: hidden;">
+						<h6 style="float: left;">Shipping Charge:</h6>
+						<div style="float: right;">
+							<h6 style="display: inline;color: red;"><b>{{order.shippingCharge}} ₹</b></h6>
+						</div>
+					</div>
+					<div style="overflow: hidden;">
+						<h6 style="float: left;">Tota Amount Has to Pay:</h6>
+						<div style="float: right;">
+							<h6 style="display: inline;"><b>{{order.totalAmountPay}} ₹</b></h6>
+						</div>
+					</div>
+				</form>
+				{{#if (eq order.status "Delivered")}}
+						<a href="/invoice?orderId={{order.orderId}}" class="btn btn-warning">Invoice</a>
+					{{/if}}
+			</div>
+		</div>
+
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 </body>
+
 </html>
-
-

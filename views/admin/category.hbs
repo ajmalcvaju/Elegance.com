@@ -69,7 +69,6 @@
                     <a href="/admin/category" class="nav-item nav-link active"><i class="fa fa-table me-2"></i>Categories</a>
                     <a href="/admin/orders" class="nav-item nav-link"><i class="fa fa-shopping-cart" title="Sales"></i>Orders</a>
                     <a href="/admin/coupons" class="nav-item nav-link"><i class="fa fa-tag" title="Offers"></i>Coupons</a>
-                    <a href="/admin/offers" class="nav-item nav-link"><i class="fas fa-percent icon-discount"></i>Offers</a>
                     <a href="/admin/salesReport" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Sales Report</a>
                     <a href="/signout" class="signOut nav-item nav-link">Sign Out</a>
                 </div>
@@ -173,7 +172,9 @@
                 </div>
             </nav>
             <!-- Navbar End -->
-
+             <div style="display: flex; justify-content: flex-end;">
+            <a href="/admin/addCategory" class="btn btn-success">Add Category</a>
+            </div>
             <table class="table mt-5">
                 <thead>
                     <tr>
@@ -200,19 +201,16 @@
                         </td>
                         <td>
                             {{#if this.is_deleted}}{{else}}
-                            <a href="/admin/delete-category?id={{this._id}}" class="btn btn-danger"
-                                onclick="return confirm('Are You want to Delete {{this.cname}}?')">Delete</a>
+                            <a href="#" class="btn btn-danger" onclick="confirmDelete('{{this._id}}', '{{this.cname}}')">Delete</a>
                             {{/if}}
                             {{#if this.is_deleted}}
-                            <a href="/admin/restore-category?id={{this._id}}" class="btn btn-success"
-                                onclick="return confirm('Are You want to Restore {{this.cname}}?')">Restrore</a>
+                            <a href="#" class="btn btn-success" onclick="confirmRestore('{{this._id}}', '{{this.cname}}')">Restore</a>
                             {{/if}}
                         </td>
                     </tr>
                     {{/each}}
                 </tbody>
             </table>
-            <a href="/admin/addCategory" class="btn btn-success">Add Category</a>
         </div>
         <!-- Content End -->
 
@@ -233,13 +231,47 @@
     <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/main.js"></script>
+    
     <script>
-        { { #each order } }
-        const un = "{{this.userId.fname}}"
-        document.getElementById("price").innerText = un;
-        { { /each}}
-    </script>
+function confirmDelete(id, cname) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: `Are you sure you want to delete ${cname}?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If confirmed, redirect to the delete URL
+            window.location.href = `/admin/delete-category?id=${id}`;
+        }
+    });
+}
+</script>
+<script>
+function confirmRestore(id, cname) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: `Are you sure you want to restore ${cname}?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, restore it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If confirmed, redirect to the restore URL
+            window.location.href = `/admin/restore-category?id=${id}`;
+        }
+    });
+}
+</script>
+
+
 </body>
 
 </html>

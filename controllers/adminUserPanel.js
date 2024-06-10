@@ -27,6 +27,9 @@ const addUser = async (req, res) => {
     res.redirect("/admin/error");
   }
 };
+
+
+
 const updateUser = async (req, res) => {
   try {
     const { username, email, mobileNumber, password, confirmPassword } =

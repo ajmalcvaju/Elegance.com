@@ -99,8 +99,8 @@ router.get("/deleteAddress", async (req, res) => {
   await Address.deleteOne({ _id: addId });
   res.redirect("/checkout");
 });
-router.get("/cancelOrder", userCheckoutOrderControll.orderCancell);
-router.get("/returnOrder", userCheckoutOrderControll.returnOrder);
+router.post("/cancelOrder", userCheckoutOrderControll.orderCancell);
+router.post("/returnOrder", userCheckoutOrderControll.returnOrder);
 
 router.get("/orderDetails", userCheckoutOrderControll.orderDetails);
 router.get("/invoice", userCheckoutOrderControll.invoice);

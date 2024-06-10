@@ -59,10 +59,11 @@ const checkoutEditAddress = async (req, res) => {
 };
 const orderCancell = async (req, res) => {
   try {
-    const orderId = req.query.orderId;
+    const orderId = req.body.orderId;
+    const reason=req.body.reason
     const order = await Order.updateOne(
       { _id: orderId },
-      { $set: { status: "Cancelled" } }
+      { $set: { status: "Cancelled",reasonForCancelation:reason } }
     );
     res.redirect("/orderStatus");
   } catch (error) {
@@ -72,10 +73,11 @@ const orderCancell = async (req, res) => {
 };
 const returnOrder = async (req, res) => {
   try {
-    const orderId = req.query.orderId;
+    const orderId = req.body.orderId;
+    const reason=req.body.reason
     const order = await Order.updateOne(
       { _id: orderId },
-      { $set: { status: "Return Pending" } }
+      { $set: { status: "Return Pending",reasonForReturn:reason } }
     );
     res.redirect("/orderStatus");
   } catch (error) {
