@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Edit User</title>
+    <title>Add User</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
@@ -16,15 +16,18 @@
 
         body {
             background-color: #080710;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
 
         .background {
-            width: 430px;
-            height: 520px;
             position: absolute;
-            transform: translate(-50%, -50%);
-            left: 50%;
-            top: 50%;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
         }
 
         .background .shape {
@@ -47,26 +50,17 @@
         }
 
         form {
-            height: auto;
-            width: 400px;
+            width: 100%;
+            max-width: 400px;
             background-color: rgba(255, 255, 255, 0.13);
-            position: absolute;
-            transform: translate(-50%, -50%);
-            top: 50%;
-            left: 50%;
             border-radius: 10px;
             backdrop-filter: blur(10px);
             border: 2px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
             padding: 50px 35px;
-        }
-
-        form * {
-            font-family: 'Poppins', sans-serif;
             color: #ffffff;
-            letter-spacing: 0.5px;
-            outline: none;
-            border: none;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
         }
 
         form h3 {
@@ -78,7 +72,7 @@
 
         label {
             display: block;
-            margin-top: 30px;
+            margin-top: 20px;
             font-size: 16px;
             font-weight: 500;
         }
@@ -100,7 +94,7 @@
         }
 
         button {
-            margin-top: 50px;
+            margin-top: 30px;
             width: 100%;
             background-color: #ffffff;
             color: #080710;
@@ -111,42 +105,13 @@
             cursor: pointer;
         }
 
-        .social {
-            margin-top: 30px;
-            display: flex;
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
         }
 
-        .social div {
-            background: red;
-            width: 150px;
-            border-radius: 3px;
-            padding: 5px 10px 10px 5px;
-            background-color: rgba(255, 255, 255, 0.27);
-            color: #eaf0fb;
-            text-align: center;
-        }
-
-        .social div:hover {
-            background-color: rgba(255, 255, 255, 0.47);
-        }
-
-        .social .fb {
-            margin-left: 25px;
-        }
-
-        .social i {
-            margin-right: 4px;
-        }
-
-        select {
-            color: #080710;
-        }
-
-        option {
-            color: #080710;
-        }
-
-        label {
+        .hidden {
             display: none;
         }
     </style>
@@ -156,27 +121,31 @@
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form id="editUserForm" action="/admin/edit-user" method="post" enctype="multipart/form-data">
-        <h3>Edit User</h3>
-        <input type="text" name="username" placeholder="Username" id="username" onblur="validateUsername()" value="{{user.username}}">
-        <span id="usernameError" style="color: red;"></span>
+    <form id="addUserForm" action="/admin/addUser" method="post" enctype="multipart/form-data">
+        <h3>Add User</h3>
 
-        <input type="text" name="email" placeholder="Email" id="email" onblur="validateEmail(this.value)" value="{{user.email}}">
-        <span id="emailError" style="color: red;"></span>
+        <input type="text" name="username" placeholder="Username" id="username" onblur="validateUsername()">
+        <span id="usernameError" class="error-message"></span>
 
-        <input type="text" name="fname" placeholder="First Name" value="{{user.fname}}">
-        <span id="fnameError" style="color: red;"></span>
+        <input type="text" name="email" placeholder="Email" id="email" onblur="validateEmail(this.value)">
+        <span id="emailError" class="error-message"></span>
 
-        <input type="text" name="lname" placeholder="Last Name" value="{{user.lname}}">
-        <span id="lnameError" style="color: red;"></span>
+        <input type="text" name="fname" placeholder="First Name" required>
+        <span id="fnameError" class="error-message"></span>
 
-        <input type="text" name="mobileNumber" placeholder="Mobile Number" id="mobileNumber" onblur="validateMobileNumber(this.value)" value="{{user.mobileNumber}}">
-        <span id="mobileNumberError" style="color: red;"></span>
+        <input type="text" name="lname" placeholder="Last Name" required>
+        <span id="lnameError" class="error-message"></span>
 
-        <input type="password" name="password" placeholder="Password" id="password" onblur="validatePassword(this.value)" value="{{user.password}}">
-        <span id="passwordErrors" style="color: red;"></span>
+        <input type="text" name="mobileNumber" placeholder="Mobile Number" id="mobileNumber" onblur="validateMobileNumber(this.value)">
+        <span id="mobileNumberError" class="error-message"></span>
 
-        <button type="submit">Edit User</button>
+        <input type="file" name="image" id="img" required>
+        <span id="imageError" class="error-message"></span>
+
+        <input type="password" name="password" placeholder="Password" id="password" onblur="validatePassword(this.value)" required>
+        <span id="passwordErrors" class="error-message"></span>
+
+        <button type="submit">Add User</button>
     </form>
 
     <script>
@@ -190,7 +159,7 @@
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ username,userId:'{{user._id}}' })
+                    body: JSON.stringify({ username })
                 });
 
                 const data = await response.json();
@@ -224,7 +193,7 @@
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ email,userId:'{{user._id}}' })
+                    body: JSON.stringify({ email })
                 });
 
                 const data = await response.json();
@@ -258,7 +227,7 @@
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ mobileNumber,userId:'{{user._id}}'})
+                    body: JSON.stringify({ mobileNumber })
                 });
 
                 const data = await response.json();
@@ -311,7 +280,7 @@
             }
         }
 
-        document.getElementById("editUserForm").addEventListener("submit", async function (event) {
+        document.getElementById("addUserForm").addEventListener("submit", async function (event) {
             event.preventDefault();
 
             // Additional validation before submission if necessary
@@ -320,6 +289,7 @@
             const fname = document.querySelector("input[name='fname']").value;
             const lname = document.querySelector("input[name='lname']").value;
             const mobileNumber = document.getElementById("mobileNumber").value;
+            const image = document.getElementById("img").files[0];
             const password = document.getElementById("password").value;
 
             let isValid = true;
@@ -349,6 +319,11 @@
                 isValid = false;
             }
 
+            if (!image) {
+                document.getElementById("imageError").textContent = "Image is required.";
+                isValid = false;
+            }
+
             if (!password) {
                 document.getElementById("passwordErrors").textContent = "Password is required.";
                 isValid = false;
@@ -356,9 +331,9 @@
 
             if (isValid) {
                 const formData = new FormData(this);
-                formData.append('userId', '{{user._id}}');
+
                 try {
-                    const response = await fetch("/admin/edit-user", {
+                    const response = await fetch("/admin/addUser", {
                         method: "POST",
                         body: formData
                     });
@@ -366,13 +341,13 @@
                     const result = await response.json();
 
                     if (result.success) {
-                        window.location.href = "/admin/user"; // Redirect on success
+                        window.location.href = "/admin/User"; // Redirect on success
                     } else {
                         // Handle specific error cases here if necessary
-                        console.error("Error editing user:", result.message);
+                        console.error("Error adding user:", result.message);
                     }
                 } catch (error) {
-                    console.error("Error editing user:", error);
+                    console.error("Error adding user:", error);
                 }
             } else {
                 // Handle the case where some fields are not valid

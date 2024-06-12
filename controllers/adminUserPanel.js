@@ -28,23 +28,31 @@ const addUser = async (req, res) => {
   }
 };
 
-
+const UserExist= async (req, res) => {
+  try {
+    const userId=req.body.userId
+    const users = await User.findOne({ _id:userId })
+    const { username,email, mobileNumber } = req.body;
+    if(username && username!=users.username){
+      const user = await User.findOne({ username });
+  res.json({ exists: !!user });
+    }else if(email && email!=users.email){
+      const user = await User.findOne({ email });
+    res.json({ exists: !!user });
+    }else if(mobileNumber && mobileNumber!=users.mobileNumber){
+      const user = await User.findOne({ mobileNumber });
+    res.json({ exists: !!user });
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/admin/error");
+  }
+};
 
 const updateUser = async (req, res) => {
   try {
     const { username, email, mobileNumber, password, confirmPassword } =
       req.body;
-    const user1 = await User.find({ username });
-    const user2 = await User.find({ email });
-    const user3 = await User.find({ mobileNumber });
-    console.log(user1);
-    if (user1[0]) {
-      res.render("admin/addUser", { Username: true });
-    } else if (user2[0]) {
-      res.render("admin/addUser", { Email: true });
-    } else if (user3[0]) {
-      res.render("admin/addUser", { MobileNumber: true });
-    } else {
       const user = new User({
         username: req.body.username,
         email: req.body.email,
@@ -56,13 +64,7 @@ const updateUser = async (req, res) => {
         is_admin: 0,
       });
       const userData = await user.save();
-      if (userData) {
-        const users = await User.find({});
-        res.render("admin/User", { users });
-      } else {
-        res.render("admin/addUser");
-      }
-    }
+        res.json({success:true})
   } catch (error) {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -89,16 +91,14 @@ const editUser = async (req, res) => {
   const user = await User.findOne({ _id: proId });
   res.render("admin/editUser", { user });
 };
-const updatingUser = async (req, res) => {
-  const proId = req.query.id;
-  console.log(req.query);
+const updatingUser = async (req, res) => { 
+  const userId=req.body.userId
   const { username, email, fname, lname, password, mobileNumber } = req.body;
-  console.log(proId);
   await User.updateOne(
-    { _id: proId },
+    { _id: userId },
     { $set: { username, email, fname, lname, password, mobileNumber } }
   );
-  res.redirect("/admin/user");
+  res.json({success:true})
 };
 module.exports = {
   adminUser,
@@ -109,4 +109,5 @@ module.exports = {
   updateUser,
   editUser,
   updatingUser,
+  UserExist
 };

@@ -340,7 +340,7 @@ const placeOrder = async (req, res) => {
         { 
           $inc: { 
             soldCount: item.quantity, 
-            quantity: -item.quantity 
+            purchase: -item.quantity 
           } 
         }
       )

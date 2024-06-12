@@ -53,6 +53,7 @@ const storage2 = multer.diskStorage({
 });
 const upload2 = multer({ storage: storage2 });
 router.post("/addUser", upload2.single("image"), adminUserPanel.updateUser);
+router.post("/UserExist", adminUserPanel.UserExist);
 
 router.get("/category", adminCategoryPanel.adminCategory);
 router.get("/addcategory", adminCategoryPanel.addCategory);
@@ -82,7 +83,7 @@ router.get("/edit-user", adminUserPanel.editUser);
 router.get("/edit-product", adminProductPanel.editProduct);
 router.get("/edit-category", adminCategoryPanel.editCategory);
 
-router.post("/edit-user", adminUserPanel.updatingUser);
+router.post("/edit-user",upload.none(),adminUserPanel.updatingUser);
 router.post("/edit-product", adminProductPanel.updatingProduct);
 router.post("/edit-category", adminCategoryPanel.updatingCategory);
 
