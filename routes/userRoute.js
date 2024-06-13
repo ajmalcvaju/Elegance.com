@@ -14,8 +14,19 @@ const cartController = require("../controllers/cartController");
 const userCheckoutOrderControll = require("../controllers/userCheckoutOrderControll");
 const Cart = require("../model/cartModel");
 
+// const passport = require("passport");
+const passport =require("../config/passport");
+
 router.get("/", userController.home);
 router.get("/login", middleware.checkSession, userController.login);
+
+router.get("/auth/google", passport.authenticate("google", { scope: ['email', 'profile'] }));
+
+router.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: '/' }), (req, res) => {
+   req.session.email=req.user.email;
+    res.redirect('/');
+});
+
 router.post("/login", userauth.login);
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

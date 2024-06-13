@@ -57,7 +57,7 @@ const home = async (req, res) => {
       const bestSellerProduct = await Product.find({})
         .sort({ soldCount: -1 })
         .limit(10);
-      console.log(bestSellerProduct);
+      console.log("hi")
       res.render("user/home", {
         login: 1,
         bestSellerProduct,
@@ -75,13 +75,13 @@ const home = async (req, res) => {
       const bestSellerProduct = await Product.find({})
         .sort({ soldCount: -1 })
         .limit(10);
-      console.log(bestSellerProduct);
       res.render("user/home", {
         login: 0,
         bestSellerProduct,
         newArrival,
         topDeal,
       });
+      console.log("hello")
     }
   } catch (error) {
     console.log(error.message);

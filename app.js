@@ -7,6 +7,9 @@ var logger = require("morgan");
 const noCache = require("nocache");
 const mongoose = require("mongoose");
 require("dotenv").config()
+const MongoStore = require('connect-mongo');
+const Passport = require('./config/passport');
+const passport = require('passport');
 const Razorpay=require('razorpay')
 const cors = require('cors');
 
@@ -35,8 +38,12 @@ app.use(
     secret: "my_key",
     resave: false,
     saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl: "mongodb://localhost:27017/NewUsers" })
   })
 );
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(function (req, res, next) {
   res.header("Cache-Control", "no-cache, no-store, must-revalidate");
