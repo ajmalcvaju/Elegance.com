@@ -161,7 +161,7 @@
     <div class="shape"></div>
     <div class="shape"></div>
   </div>
-  <form action="/login" method="post" id="login">
+  <form action="/login" method="post" id="login" onsubmit="return validateForm()">
     <h3>Login Here</h3>
 
     <label for="email">Email</label>
@@ -178,7 +178,7 @@
     <p style="color: red;">Invalid Credentials!!....Try Again....</p>
     {{/if}}
     <button type="submit" id="login">Log In</button>
-    <a href="/signup" class="create-account-link ">Create New Account</a>
+    <a href="/signup" class="create-account-link">Create New Account</a>
     <div class="social">
       <div class="go"><a href="/auth/google"><i class="fab fa-google"></i> Google</a></div>
     </div>
@@ -200,6 +200,7 @@
       emailError.textContent = "Please enter a valid email address";
     }
   }
+
   function validatePassword(password) {
     var passwordInput = document.getElementById("password");
     var passwordErrors = document.getElementById("passwordErrors");
@@ -236,6 +237,33 @@
     }
   }
 
+  function validateForm() {
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var emailError = document.getElementById("emailError");
+    var passwordErrors = document.getElementById("passwordErrors");
+
+    if (!email) {
+      emailError.textContent = "Email is required";
+      return false;
+    }
+
+    if (!password) {
+      passwordErrors.innerHTML = "Password is required";
+      return false;
+    }
+
+    // Call existing validation functions
+    validateEmail(email);
+    validatePassword(password);
+
+    // Check if there are any error messages
+    if (emailError.textContent || passwordErrors.innerHTML) {
+      return false;
+    }
+
+    return true;
+  }
 </script>
 
 </html>

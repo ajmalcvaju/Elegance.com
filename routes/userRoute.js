@@ -40,7 +40,10 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get("/signup", middleware.checkSession2, userController.loadRegister);
+router.post("/checkUserExist", userController.checkUserExist);
+
 router.post("/signup", upload.single("image"), userController.insertUser);
+router.get("/otp", userController.otp);
 router.post("/signup/verify", userController.verifyMail);
 
 router.get("/reset", userController.reset);

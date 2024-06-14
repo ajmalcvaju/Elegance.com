@@ -2,13 +2,11 @@
 <html lang="en">
 
 <head>
-    <!-- Design by foolishdeveloper.com -->
     <title>Edit Address</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-    <!--Stylesheet-->
     <style media="screen">
         *,
         *:before,
@@ -54,7 +52,7 @@
         }
 
         form {
-            height: 550px;
+            height: 600px;
             width: 400px;
             background-color: rgba(255, 255, 255, 0.13);
             position: absolute;
@@ -159,22 +157,42 @@
             flex-direction: row;
             align-items: flex-start;
         }
+
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
     </style>
     <script>
         function validateForm() {
-            var houseName = document.getElementsByName("houseName")[0].value;
-            var street = document.getElementsByName("street")[0].value;
-            var district = document.getElementsByName("district")[0].value;
-            var state = document.getElementsByName("state")[0].value;
-            var pincode = document.getElementsByName("pincode")[0].value;
-            var addressType = document.querySelector('input[name="addressType"]:checked');
+            var isValid = true;
+            var fields = ["houseName", "street", "district", "state", "pincode"];
+            fields.forEach(function (field) {
+                var input = document.getElementsByName(field)[0];
+                var errorElement = document.getElementById(field + "Error");
 
-            if (houseName === "" || street === "" || district === "" || state === "" || pincode === "" || !addressType) {
-                alert("All fields must be filled out");
-                return false;
+                if (!input.value) {
+                    errorElement.textContent = "This field is required.";
+                    input.style.border = "1px solid red";
+                    isValid = false;
+                } else {
+                    errorElement.textContent = "";
+                    input.style.border = "1px solid #ccc";
+                }
+            });
+
+            var addressType = document.querySelector('input[name="addressType"]:checked');
+            var addressTypeError = document.getElementById("addressTypeError");
+
+            if (!addressType) {
+                addressTypeError.textContent = "Please select an address type.";
+                isValid = false;
+            } else {
+                addressTypeError.textContent = "";
             }
 
-            return true;
+            return isValid;
         }
     </script>
 </head>
@@ -191,19 +209,25 @@
             {{/if}}
 
             <h3>Edit Address</h3>
-            <input type="text" name="houseName" placeholder="House Name" value="{{address.houseName}}" required>
-            <input type="text" name="street" placeholder="Street Name/Location" value="{{address.street}}" required>
-            <input type="text" name="district" placeholder="District" value="{{address.district}}" required>
-            <input type="text" name="state" placeholder="State" value="{{address.state}}" required>
-            <input type="text" name="pincode" placeholder="Pincode" value="{{address.pincode}}" required>
+            <input type="text" name="houseName" placeholder="House Name" value="{{address.houseName}}" >
+            <div id="houseNameError" class="error"></div>
+            <input type="text" name="street" placeholder="Street Name/Location" value="{{address.street}}" >
+            <div id="streetError" class="error"></div>
+            <input type="text" name="district" placeholder="District" value="{{address.district}}">
+            <div id="districtError" class="error"></div>
+            <input type="text" name="state" placeholder="State" value="{{address.state}}" >
+            <div id="stateError" class="error"></div>
+            <input type="text" name="pincode" placeholder="Pincode" value="{{address.pincode}}" >
+            <div id="pincodeError" class="error"></div>
 
             <label for="addressType" style="font-size: larger;">Address Type</label>
             <div class="addressType">
-                <input type="radio" name="addressType" value="Home" id="option1" required>
+                <input type="radio" name="addressType" value="Home" id="option1" {{#if (eq address.addressType "Home")}}checked{{/if}} >
                 <label for="option1" style="font-size: medium;">Home</label><br>
-                <input type="radio" name="addressType" value="Work" id="option2" required>
+                <input type="radio" name="addressType" value="Work" id="option2" {{#if (eq address.addressType "Work")}}checked{{/if}} >
                 <label for="option2" style="font-size: medium;">Work</label>
             </div>
+            <div id="addressTypeError" class="error"></div>
             <button type="submit">Edit Address</button>
         </form>
 </body>

@@ -9,6 +9,25 @@ const adminCategory = async (req, res) => {
     res.redirect("/admin/error");
   }
 };
+const CategoryExist=async (req,res)=>{
+  try {
+    const {cname,categoryId}=req.body
+    if(categoryId){
+     const category = await Category.findOne({ _id:categoryId })
+     if(cname!=category.cname){
+       const categories = await Category.findOne({cname})
+       res.json({ exists: !!categories });
+     }
+    }else{
+     const categories = await Category.findOne({cname})
+     res.json({ exists: !!categories });
+    }
+   } catch {
+     console.log(error.message);
+     res.redirect("/admin/error");
+   }
+}
+
 const addCategory = async (req, res) => {
   try {
     res.render("admin/addCategory");
@@ -81,4 +100,5 @@ module.exports = {
   restoreCategory,
   editCategory,
   updatingCategory,
+  CategoryExist
 };

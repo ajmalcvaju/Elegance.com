@@ -161,7 +161,7 @@
         <h3>OTP Verification</h3>
         <label for="" class="lab">For the secuirity Purpose, We have send a code to your email </label>
         <input type="text" name="otp" placeholder="OTP">
-        <input type="text" name="UserId" id="otpInput">
+        <input type="text" name="userId" id="otpInput" value="{{userId}}">
         <label><a class="responsive-menu-trigger d-inline-block" href="#" onclick="resendOtp()"><i
                                     class="fi fi-rr-align-justify"></i>Resend OTP?</a></label>
         {{#if invalid}}
@@ -173,12 +173,10 @@
         <button type="submit" id="otpVerification">Continue</button>
     </form>
     <script>
-        document.getElementById("otpInput").value = "{{UserId}}";
+        document.getElementById("otpInput").value = "{{userId}}";
     </script>
      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
      <script>
-        // Set the value of the hidden input field (if necessary)
-        document.getElementById("otpInput").value = "{{UserId}}";
 
         function resendOtp() {
             // Get the UserId from the hidden input field

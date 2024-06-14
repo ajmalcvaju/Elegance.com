@@ -10,6 +10,26 @@ const adminProduct = async (req, res) => {
     res.redirect("/admin/error");
   }
 };
+
+const ProductExist=async (req, res) => {
+  try {
+   const {pname,productId}=req.body
+   if(productId){
+    const product = await Product.findOne({ _id:productId })
+    if(pname!=product.pname){
+      const products = await Product.findOne({pname})
+      res.json({ exists: !!products });
+    }
+   }else{
+    const products = await Product.findOne({pname})
+    res.json({ exists: !!products });
+   }
+  } catch {
+    console.log(error.message);
+    res.redirect("/admin/error");
+  }
+};
+
 const addProduct = async (req, res) => {
   try {
     const categories = await Category.find({});
@@ -19,6 +39,8 @@ const addProduct = async (req, res) => {
     res.redirect("/admin/error");
   }
 };
+
+
 const updateProduct = async (req, res) => {
   try {
     const pname = req.body.pname;
@@ -106,4 +128,5 @@ module.exports = {
   restoreUser,
   editProduct,
   updatingProduct,
+  ProductExist
 };

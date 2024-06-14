@@ -22,6 +22,8 @@ router.get("/unblock-user", adminUserPanel.unBlockUser);
 
 router.get("/product", adminProductPanel.adminProduct);
 router.get("/addProduct", adminProductPanel.addProduct);
+router.post("/ProductExist", adminProductPanel.ProductExist);
+
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -56,6 +58,7 @@ router.post("/addUser", upload2.single("image"), adminUserPanel.updateUser);
 router.post("/UserExist", adminUserPanel.UserExist);
 
 router.get("/category", adminCategoryPanel.adminCategory);
+router.post("/CategoryExist", adminCategoryPanel.CategoryExist);
 router.get("/addcategory", adminCategoryPanel.addCategory);
 const storage3 = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -96,6 +99,8 @@ router.post("/edit-coupons", adminCouponPanel.editingCoupon);
 router.get("/delete-coupon", adminCouponPanel.deleteCoupon);
 router.get("/addCoupon", adminCouponPanel.addCoupon);
 router.post("/addCoupons", adminCouponPanel.addingCoupon);
+router.post("/CouponExist", adminCouponPanel.CouponExist);
+
 router.get("/orderDetails", adminOrderPanel.orderDetails);
 router.get("/salesReport", adminsalesReportPanel.salesReport);
 router.get("/dashboard", adminsalesReportPanel.dashboard);

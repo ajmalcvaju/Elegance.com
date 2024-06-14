@@ -152,6 +152,15 @@
     option {
       color: #080710;
     }
+    
+    .is-invalid {
+      border-color: red;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 12px;
+    }
   </style>
 </head>
 
@@ -160,22 +169,134 @@
     <div class="shape"></div>
     <div class="shape"></div>
   </div>
-  <form action="/admin/edit-product?id={{product._id}}" method="post">
+  <form id="productForm" action="/admin/edit-product?id={{product._id}}" method="post">
     <h3>Edit Products</h3>
-    <input type="text" name="pname" placeholder="Product Name" value="{{product.pname}}" required>
-    <input type="text" name="description" placeholder="Description" value="{{product.description}}" required>
-    <input type="number" name="price" placeholder="Price" value="{{product.price}}" required>
-    <input type="number" name="discount" placeholder="Discount" value="{{product.discount}}" required>
-    <input type="number" name="purchase" placeholder="Purchased Quantity" value="{{product.purchase}}" required>
-    <label for="cars">Choose Category</label>
-    <select id="cat" name="category">
+    <input type="text" name="pname" placeholder="Product Name" id="pname" onblur="validateProductName()" value="{{product.pname}}">
+    <span id="pnameError" class="error-message"></span>
+    
+    <input type="text" name="description" placeholder="Description" id="description" value="{{product.description}}">
+    <span id="descriptionError" class="error-message"></span>
+    
+    <input type="number" name="price" placeholder="Price" id="price" value="{{product.price}}">
+    <span id="priceError" class="error-message"></span>
+    
+    <input type="number" name="discount" placeholder="Discount" id="discount" value="{{product.discount}}">
+    <span id="discountError" class="error-message"></span>
+    
+    <input type="number" name="purchase" placeholder="Stock" id="purchase" value="{{product.purchase}}">
+    <span id="purchaseError" class="error-message"></span>
+    
+    <label for="cat">Choose Category</label>
+    <select id="cat" name="category" value="{{product.category}}">
+      <option value="" disabled selected>Choose Category</option>
       {{#each categories}}
       <option value="{{this.cname}}">{{this.cname}}</option>
       {{/each}}
     </select>
+    <span id="catError" class="error-message"></span>
+    
+    {{#if exist}}
+    <p style="color: red;">Product Already Exists</p>
+    {{/if}}
+    
     <button type="submit">Edit Products</button>
   </form>
-  </form>
+  <script>
+  async function validateProductName() {
+    const pname = document.getElementById("pname").value;
+    const pnameError = document.getElementById("pnameError");
+    console.log(pname)
+     try {
+        const response = await fetch("/admin/ProductExist", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ pname,productId:'{{product._id}}' })
+        });
+
+        const data = await response.json();
+
+        if (data.exists) {
+          pnameError.textContent = "Product name already exists.";
+          document.getElementById("pname").classList.add('is-invalid');
+        } else {
+          pnameError.textContent = "";
+          document.getElementById("pname").classList.remove('is-invalid');
+        }
+      } catch (error) {
+        console.error("Error validating product name:", error);
+      }
+
+  }
+
+    document.getElementById('productForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      var form = event.target;
+      var isValid = true;
+
+      // Reset all error messages
+      document.querySelectorAll('.error-message').forEach(function(element) {
+        element.textContent = '';
+      });
+
+      // Reset invalid class
+      form.querySelectorAll('.is-invalid').forEach(function(element) {
+        element.classList.remove('is-invalid');
+      });
+
+      // Validate each input field
+      var pname = document.getElementById('pname');
+      var description = document.getElementById('description');
+      var price = document.getElementById('price');
+      var discount = document.getElementById('discount');
+      var purchase = document.getElementById('purchase');
+      var cat = document.getElementById('cat');
+
+      if (!pname.value.trim()) {
+        isValid = false;
+        pname.classList.add('is-invalid');
+        document.getElementById('pnameError').textContent = 'Product Name is required.';
+      }
+
+      if (!description.value.trim()) {
+        isValid = false;
+        description.classList.add('is-invalid');
+        document.getElementById('descriptionError').textContent = 'Description is required.';
+      }
+
+      if (!price.value.trim()) {
+        isValid = false;
+        price.classList.add('is-invalid');
+        document.getElementById('priceError').textContent = 'Price is required.';
+      }
+
+      if (!discount.value.trim()) {
+        isValid = false;
+        discount.classList.add('is-invalid');
+        document.getElementById('discountError').textContent = 'Discount is required.';
+      }
+
+      if (!purchase.value.trim()) {
+        isValid = false;
+        purchase.classList.add('is-invalid');
+        document.getElementById('purchaseError').textContent = 'Stock is required.';
+      }
+
+      if (!cat.value.trim()) {
+        isValid = false;
+        cat.classList.add('is-invalid');
+        document.getElementById('catError').textContent = 'Category is required.';
+      }
+
+      if (isValid) {
+        form.submit();
+      } 
+      {{!-- else {
+        alert('Please fill out all required fields.');
+      } --}}
+    });
+  </script>
 </body>
 
 </html>

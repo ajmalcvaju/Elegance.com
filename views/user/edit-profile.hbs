@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-    <!-- Design by foolishdeveloper.com -->
     <title>Edit Profile</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -54,7 +53,7 @@
         }
 
         form {
-            height: 520px;
+            height: auto;
             width: 400px;
             background-color: rgba(255, 255, 255, 0.13);
             position: absolute;
@@ -118,65 +117,41 @@
             cursor: pointer;
         }
 
-        .social {
-            margin-top: 30px;
-            display: flex;
-        }
-
-        .social div {
-            background: red;
-            width: 150px;
-            border-radius: 3px;
-            padding: 5px 10px 10px 5px;
-            background-color: rgba(255, 255, 255, 0.27);
-            color: #eaf0fb;
-            text-align: center;
-        }
-
-        .social div:hover {
-            background-color: rgba(255, 255, 255, 0.47);
-        }
-
-        .social .fb {
-            margin-left: 25px;
-        }
-
-        .social i {
-            margin-right: 4px;
-        }
-
-        select {
-            color: #080710;
-        }
-
-        option {
-            color: #080710;
-        }
-
-        .addressType {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
         }
     </style>
     <script>
         function validateForm() {
-            var username = document.getElementById("username").value;
-            var fname = document.getElementById("fname").value;
-            var lname = document.getElementById("lname").value;
+            var isValid = true;
+
+            var fields = ["username", "fname", "lname", "mobileNumber"];
+            fields.forEach(function (field) {
+                var input = document.getElementById(field);
+                var errorElement = document.getElementById(field + "Error");
+
+                if (!input.value) {
+                    errorElement.textContent = "This field is required.";
+                    input.style.border = "1px solid red";
+                    isValid = false;
+                } else {
+                    errorElement.textContent = "";
+                    input.style.border = "1px solid #ccc";
+                }
+            });
+
             var mobileNumber = document.getElementById("mobileNumber").value;
+            var mobileNumberError = document.getElementById("mobileNumberError");
 
-            if (username === "" || fname === "" || lname === "" || mobileNumber === "") {
-                alert("All fields must be filled out");
-                return false;
+            if (mobileNumber && !/^\d{10}$/.test(mobileNumber)) {
+                mobileNumberError.textContent = "Mobile Number must be exactly 10 digits.";
+                document.getElementById("mobileNumber").style.border = "1px solid red";
+                isValid = false;
             }
 
-            if (!/^\d{10}$/.test(mobileNumber)) {
-                alert("Mobile Number must be exactly 10 digits");
-                return false;
-            }
-
-            return true;
+            return isValid;
         }
     </script>
 </head>
@@ -188,11 +163,18 @@
     </div>
     <form action="/edit-profile?id={{user._id}}" method="post" onsubmit="return validateForm()">
         <h3>Edit Profile</h3>
-        <input type="text" id="username" name="username" placeholder="Username" value="{{user.username}}" required>
-        <input type="text" id="fname" name="fname" placeholder="First Name" value="{{user.fname}}" required>
-        <input type="text" id="lname" name="lname" placeholder="Last Name" value="{{user.lname}}" required>
-        <input type="text" id="mobileNumber" name="mobileNumber" placeholder="Mobile Number"
-            value="{{user.mobileNumber}}" required>
+        <input type="text" id="username" name="username" placeholder="Username" value="{{user.username}}">
+        <div id="usernameError" class="error"></div>
+
+        <input type="text" id="fname" name="fname" placeholder="First Name" value="{{user.fname}}">
+        <div id="fnameError" class="error"></div>
+
+        <input type="text" id="lname" name="lname" placeholder="Last Name" value="{{user.lname}}">
+        <div id="lnameError" class="error"></div>
+
+        <input type="text" id="mobileNumber" name="mobileNumber" placeholder="Mobile Number" value="{{user.mobileNumber}}">
+        <div id="mobileNumberError" class="error"></div>
+
         <button type="submit">Edit Profile</button>
     </form>
 </body>

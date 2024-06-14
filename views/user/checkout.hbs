@@ -209,9 +209,10 @@
               <input type="hidden" name="totalPriceIncludingGst" value="{{cart.totalPriceIncludingGst}}">
               <input type="hidden" name="shippingCharge" value="{{cart.shippingCharge}}">
               <div style="display: flex;flex-direction: column;">
+                <h3>Address</h3>
                 {{#each address}}
                 <div>
-                  <input type="radio" name="address" id="address" value="{{this._id}}" required>
+                  <input type="radio" name="address" id="address" value="{{this._id}}" >
 
                   <label><u>{{this.addressType}}</u><br>{{this.houseName}},{{this.street}} <a
                       href="/editAddress?id={{this._id}}" style="color:blue;">Edit
@@ -257,6 +258,17 @@
       $(".form").submit(function (e) {
         e.preventDefault();
         console.log("Form submitted");
+
+       if (!$("input[name='address']:checked").val()) {
+            Swal.fire({
+                title: "Error!",
+                text: "Please select an address to proceed.",
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
         var formData = $(this).serialize();
         var paymentMethod = $("#select").val();
         var address = $("#address").val();

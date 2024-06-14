@@ -2,13 +2,9 @@
 <html lang="en">
 
 <head>
-  <!-- Design by foolishdeveloper.com -->
   <title>Edit Category</title>
-
-  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-  <!--Stylesheet-->
   <style media="screen">
     *,
     *:before,
@@ -118,39 +114,13 @@
       cursor: pointer;
     }
 
-    .social {
-      margin-top: 30px;
-      display: flex;
+    .is-invalid {
+      border-color: red;
     }
 
-    .social div {
-      background: red;
-      width: 150px;
-      border-radius: 3px;
-      padding: 5px 10px 10px 5px;
-      background-color: rgba(255, 255, 255, 0.27);
-      color: #eaf0fb;
-      text-align: center;
-    }
-
-    .social div:hover {
-      background-color: rgba(255, 255, 255, 0.47);
-    }
-
-    .social .fb {
-      margin-left: 25px;
-    }
-
-    .social i {
-      margin-right: 4px;
-    }
-
-    select {
-      color: #080710;
-    }
-
-    option {
-      color: #080710;
+    .error-message {
+      color: red;
+      font-size: 12px;
     }
 
     .gender {
@@ -169,16 +139,22 @@
   </div>
 
   <h2>Add Category</h2>
-  <form action="/admin/addCategory" method="post" enctype="multipart/form-data">
+  <form id="categoryForm" action="/admin/addCategory" method="post" enctype="multipart/form-data">
     <label>Category Name</label>
-    <input type="text" name="cname" placeholder="Category Name" required> 
+    <input type="text" name="cname" id="cname" placeholder="Category Name" onblur="validateCategoryName()">
+    <span id="cnameError" class="error-message"></span>
+
     <label>Category Image</label>
-    <input type="file" name="image" id="img" required>
+    <input type="file" name="image" id="img">
+    <span id="imgError" class="error-message"></span>
+
     <label>Discount(%)</label>
-    <input type="number" name="discount">
+    <input type="number" name="discount" id="discount" min="0" max="100">
+    <span id="discountError" class="error-message"></span>
+
     <label>Gender</label>
     <div class="gender">
-      <input type="radio" name="Type" value="Male" id="option1" required>
+      <input type="radio" name="Type" value="Male" id="option1">
       <label for="Male">Male</label><br>
 
       <input type="radio" name="Type" value="Female" id="option2">
@@ -190,11 +166,89 @@
       <input type="radio" name="Type" value="Girl" id="option4">
       <label for="Girl">Girl</label><br>
     </div>
-    {{#if exist}}
-    <p style="color: red;">Category Already Exists</p>
-    {{/if}}
+    <span id="genderError" class="error-message"></span>
+
     <button type="submit">Add Category</button>
   </form>
+
+  <script>
+    async function validateCategoryName() {
+      var cname = document.getElementById("cname").value;
+      var cnameError = document.getElementById("cnameError");
+      console.log(cname)
+      try {
+        const response = await fetch("/admin/CategoryExist", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ cname })
+        });
+
+        const data = await response.json();
+
+        if (data.exists) {
+          cnameError.textContent = "Category name already exists.";
+          document.getElementById("cname").classList.add('is-invalid');
+        } else {
+          cnameError.textContent = "";
+          document.getElementById("cname").classList.remove('is-invalid');
+        }
+      } catch (error) {
+        console.error("Error validating category name:", error);
+      }
+    }
+
+    document.getElementById('categoryForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      var form = event.target;
+      var isValid = true;
+
+      // Reset all error messages
+      document.querySelectorAll('.error-message').forEach(function(element) {
+        element.textContent = '';
+      });
+
+      // Reset invalid class
+      form.querySelectorAll('.is-invalid').forEach(function(element) {
+        element.classList.remove('is-invalid');
+      });
+
+      // Validate each input field
+      var cname = document.getElementById('cname');
+      var img = document.getElementById('img');
+      var discount = document.getElementById('discount');
+      var genderOptions = document.querySelectorAll('input[name="Type"]');
+      var genderSelected = Array.from(genderOptions).some(option => option.checked);
+
+      if (!cname.value.trim()) {
+        isValid = false;
+        cname.classList.add('is-invalid');
+        document.getElementById('cnameError').textContent = 'Category Name is required.';
+      }
+
+      if (!img.value) {
+        isValid = false;
+        img.classList.add('is-invalid');
+        document.getElementById('imgError').textContent = 'Image is required.';
+      }
+
+      if (!discount.value.trim() || discount.value < 0 || discount.value > 100) {
+        isValid = false;
+        discount.classList.add('is-invalid');
+        document.getElementById('discountError').textContent = 'Valid discount is required (0-100).';
+      }
+
+      if (!genderSelected) {
+        isValid = false;
+        document.getElementById('genderError').textContent = 'Gender selection is required.';
+      }
+
+      if (isValid) {
+        form.submit();
+      }
+    });
+  </script>
 </body>
 
 </html>

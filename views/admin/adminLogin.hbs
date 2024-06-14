@@ -167,18 +167,15 @@
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form action="/admin/adminLogin" method="post">
+    <form id="adminLoginForm" action="/admin/adminLogin" onsubmit="return validateForm()" method="post">
         <h3>Admin Login</h3>
         <label for="email">Email</label>
         <input type="text" name="email" placeholder="Email" id="email" onblur="validateEmail(this.value)">
         <span id="emailError" style="color: red;"></span>
         <label for="password">Password</label>
-        <input type="password" name="password" placeholder="Password" id="password"
-            onblur="validatePassword(this.value)">
+        <input type="password" name="password" placeholder="Password" id="password" onblur="validatePassword(this.value)">
         <div id="passwordErrors" style="color: red;"></div>
-        {{#if invalid}}
-        <p style="color: red;">Invalid Credentials!!....Try Again....</p>
-        {{/if}}
+        <div id="loginError" style="color: red;"></div>
         <button type="submit">Login</button>
     </form>
     <script>
@@ -195,6 +192,7 @@
                 emailError.textContent = "Please enter a valid email address";
             }
         }
+
         function validatePassword(password) {
             var passwordInput = document.getElementById("password");
             var passwordErrors = document.getElementById("passwordErrors");
@@ -230,7 +228,68 @@
                 passwordInput.style.border = "1px solid #ccc";
             }
         }
+          function validateForm() {
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var emailError = document.getElementById('emailError');
+            var passwordErrors = document.getElementById('passwordErrors');
+            var loginError = document.getElementById('loginError');
 
+            // Reset previous error messages
+            emailError.textContent = "";
+            passwordErrors.innerHTML = "";
+            loginError.textContent = "";
+
+            // Check if fields are empty
+            if (!email) {
+                emailError.textContent = "Email is required";
+                return false;
+            }
+
+            if (!password) {
+                passwordErrors.innerHTML = "Password is required";
+                return false;
+            }
+
+            // Call existing validation functions
+            validateEmail(email);
+            validatePassword(password);
+
+            // Check if there are any error messages
+            if (emailError.textContent || passwordErrors.innerHTML) {
+                return false;
+            }
+
+            return true;
+        }
+
+        document.getElementById('adminLoginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+            var loginError = document.getElementById('loginError');
+
+            try {
+                const response = await fetch('/admin/adminLogin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    window.location.href = '/admin/dashboard';
+                } else {
+                    loginError.textContent = 'Invalid Credentials!!....Try Again....';
+                }
+            } catch (error) {
+                console.error('Error during login:', error);
+                loginError.textContent = 'An error occurred. Please try again later.';
+            }
+        });
     </script>
 </body>
 

@@ -1,14 +1,15 @@
-<!DOCTYPE html>
+
+   <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <title>Signup</title>
-
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-    <!--Stylesheet-->
+    <!-- Stylesheet -->
     <style media="screen">
+        
         *,
         *:before,
         *:after {
@@ -164,55 +165,132 @@
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form action="/signup" method="post" enctype="multipart/form-data">
+    <form id="signupForm" action="/signup" method="post" enctype="multipart/form-data">
         <h3>Signup Here</h3>
-        <input type="text" name="username" placeholder="Username">
-        <input type="text" name="fname" placeholder="First Name">
-        <input type="text" name="lname" placeholder="Last Name">
-        <label for="email">Email</label>
-        <input type="text" name="email" placeholder="Email" id="email" onblur="validateEmail(this.value)">
+        <input type="text" name="username" id="username" placeholder="Username" onblur="validateUsername()">
+        <span id="usernameError" style="color: red;"></span>
+
+        <input type="text" id="fname" name="fname" placeholder="First Name">
+        <span id="fnameError" style="color: red;"></span>
+
+        <input type="text" id="lname" name="lname" placeholder="Last Name">
+        <span id="lnameError" style="color: red;"></span>
+
+        <input type="text" name="email" id="email" placeholder="Email" onblur="validateEmail(this.value)">
         <span id="emailError" style="color: red;"></span>
-        <label for="mobileNumber">Mobile Number</label>
-        <input type="text" name="mobileNumber" placeholder="Mobile Number" id="mobileNumber"
+
+        <input type="text" name="mobileNumber" id="mobileNumber" placeholder="Mobile Number"
             onblur="validateMobileNumber(this.value)">
-        <div id="mobileNumberError" style="color: red;"></div>
+        <span id="mobileNumberError" style="color: red;"></span>
+
         <input type="file" name="image" id="img">
-        <label for="password">Password</label>
-        <input type="password" name="password" placeholder="Password" id="password"
-            onblur="validatePassword(this.value)">
-        <div id="passwordErrors" style="color: red;"></div>
-        <input type="password" name="confirmPassword" placeholder="Confirm Password">
-        {{#if Username}}
-        <p style="color: red;">Username already exist!!....Try with Another Username....</p>
-        {{/if}}
-        {{#if Email}}
-        <p style="color: red;">Email already exist!!....Try with Another Email....</p>
-        {{/if}}
-        {{#if MobileNumber}}
-        <p style="color: red;">Mobile Number already exist!!....Try with Another Mobile Number....</p>
-        {{/if}}
-        {{#if Password}}
-        <p style="color: red;">Confirmation Password is Not Correct!!....confirm password....</p>
-        {{/if}}
+        <span id="imageError" style="color: red;"></span>
+
+        <input type="password" name="password" id="password" placeholder="Password" onblur="validatePassword(this.value)">
+        <span id="passwordErrors" style="color: red;"></span>
+
         <button type="submit">Sign Up</button>
     </form>
-    <script>
-        function validateEmail(email) {
-            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            var emailInput = document.getElementById("email");
-            var emailError = document.getElementById("emailError");
 
-            if (emailPattern.test(email)) {
-                emailInput.style.border = "1px solid #ccc";
-                emailError.textContent = "";
-            } else {
-                emailInput.style.border = "1px solid red";
-                emailError.textContent = "Please enter a valid email address";
+    <script>
+        async function validateUsername() {
+            const username = document.getElementById("username").value;
+            const usernameError = document.getElementById("usernameError");
+
+            try {
+                const response = await fetch("/checkUserExist", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ username })
+                });
+
+                const data = await response.json();
+
+                if (data.exists) {
+                    usernameError.textContent = "Username already exists.";
+                    document.getElementById("username").style.border = "1px solid red";
+                } else {
+                    usernameError.textContent = "";
+                    document.getElementById("username").style.border = "1px solid #ccc";
+                }
+            } catch (error) {
+                console.error("Error validating username:", error);
             }
         }
+
+        async function validateEmail(email) {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const emailInput = document.getElementById("email");
+            const emailError = document.getElementById("emailError");
+
+            if (!emailPattern.test(email)) {
+                emailInput.style.border = "1px solid red";
+                emailError.textContent = "Please enter a valid email address";
+                return;
+            }
+
+            try {
+                const response = await fetch("/checkUserExist", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email })
+                });
+
+                const data = await response.json();
+
+                if (data.exists) {
+                    emailInput.style.border = "1px solid red";
+                    emailError.textContent = "Email already exists.";
+                } else {
+                    emailInput.style.border = "1px solid #ccc";
+                    emailError.textContent = "";
+                }
+            } catch (error) {
+                console.error("Error validating email:", error);
+            }
+        }
+
+        async function validateMobileNumber(mobileNumber) {
+            const mobileNumberPattern = /^\d{10}$/;
+            const mobileNumberInput = document.getElementById("mobileNumber");
+            const mobileNumberError = document.getElementById("mobileNumberError");
+
+            if (!mobileNumberPattern.test(mobileNumber)) {
+                mobileNumberError.textContent = "Mobile number must have exactly 10 digits and contain no alphabet or symbols.";
+                mobileNumberInput.style.border = "1px solid red";
+                return;
+            }
+
+            try {
+                const response = await fetch("/checkUserExist", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ mobileNumber })
+                });
+
+                const data = await response.json();
+
+                if (data.exists) {
+                    mobileNumberInput.style.border = "1px solid red";
+                    mobileNumberError.textContent = "Mobile number already exists.";
+                } else {
+                    mobileNumberInput.style.border = "1px solid #ccc";
+                    mobileNumberError.textContent = "";
+                }
+            } catch (error) {
+                console.error("Error validating mobile number:", error);
+            }
+        }
+
         function validatePassword(password) {
-            var passwordInput = document.getElementById("password");
-            var passwordErrors = document.getElementById("passwordErrors");
+            const passwordInput = document.getElementById("password");
+            const passwordErrors = document.getElementById("passwordErrors");
 
             // Reset error messages
             passwordErrors.innerHTML = "";
@@ -245,22 +323,85 @@
                 passwordInput.style.border = "1px solid #ccc";
             }
         }
-        function validateMobileNumber(mobileNumber) {
-            var mobileNumberInput = document.getElementById("mobileNumber");
-            var mobileNumberError = document.getElementById("mobileNumberError");
 
-            // Remove any existing error message
-            mobileNumberError.textContent = "";
+        document.getElementById("signupForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
 
-            // Check if the mobile number contains only digits and has exactly 10 digits
-            var mobileNumberPattern = /^\d{10}$/;
-            if (!mobileNumberPattern.test(mobileNumber)) {
-                mobileNumberError.textContent = "Mobile number must have exactly 10 digits and contain no alphabet or symbols.";
-                mobileNumberInput.style.border = "1px solid red";
-            } else {
-                mobileNumberInput.style.border = "1px solid #ccc";
+            // Additional validation before submission if necessary
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const fname = document.getElementById("fname").value;
+            const lname = document.getElementById("lname").value;
+            const mobileNumber = document.getElementById("mobileNumber").value;
+            const image = document.getElementById("img").files[0];
+            const password = document.getElementById("password").value;
+
+            let isValid = true;
+
+            if (!username) {
+                document.getElementById("usernameError").textContent = "Username is required.";
+                isValid = false;
             }
-        }
+
+            if (!email) {
+                document.getElementById("emailError").textContent = "Email is required.";
+                isValid = false;
+            }
+
+            if (!fname) {
+                document.getElementById("fnameError").textContent = "First Name is required.";
+                isValid = false;
+            }else{
+                document.getElementById("fnameError").textContent = "";
+            }
+
+            if (!lname) {
+                document.getElementById("lnameError").textContent = "Last Name is required.";
+                isValid = false;
+            }else{
+                document.getElementById("lnameError").textContent = "";
+            }
+
+            if (!mobileNumber) {
+                document.getElementById("mobileNumberError").textContent = "Mobile Number is required.";
+                isValid = false;
+            }
+
+            if (!image) {
+                document.getElementById("imageError").textContent = "Image is required.";
+                isValid = false;
+            }
+
+            if (!password) {
+                document.getElementById("passwordErrors").textContent = "Password is required.";
+                isValid = false;
+            }
+
+            if (isValid) {
+                const formData = new FormData(this);
+
+                try {
+                    const response = await fetch("/signup", {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                       const userId=result.userId
+                    if (result.success) {
+                        window.location.href = `/otp?id=${userId}`; // Redirect on success
+                    } else {
+                        // Handle specific error cases here if necessary
+                        console.error("Error signing up:", result.message);
+                    }
+                } catch (error) {
+                    console.error("Error signing up:", error);
+                }
+            } else {
+                // Handle the case where some fields are not valid
+                console.error("Form fields are not valid.");
+            }
+        });
     </script>
 </body>
 

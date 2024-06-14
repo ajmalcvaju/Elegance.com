@@ -1,14 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <!-- Design by foolishdeveloper.com -->
   <title>Add Products</title>
-
-  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-  <!--Stylesheet-->
   <style media="screen">
     *,
     *:before,
@@ -39,22 +34,19 @@
     }
 
     .shape:first-child {
-      background: linear-gradient(#1845ad,
-          #23a2f6);
+      background: linear-gradient(#1845ad, #23a2f6);
       left: -80px;
       top: -80px;
     }
 
     .shape:last-child {
-      background: linear-gradient(to right,
-          #ff512f,
-          #f09819);
+      background: linear-gradient(to right, #ff512f, #f09819);
       right: -30px;
       bottom: -80px;
     }
 
     form {
-      height: 520px;
+      height: auto;
       width: 400px;
       background-color: rgba(255, 255, 255, 0.13);
       position: absolute;
@@ -90,7 +82,8 @@
       font-weight: 500;
     }
 
-    input {
+    input,
+    select {
       display: block;
       height: 30px;
       width: 100%;
@@ -118,39 +111,13 @@
       cursor: pointer;
     }
 
-    .social {
-      margin-top: 30px;
-      display: flex;
+    .is-invalid {
+      border-color: red;
     }
 
-    .social div {
-      background: red;
-      width: 150px;
-      border-radius: 3px;
-      padding: 5px 10px 10px 5px;
-      background-color: rgba(255, 255, 255, 0.27);
-      color: #eaf0fb;
-      text-align: center;
-    }
-
-    .social div:hover {
-      background-color: rgba(255, 255, 255, 0.47);
-    }
-
-    .social .fb {
-      margin-left: 25px;
-    }
-
-    .social i {
-      margin-right: 4px;
-    }
-
-    select {
-      color: #080710;
-    }
-
-    option {
-      color: #080710;
+    .error-message {
+      color: red;
+      font-size: 12px;
     }
   </style>
 </head>
@@ -160,25 +127,144 @@
     <div class="shape"></div>
     <div class="shape"></div>
   </div>
-  <form action="/admin/addProduct" method="post" enctype="multipart/form-data">
+  <form id="productForm" action="/admin/addProduct" method="post" enctype="multipart/form-data">
     <h3>Add Products</h3>
-    <input type="text" name="pname" placeholder="Product Name" required>
-    <input type="file" name="image" id="img" multiple required>
-    <input type="text" name="description" placeholder="Description" required>
-    <input type="number" name="price" placeholder="Price" required>
-    <input type="number" name="discount" placeholder="Discount" required>
-    <input type="number" name="purchase" placeholder="Stock" required>
-    {{#if exist}}
-    <p style="color: red;">Product Already Exists</p>
-    {{/if}}
-    <label for="cars">Choose Category</label>
+    <input type="text" name="pname" placeholder="Product Name" id="pname" onblur="validateProductName()">
+    <span id="pnameError" class="error-message"></span>
+    
+    <input type="file" name="image" id="img">
+    <span id="imgError" class="error-message"></span>
+    
+    <input type="text" name="description" placeholder="Description" id="description">
+    <span id="descriptionError" class="error-message"></span>
+    
+    <input type="number" name="price" placeholder="Price" id="price">
+    <span id="priceError" class="error-message"></span>
+    
+    <input type="number" name="discount" placeholder="Discount" id="discount">
+    <span id="discountError" class="error-message"></span>
+    
+    <input type="number" name="purchase" placeholder="Stock" id="purchase">
+    <span id="purchaseError" class="error-message"></span>
+    
+    <label for="cat">Choose Category</label>
     <select id="cat" name="category">
+      <option value="" disabled selected>Choose Category</option>
       {{#each categories}}
       <option value="{{this.cname}}">{{this.cname}}</option>
       {{/each}}
     </select>
+    <span id="catError" class="error-message"></span>
+    
+    {{#if exist}}
+    <p style="color: red;">Product Already Exists</p>
+    {{/if}}
+    
     <button type="submit">Add Products</button>
   </form>
-</body>
 
+ <script>
+  async function validateProductName() {
+    const pname = document.getElementById("pname").value;
+    const pnameError = document.getElementById("pnameError");
+    console.log(pname)
+     try {
+        const response = await fetch("/admin/ProductExist", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ pname })
+        });
+
+        const data = await response.json();
+
+        if (data.exists) {
+          pnameError.textContent = "Product name already exists.";
+          document.getElementById("pname").classList.add('is-invalid');
+        } else {
+          pnameError.textContent = "";
+          document.getElementById("pname").classList.remove('is-invalid');
+        }
+      } catch (error) {
+        console.error("Error validating product name:", error);
+      }
+
+  }
+
+    document.getElementById('productForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      var form = event.target;
+      var isValid = true;
+
+      // Reset all error messages
+      document.querySelectorAll('.error-message').forEach(function(element) {
+        element.textContent = '';
+      });
+
+      // Reset invalid class
+      form.querySelectorAll('.is-invalid').forEach(function(element) {
+        element.classList.remove('is-invalid');
+      });
+
+      // Validate each input field
+      var pname = document.getElementById('pname');
+      var img = document.getElementById('img');
+      var description = document.getElementById('description');
+      var price = document.getElementById('price');
+      var discount = document.getElementById('discount');
+      var purchase = document.getElementById('purchase');
+      var cat = document.getElementById('cat');
+
+      if (!pname.value.trim()) {
+        isValid = false;
+        pname.classList.add('is-invalid');
+        document.getElementById('pnameError').textContent = 'Product Name is required.';
+      }
+
+      if (!img.value) {
+        isValid = false;
+        img.classList.add('is-invalid');
+        document.getElementById('imgError').textContent = 'Image is required.';
+      }
+
+      if (!description.value.trim()) {
+        isValid = false;
+        description.classList.add('is-invalid');
+        document.getElementById('descriptionError').textContent = 'Description is required.';
+      }
+
+      if (!price.value.trim()) {
+        isValid = false;
+        price.classList.add('is-invalid');
+        document.getElementById('priceError').textContent = 'Price is required.';
+      }
+
+      if (!discount.value.trim()) {
+        isValid = false;
+        discount.classList.add('is-invalid');
+        document.getElementById('discountError').textContent = 'Discount is required.';
+      }
+
+      if (!purchase.value.trim()) {
+        isValid = false;
+        purchase.classList.add('is-invalid');
+        document.getElementById('purchaseError').textContent = 'Stock is required.';
+      }
+
+      if (!cat.value.trim()) {
+        isValid = false;
+        cat.classList.add('is-invalid');
+        document.getElementById('catError').textContent = 'Category is required.';
+      }
+
+      if (isValid) {
+        form.submit();
+      } 
+      {{!-- else {
+        alert('Please fill out all required fields.');
+      } --}}
+    });
+  </script>
+</body>
 </html>

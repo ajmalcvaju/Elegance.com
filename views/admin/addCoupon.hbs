@@ -2,13 +2,10 @@
 <html lang="en">
 
 <head>
-    <!-- Design by foolishdeveloper.com -->
     <title>Add Coupons</title>
-
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-    <!--Stylesheet-->
     <style media="screen">
         *,
         *:before,
@@ -39,22 +36,19 @@
         }
 
         .shape:first-child {
-            background: linear-gradient(#1845ad,
-                    #23a2f6);
+            background: linear-gradient(#1845ad, #23a2f6);
             left: -80px;
             top: -80px;
         }
 
         .shape:last-child {
-            background: linear-gradient(to right,
-                    #ff512f,
-                    #f09819);
+            background: linear-gradient(to right, #ff512f, #f09819);
             right: -30px;
             bottom: -80px;
         }
 
         form {
-            height: 520px;
+            height: auto;
             width: 400px;
             background-color: rgba(255, 255, 255, 0.13);
             position: absolute;
@@ -118,39 +112,19 @@
             cursor: pointer;
         }
 
-        .social {
-            margin-top: 30px;
-            display: flex;
+        .error-message {
+            color: red;
+            font-size: 12px;
         }
 
-        .social div {
-            background: red;
-            width: 150px;
-            border-radius: 3px;
-            padding: 5px 10px 10px 5px;
-            background-color: rgba(255, 255, 255, 0.27);
-            color: #eaf0fb;
-            text-align: center;
+        .is-invalid {
+            border-color: red;
         }
-
-        .social div:hover {
-            background-color: rgba(255, 255, 255, 0.47);
+        option{
+            color: white;
         }
-
-        .social .fb {
-            margin-left: 25px;
-        }
-
-        .social i {
-            margin-right: 4px;
-        }
-
-        select {
-            color: #080710;
-        }
-
-        option {
-            color: #080710;
+        #couponStatus{
+            background-color: #080710;
         }
     </style>
 </head>
@@ -160,20 +134,119 @@
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form action="/admin/addCoupons" method="post">
+    <form id="couponForm" action="/admin/addCoupons" method="post">
         <h3>Add Coupons</h3>
-        <input type="text" name="couponCode" placeholder="Coupon Code" required>
-        <input type="text" name="description" placeholder="Description" required>
-        <input type="number" name="minPurchaseAmount" placeholder="Min Purchase Amount" required>
-        <input type="number" name="discount" placeholder="Discount" required>
-        <input type="date" name="expiryDate" placeholder="Expiry Date" required>
-        <label for="couponStatus">Coupon status</label>
-        <select class="form-control" id="couponSelect" name="isActive">
+        <input type="text" name="couponCode" id="couponCode" placeholder="Coupon Code" onblur="validatecouponCode()">
+        <span id="couponCodeError" class="error-message"></span>
+
+        <input type="text" name="description" id="description" placeholder="Description" >
+        <span id="descriptionError" class="error-message"></span>
+
+        <input type="number" name="minPurchaseAmount" id="minPurchaseAmount" placeholder="Min Purchase Amount" >
+        <span id="minPurchaseAmountError" class="error-message"></span>
+
+        <label>Discount (%)</label>
+        <input type="number" name="discount" id="discount" placeholder="Discount">
+        <span id="discountError" class="error-message"></span>
+
+        <label>Expiry Date</label>
+        <input type="date" name="expiryDate" id="expiryDate" placeholder="Expiry Date" >
+        <span id="expiryDateError" class="error-message"></span>
+
+        <label for="couponStatus">Coupon Status</label>
+        <select class="form-control" id="couponStatus" name="isActive">
             <option value="true">Active</option>
-            <option value="false">InActive</option>
+            <option value="false">Inactive</option>
         </select>
+
         <button type="submit">Add Coupons</button>
     </form>
+
+    <script>
+            async function validatecouponCode() {
+        var couponCode = document.getElementById("couponCode").value;
+        var couponCodeError = document.getElementById("couponCodeError");
+        console.log(couponCode);
+        try {
+            const response = await fetch("/admin/CouponExist", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ couponCode })
+            });
+
+            const data = await response.json();
+
+            if (data.exists) {
+                couponCodeError.textContent = "Coupon code already exists.";
+                document.getElementById("couponCode").classList.add('is-invalid');
+            } else {
+                couponCodeError.textContent = "";
+                document.getElementById("couponCode").classList.remove('is-invalid');
+            }
+        } catch (error) {
+            console.error("Error validating coupon code:", error);
+        }
+    }
+
+        document.getElementById('couponForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var form = event.target;
+            var isValid = true;
+
+            // Reset all error messages
+            document.querySelectorAll('.error-message').forEach(function (element) {
+                element.textContent = '';
+            });
+
+            // Reset invalid class
+            form.querySelectorAll('.is-invalid').forEach(function (element) {
+                element.classList.remove('is-invalid');
+            });
+
+            // Validate each input field
+            var couponCode = document.getElementById('couponCode');
+            var description = document.getElementById('description');
+            var minPurchaseAmount = document.getElementById('minPurchaseAmount');
+            var discount = document.getElementById('discount');
+            var expiryDate = document.getElementById('expiryDate');
+
+            if (!couponCode.value.trim()) {
+                isValid = false;
+                couponCode.classList.add('is-invalid');
+                document.getElementById('couponCodeError').textContent = 'Coupon Code is required.';
+            }
+
+            if (!description.value.trim()) {
+                isValid = false;
+                description.classList.add('is-invalid');
+                document.getElementById('descriptionError').textContent = 'Description is required.';
+            }
+
+            if (!minPurchaseAmount.value.trim() || minPurchaseAmount.value < 0) {
+                isValid = false;
+                minPurchaseAmount.classList.add('is-invalid');
+                document.getElementById('minPurchaseAmountError').textContent = 'Min Purchase Amount must be a positive number.';
+            }
+
+            if (!discount.value.trim() || discount.value < 0 || discount.value > 100) {
+                isValid = false;
+                discount.classList.add('is-invalid');
+                document.getElementById('discountError').textContent = 'Discount must be between 0 and 100.';
+            }
+
+            if (!expiryDate.value.trim()) {
+                isValid = false;
+                expiryDate.classList.add('is-invalid');
+                document.getElementById('expiryDateError').textContent = 'Expiry Date is required.';
+            }
+
+            if (isValid) {
+                form.submit();
+            }
+        });
+    </script>
 </body>
 
 </html>

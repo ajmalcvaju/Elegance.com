@@ -28,19 +28,19 @@ const addToCart = async (req, res) => {
       const user = await User.findOne({ email });
       const userId = user._id;
       let cart = await Cart.findOne({ userId });
-      console.log(cart);
       let isProductInCart = false;
-      let wishlist = await Wishlist.findOne({ userId });
-      const index = wishlist.items.findIndex(
-        (item) => item.productId.toString() === productId
-      );
-      if (index !== -1) {
-        const updatedWishlist = await Wishlist.findOneAndUpdate(
-          { userId: userId },
-          { $pull: { items: { productId: productId } } },
-          { new: true }
-        );
-      }
+
+      // let wishlist = await Wishlist.findOne({ userId });
+      // const index = wishlist.items.findIndex(
+      //   (item) => item.productId.toString() === productId
+      // );
+      // if (index !== -1) {
+      //   const updatedWishlist = await Wishlist.findOneAndUpdate(
+      //     { userId: userId },
+      //     { $pull: { items: { productId: productId } } },
+      //     { new: true }
+      //   );
+      // }
       if (!cart) {
         cart = new Cart({ userId, items: [{ productId, quantity: 1 }] });
         const cartData = await cart.save();
@@ -485,8 +485,13 @@ const myWishlist = async (req, res) => {
         "items.productId"
       );
       let wishlists = await Wishlist.findOne({ userId });
-      console.log(wishlists.items.length);
-      if (wishlists.items.length == 0) {
+  
+      if(!wishlist){
+        console.log('Wishlist is not present');
+        
+        res.render("user/wishlist", { noProduct: 1 });
+      }
+      else if (wishlists.items.length == 0) {
         res.render("user/wishlist", { wishlist, noProduct: 1 });
       } else {
         res.render("user/wishlist", { wishlist });

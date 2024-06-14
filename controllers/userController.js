@@ -15,6 +15,25 @@ const login = async (req, res) => {
     res.redirect("/error");
   }
 };
+const checkUserExist=async(req,res)=>{
+  try {
+    const { username,email, mobileNumber } = req.body;
+    if(username){
+      const user = await User.findOne({ username });
+  res.json({ exists: !!user });
+    }else if(email){
+      const user = await User.findOne({ email });
+    res.json({ exists: !!user });
+    }else if(mobileNumber){
+      const user = await User.findOne({ mobileNumber });
+    res.json({ exists: !!user });
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
+  }
+}
+
 const shop = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -162,21 +181,7 @@ const loadRegister = async (req, res) => {
 };
 const insertUser = async (req, res) => {
   const { username, email, mobileNumber, password, confirmPassword } = req.body;
-  const user1 = await User.find({ username });
-  const user2 = await User.find({ email });
-  const user3 = await User.find({ mobileNumber });
-  console.log(user1);
-  if (user1[0]) {
-    res.render("user/signup", { Username: true });
-  } else if (user2[0]) {
-    res.render("user/signup", { Email: true });
-  } else if (user3[0]) {
-    res.render("user/signup", { MobileNumber: true });
-  } else if (password != confirmPassword) {
-    res.render("user/signup", { Password: true });
-  } else {
     try {
-      req.session.email = email;
       const user = new User({
         username: req.body.username,
         email: req.body.email,
@@ -197,29 +202,31 @@ const insertUser = async (req, res) => {
         expiresAt: Date.now() + 300000,
       });
       const otpData = await otp.save();
-      if (userData) {
         sendVerifyMail(req.body.fname, req.body.lname, req.body.email, OTP);
-        res.render("user/otp", {
-          email: userData.email,
-          UserId: userData._id,
-          otp: otpData.otp,
-        });
-      } else {
-        res.render("user/otp", { invalid: true });
-      }
+        res.json({success:true,userId:userData._id})
     } catch (error) {
       console.log(error.message);
       res.redirect("/error");
     }
-  }
 };
+const otp=async(req,res)=>{
+  try {
+    const userId=req.query.id
+    console.log(userId)
+    res.render("user/otp",{ userId:userId})
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
+  }
+}
 const verifyMail = async (req, res) => {
   try {
-    let { otp, UserId } = req.body;
-    console.log(otp);
-    console.log(UserId);
-    const Otps = await OTPcode.find({ userId: UserId });
-    console.log(Otps);
+    let {otp,userId} = req.body;
+    console.log(req.body)
+    const Otps = await OTPcode.find({userId});
+    console.log(Otps)
+    const user = await User.findOne({_id:userId});
+    console.log(user);
     const otpSend = Otps[0].otp;
     console.log(otpSend);
     const ExpiresAt = Otps[0].expiresAt;
@@ -228,12 +235,14 @@ const verifyMail = async (req, res) => {
       res.render("user/otp", { expire: true });
     } else if (otpSend == otp) {
       updateInfo = await User.updateOne(
-        { _id: UserId },
+        { _id: userId },
         { $set: { is_verified: 1 } }
       );
+      req.session.email=user.email
+      console.log(req.session.email)
       res.redirect("/");
     } else {
-      res.render("user/otp", { invalid: true, UserId });
+      res.render("user/otp", { invalid: true, userId });
     }
 
     updateInfo = await User.updateOne(
@@ -259,6 +268,7 @@ const resetPass = async (req, res) => {
   try {
     const { email } = req.body;
     const fUser = await User.findOne({ email });
+    if(fUser){
     const OTP = Math.floor(100000 + Math.random() * 900000);
     const otp = new OTPcode({
       userId: fUser._id,
@@ -273,7 +283,9 @@ const resetPass = async (req, res) => {
       email: fUser.email,
       UserId: fUser._id,
       Otp: otpData.otp,
-    });
+    });}else{
+      res.render("user/forgetPassword",{invalid:true})
+    }
   } catch (error) {
     console.log(error.message);
     res.redirect("/error");
@@ -678,5 +690,7 @@ module.exports = {
   productDetails,
   review,
   rating,
-  resendOtp
+  resendOtp,
+  checkUserExist,
+  otp
 };
