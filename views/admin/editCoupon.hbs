@@ -187,7 +187,7 @@
         <span id="minPurchaseAmountError" class="error-message"></span>
 
         <label>Discount (%)</label>
-        <input type="number" name="discount" id="discount" placeholder="Discount" value="{{coupon.discount}}">
+        <input type="number" name="discount" id="discount" placeholder="Discount" value="{{coupon.discount}}" min="0" max="90">
         <span id="discountError" class="error-message"></span>
 
         <label>Expiry Date</label>

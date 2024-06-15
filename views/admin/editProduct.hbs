@@ -180,7 +180,7 @@
     <input type="number" name="price" placeholder="Price" id="price" value="{{product.price}}">
     <span id="priceError" class="error-message"></span>
     
-    <input type="number" name="discount" placeholder="Discount" id="discount" value="{{product.discount}}">
+    <input type="number" name="discount" placeholder="Discount" id="discount" value="{{product.discount}}" min="0" max="90">
     <span id="discountError" class="error-message"></span>
     
     <input type="number" name="purchase" placeholder="Stock" id="purchase" value="{{product.purchase}}">

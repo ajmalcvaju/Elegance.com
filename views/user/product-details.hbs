@@ -290,7 +290,7 @@
 
 
 
-                                <h2 class="mb-0">{{product.pname}}</h2>
+                                <h2 class="mb-0"><b>{{product.pname}}</b></h2>
                                 <span class="d-block price">₹{{product.discountedPrice}} <del
                                         style="color: red;">₹{{product.price}}</del></span>
 
@@ -300,7 +300,7 @@
                                     <li>Free delivery available above purchase 2000₹</li>
                                 </ul>
 
-                                <p class="mb-0" style="color: black;">{{product.description}}</p>
+                                <p class="mb-0" style="color: black;"><b>Description:</b> {{product.description}}</p>
 
                                 <div class="products-color d-flex flex-wrap align-items-center w-100">
                                     <span>Colors:</span>
@@ -342,18 +342,20 @@
 
                                         <!--product-quanty-->
                                     </div>
-
-                                    <button class="theme-btn bg-color1"
+                                    <div  style="display: flex;flex-direction: column;">
+                                    
+                                     <button class="theme-btn bg-color1 btn btn-success"
                                         onclick="addToCart(event, '{{product._id}}')">Add to Cart
 
                                     </button>
+                                    <button class="theme-btn bg-color1 btn btn-warning mt-3"
+                                       onclick="addTowishlist(event, '{{product._id}}')">Add to Wishlist
+
+                                    </button>
+                                    </div>
                                     <!--product-bottom-->
                                 </div>
-                                <div class="wish my-4">
-                                    <a class="heart-btn d-inline-block rounded-circle"
-                                        onclick="addTowishlist(event, '{{product._id}}')" title=""><i
-                                            class="fi-rr-heart"></i>Add to Wishlist</a>
-                                </div>
+                               
 
 
                                 <!--porduct-detail-info-->
@@ -833,7 +835,12 @@
                                     icon: 'success',
                                     title: 'Thank you!',
                                     text: 'Thank you for your review!',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.reload();
+                                    }
                                 });
+
                             } else if (data.notLoggedIn) {
                                 Swal.fire({
                                     icon: 'warning',
@@ -872,9 +879,9 @@
             }
         });
     </script>
-<script>
-    function fetchReviews() {
-                fetch(`/reviews?productId={{product._id}}`) // Replace with the actual product ID
+    <script>
+        function fetchReviews() {
+            fetch(`/reviews?productId={{product._id}}`) // Replace with the actual product ID
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -897,23 +904,23 @@
                 .catch((error) => {
                     console.error('Error:', error);
                 });
-            }
+        }
 
-            function generateStars(rating) {
-                let starsHtml = '';
-                for (let i = 1; i <= 5; i++) {
-                    if (i <= rating) {
-                        starsHtml += '<i class="fas fa-star"></i>';
-                    } else {
-                        starsHtml += '<i class="far fa-star"></i>';
-                    }
+        function generateStars(rating) {
+            let starsHtml = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    starsHtml += '<i class="fas fa-star"></i>';
+                } else {
+                    starsHtml += '<i class="far fa-star"></i>';
                 }
-                return starsHtml;
             }
+            return starsHtml;
+        }
 
-            // Fetch reviews on page load
-            fetchReviews();
-</script>
+        // Fetch reviews on page load
+        fetchReviews();
+    </script>
 </body>
 
 </html>
