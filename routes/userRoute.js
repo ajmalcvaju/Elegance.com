@@ -29,7 +29,7 @@ router.post("/login", userauth.login);
 router.get("/signup", middleware.checkSession2, userController.loadRegister);
 router.post("/checkUserExist", userController.checkUserExist);
 
-router.post("/signup",  middleware.signUpImage, userController.insertUser);
+router.post("/signup",  middleware.userImage, userController.insertUser);
 router.get("/otp", userController.otp);
 router.post("/signup/verify", userController.verifyMail);
 

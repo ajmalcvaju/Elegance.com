@@ -4,9 +4,9 @@ const openProfile = async (req, res) => {
   try {
     if (req.session && req.session.email) {
       const email = req.session.email;
-      const user = await User.findOne({ email });
+      const user = await User.findOne({email});
       const userId = user._id;
-      const addresses = await Address.find({ userId });
+      const addresses = await Address.find({userId});
       res.render("user/my-profile", { user, addresses });
     } else {
       res.redirect("/login");

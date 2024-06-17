@@ -31,6 +31,7 @@
 							<tbody>
 								{{#each wishlist}}
 								{{#each this.items}}
+								{{#if this.productId.purchase}}
 								<tr>
 									<td width="45%">
 										<div class="display-flex align-center">
@@ -52,6 +53,7 @@
 											class="trash-icon btn btn-danger"><i class="far fa-trash-alt"></i>Delete</a>
 									</td>
 								</tr>
+								{{/if}}
 								{{/each}}
 								{{/each}}
 
