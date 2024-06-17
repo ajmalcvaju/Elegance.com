@@ -15,8 +15,8 @@ const login = async (req, res) => {
       res.render("user/login",{invalid:true});
   }
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).send("Internal Server Error");
+    console.log(error.message);
+    res.redirect("/error");
   }
 };
 const googleAuth=(req, res) => {

@@ -28,17 +28,6 @@ const addToCart = async (req, res) => {
       let cart = await Cart.findOne({ userId });
       let isProductInCart = false;
 
-      // let wishlist = await Wishlist.findOne({ userId });
-      // const index = wishlist.items.findIndex(
-      //   (item) => item.productId.toString() === productId
-      // );
-      // if (index !== -1) {
-      //   const updatedWishlist = await Wishlist.findOneAndUpdate(
-      //     { userId: userId },
-      //     { $pull: { items: { productId: productId } } },
-      //     { new: true }
-      //   );
-      // }
       if (!cart) {
         cart = new Cart({ userId, items: [{ productId, quantity: 1 }] });
         const cartData = await cart.save();
@@ -48,8 +37,6 @@ const addToCart = async (req, res) => {
           (item) => item.productId.toString() === productId
         );
         if (index !== -1) {
-          // (cart.items[index].quantity)++
-          // const cartData=await cart.save()
           isProductInCart = true;
         } else {
           cart.items.push({ productId, quantity: 1 });
@@ -270,25 +257,6 @@ const checkout=async (req, res) => {
       if (cart.nModified === 0) throw new Error("Failed to update couponDiscount to 0.");
     }
 
-    // let wallet = req.session.wallet;
-    // if (wallet) {
-    //   let amountAfterWallet;
-    //   if (carts.priceAfterCoupon) {
-    //     if (carts.priceAfterCoupon > wallet) {
-    //       amountAfterWallet = carts.priceAfterCoupon - wallet;
-    //     } else {
-    //       amountAfterWallet = 0;
-    //     }
-    //   } else {
-    //     if (carts.totalAmountPay > wallet) {
-    //       amountAfterWallet = carts.totalAmountPay - wallet;
-    //     } else {
-    //       amountAfterWallet = 0;
-    //     }
-    //   }
-    //   cart = await Cart.updateOne({ userId }, { $set: { amountAfterWallet } });
-    //   if (cart.nModified === 0) throw new Error("Failed to update amountAfterWallet.");
-    // }
 
     if (!carts) {
       res.send(`
@@ -318,94 +286,6 @@ const checkout=async (req, res) => {
 };
 
 
-// const checkout = async (req, res) => {
-//   try {
-//     const email = req.session.email;
-//     const user = await User.findOne({ email });
-//     const userId = user._id;
-//     let carts = await Cart.findOne({ userId });
-//     let totalPriceAfterCoupon;
-//     let couponDiscount;
-//     if (req.session.discount) {
-//       console.log(req.session.discount);
-//       const discount = req.session.discount;
-//       const totalPrice = carts.totalPrice;
-//       totalPriceAfterCoupon = Math.round(totalPrice * (1 - discount / 100));
-//       couponDiscount = Math.round((totalPrice * discount) / 100);
-//       console.log(couponDiscount);
-//       const cart = await Cart.updateOne(
-//         { userId },
-//         {
-//           $set: {
-//             priceAfterCoupon: totalPriceAfterCoupon,
-//             couponDiscount: couponDiscount,
-//           },
-//         }
-//       );
-//     } else {
-//       let cart = await Cart.updateOne(
-//         { userId },
-//         { $unset: { priceAfterCoupon: "" } }
-//       );
-//       cart = await Cart.updateOne({ userId }, { $set: { couponDiscount: 0 } });
-//     }
-//     let wallet=req.session.wallet
-//     if(req.session.wallet){
-//       if(carts.priceAfterCoupon){
-//          if(carts.priceAfterCoupon>wallet){
-//           console.log("a",carts.priceAfterCoupon)
-//           amountAfterWallet=carts.priceAfterCoupon-wallet
-//           cart = await Cart.updateOne({ userId }, { $set: { amountAfterWallet } });
-//          }else{
-//           console.log("b",carts.priceAfterCoupon)
-//           amountAfterWallet=0
-//           cart = await Cart.updateOne({ userId }, { $set: { amountAfterWallet } });
-//          }
-//     }
-//     else{
-//       if(carts.totalAmountPay>wallet){
-//         console.log("c",carts.totalAmountPay)
-//         const amountAfterWallet=carts.totalAmountPay-wallet
-//         console.log(amountAfterWallet)
-//           cart = await Cart.updateOne({ userId }, { $set: { amountAfterWallet } });
-//       }else{
-//         console.log("d",carts.totalAmountPay)
-//         const amountAfterWallet=0
-//         console.log(amountAfterWallet)
-//         console.log(userId)
-//           cart = await Cart.updateOne({ userId }, { $set: { amountAfterWallet } });
-//       }
-//     }
-//   }
-
-//     if (!carts) {
-//       res.send(`
-//             <script>
-//         alert('No Item Present in The Cart.');
-//         window.location.href = '/cart';
-//       </script>`);
-//     } else {
-//       if (carts.items.length == 0) {
-//         res.send(`
-//         <script>
-//     alert('No Item Present in The Cart.');
-//     window.location.href = '/cart';
-//   </script>`);
-//       } else {
-//         console.log(totalPriceAfterCoupon);
-//         const cart = await Cart.findOne({ userId }).populate("items.productId");
-//         const address = await Address.find({ userId });
-//         const coupon = await Coupon.find({});
-//         const wallet = await Wallet.findOne({userId});
-//         console.log(req.session.discount);
-//         res.render("user/checkout", { cart, address, coupon,wallet });
-//       }
-//     }
-//   } catch (error) {
-//     console.log(error.message);
-//     res.redirect("/error");
-//   }
-// };
 const createOrder = async (req, res) => {
   try {
     const { totalAmountPay, priceAfterCoupon, paymentMethod } = req.body;
@@ -614,8 +494,6 @@ const addWishlist = async (req, res) => {
           (item) => item.productId.toString() === productId
         );
         if (index !== -1) {
-          // (cart.items[index].quantity)++
-          // const cartData=await cart.save()
           isProductInWishlist = true;
         } else {
           wishlist.items.push({ productId });
@@ -701,8 +579,6 @@ const wishlistToAddCart = async (req, res) => {
           { $pull: { items: { productId: productId } } },
           { new: true }
         );
-        // (cart.items[index].quantity)++
-        // const cartData=await cart.save()
         isProductInCart = true;
         res.redirect("/myWishlist");
       } else {

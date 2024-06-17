@@ -35,7 +35,6 @@ const checkoutAddAddress = async (req, res) => {
   } catch (error) {
     console.log(error.message);
     res.redirect("/error");
-    res.status(500).send("Internal Server Error");
   }
 };
 const checkoutEditAddress = async (req, res) => {

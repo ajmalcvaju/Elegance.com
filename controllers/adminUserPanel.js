@@ -84,26 +84,45 @@ const updateUser = async (req, res) => {
   }
 };
 const blockUser = async (req, res) => {
-  let proId = req.query.id;
-  const updatedInfo = await User.updateOne(
-    { _id: proId },
-    { $set: { is_blocked: 1 } }
-  );
-  res.redirect("/admin/User");
+  try {
+    let proId = req.query.id;
+    const updatedInfo = await User.updateOne(
+      { _id: proId },
+      { $set: { is_blocked: 1 } }
+    );
+    res.redirect("/admin/User");
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/admin/error");
+  }
 };
+
+
 const unBlockUser = async (req, res) => {
-  let proId = req.query.id;
-  const updatedInfo = await User.updateOne(
-    { _id: proId },
-    { $set: { is_blocked: 0 } }
-  );
-  res.redirect("/admin/User");
+  try {
+    let proId = req.query.id;
+    const updatedInfo = await User.updateOne(
+      { _id: proId },
+      { $set: { is_blocked: 0 } }
+    );
+    res.redirect("/admin/User");
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/admin/error");
+  }
 };
 const editUser = async (req, res) => {
-  let proId = req.query.id;
-  const user = await User.findOne({ _id: proId });
-  res.render("admin/editUser", { user });
+  try {
+    let proId = req.query.id;
+    const user = await User.findOne({ _id: proId });
+    res.render("admin/editUser", { user });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/admin/error");
+  }
 };
+
+
 const updatingUser = async (req, res) => { 
   const userId=req.body.userId
   const { username, email, fname, lname, password, mobileNumber } = req.body;

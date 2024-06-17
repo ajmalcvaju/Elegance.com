@@ -80,7 +80,7 @@ const orderDetails = async (req, res) => {
   }
 };
 const error = async (req, res) => {
-  res.render("admin/errorPage");
+  res.redirect("/admin/error");
 };
 
 module.exports = { adminOrder, manageOrder, updateOrder, orderDetails, error };

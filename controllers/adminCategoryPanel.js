@@ -94,18 +94,27 @@ const restoreCategory = async (req, res) => {
 
 
 const editCategory = async (req, res) => {
+try {
   let proId = req.query.id;
   const category = await Category.findOne({ _id: proId });
-  res.render("admin/editCategory", { category });
+  res.render("admin/editCategory", { category })
+} catch (error) {
+  console.log(error.message);
+    res.redirect("/admin/error");
+};
 };
 
 const updatingCategory = async (req, res) => {
-  const proId = req.query.id;
+  try {
+    const proId = req.query.id;
   console.log(req.query);
   const { cname, discount, Type } = req.body;
-
   await Category.updateOne({ _id: proId }, { $set: { cname, discount, Type } });
   res.redirect("/admin/category");
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/admin/error");
+  }
 };
 
 module.exports = {

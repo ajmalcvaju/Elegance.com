@@ -87,37 +87,57 @@ const updateProduct = async (req, res) => {
   }
 };
 const deleteUser = async (req, res) => {
-  let proId = req.query.id;
+  try {
+    let proId = req.query.id;
   const updatedInfo = await Product.updateOne(
     { _id: proId },
     { $set: { is_deleted: 1 } }
   );
   res.redirect("/admin/product");
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/admin/error");
+  }
 };
 
 const restoreUser = async (req, res) => {
-  let proId = req.query.id;
+  try {
+    let proId = req.query.id;
   const updatedInfo = await Product.updateOne(
     { _id: proId },
     { $set: { is_deleted: 0 } }
   );
   res.redirect("/admin/product");
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/admin/error");
+  }
 };
 const editProduct = async (req, res) => {
-  let proId = req.query.id;
-  const product = await Product.findOne({ _id: proId });
-  const categories = await Category.find({});
-  res.render("admin/editProduct", { product, categories });
+  try {
+    let proId = req.query.id;
+    const product = await Product.findOne({ _id: proId });
+    const categories = await Category.find({});
+    res.render("admin/editProduct", { product, categories });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/admin/error");
+  }
 };
-const updatingProduct = async (req, res) => {
-  const proId = req.query.id;
-  const { pname, description,category, price, discount, purchase } = req.body;
 
+const updatingProduct = async (req, res) => {
+  try {
+    const proId = req.query.id;
+  const { pname, description,category, price, discount, purchase } = req.body;
   await Product.updateOne(
     { _id: proId },
     { $set: { pname, description, price,category, discount, purchase } }
   );
   res.redirect("/admin/product");
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/admin/error");
+  }
 };
 
 module.exports = {

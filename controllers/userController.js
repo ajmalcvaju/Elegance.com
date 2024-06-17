@@ -312,19 +312,10 @@ const changePassword = async (req, res) => {
         res.render("user/changePassword", { UserId });
       } else {
         res.render("user/otpForgetPassword", { invalid: true, UserId });
-        console.log("2")
       }
     } else {
       res.render("user/otpForgetPassword", { expire: true, UserId });
-      console.log("3")
     }
-
-    // updateInfo = await User.updateOne(
-    //   { _id: req.query.id },
-    //   { $set: { is_verified: 1 } }
-    // );
-    // console.log(updateInfo);
-    // res.render("home");
   } catch (error) {
     console.log(error.message);
     res.redirect("/error");
@@ -633,7 +624,6 @@ const advanceSearch = async (req, res) => {
   } catch (error) {
     console.log(error.message);
     res.redirect("/error");
-    res.status(500).send("Internal Server Error");
   }
 };
 
