@@ -90,9 +90,6 @@
                 <a href="#" class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
                 </a>
-                <form class="d-none d-md-flex ms-4">
-                    <input class="form-control border-0" type="search" placeholder="Search">
-                </form>
                 <div class="navbar-nav align-items-center ms-auto">
                     <div class="nav-item dropdown">
                        
@@ -104,8 +101,16 @@
                 </div>
             </nav>
 <!-- Navbar End -->
+ <div style="display: flex;flex-direction: column;">
+            <form class="form-inline my-2 my-lg-0" style="display: flex;flex-direction: row;width: 30%;float: right;">
+                    <input class="form-control mr-sm-2" id="searchInput" type="text" placeholder="Search"
+                        aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0 mx-2" id="searchByIdButton"
+                        type="submit">Search</button>
+                </form>
 <div style="display: flex; justify-content: flex-end;margin-top: 2%;">
             <a href="/admin/addCoupon" class="btn btn-success">Add Coupons</a>
+            </div>
             </div>
             <table class="table mt-3">
                 <thead>
@@ -184,6 +189,16 @@
             })
         }
     </script>
+    <script>
+    $(document).ready(function () {
+        $("#searchInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("table tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
 </body>
 
 </html>

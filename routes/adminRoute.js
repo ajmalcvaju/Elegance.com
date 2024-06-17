@@ -11,6 +11,8 @@ const multer = require("multer");
 const path = require("path");
 const middleware = require("../middlewares/middlewares");
 
+
+
 router.get("/", middleware.checkSession3, adminController.loginLoad);
 
 router.get("/adminLogin", adminController.loginLoad);
@@ -25,16 +27,6 @@ router.get("/addProduct", adminProductPanel.addProduct);
 router.post("/ProductExist", adminProductPanel.ProductExist);
 
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../public/productImages"));
-  },
-  filename: function (req, file, cb) {
-    const name = Date.now() + "-" + file.originalname;
-    cb(null, name);
-  },
-});
-const upload = multer({ storage: storage });
 router.post(
   "/addProduct",
   upload.array("image", 4),

@@ -75,10 +75,7 @@ router.get("/delete-address", userProfile.deleteAddress);
 router.get("/edit-profile", userProfile.editProfile);
 router.post("/edit-profile", userProfile.updateProfile);
 
-const hbs = require("hbs");
-hbs.registerHelper("incrementIndex", function (index) {
-  return index + 1;
-});
+
 
 router.get("/add-to-cart", cartController.addToCart);
 

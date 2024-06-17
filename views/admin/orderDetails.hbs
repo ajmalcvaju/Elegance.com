@@ -53,6 +53,15 @@
 					<p>{{order.addressId.houseName}},{{order.addressId.street}}
 						<br>{{order.addressId.district}},{{order.addressId.state}}<br>Pincode:{{order.addressId.pincode}}
 					</p>
+					{{#if order.reasonForCancelation}}
+					<h5>Reasson For Cancellation:</h5>
+					<p>{{order.reasonForCancelation}}</p>
+					{{else}}
+					{{#if order.reasonForReturn}}
+					<h5>Reasson For Return:</h5>
+					<p>{{order.reasonForReturn}}</p>
+					{{/if}}
+					{{/if}}
 				</div>
 			</div>
 

@@ -478,6 +478,18 @@ const advanceSearch = async (req, res) => {
         }
       }
       const categories = await Category.find({});
+
+      const page = parseInt(req.query.page) || 1;
+    const limit = 6;
+
+    const query = category ? { category } : {};
+
+    const totalProducts = await Product.countDocuments(query);
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    products = await Product.find(query)
+      .skip((page - 1) * limit)
+      .limit(limit);
       
       res.render("user/shop-sidebar", {
         products,
@@ -486,6 +498,8 @@ const advanceSearch = async (req, res) => {
         priceSort,
         alphabetSort,
         category,
+        currentPage: page,
+      totalPages,
       });
     } else {
       req.session.category = req.query.category;
@@ -590,8 +604,20 @@ const advanceSearch = async (req, res) => {
           products = await Product.find({});
         }
       }
-
       const categories = await Category.find({});
+
+      const page = parseInt(req.query.page) || 1;
+    const limit = 6;
+
+    const query = category ? { category } : {};
+
+    const totalProducts = await Product.countDocuments(query);
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    products = await Product.find(query)
+      .skip((page - 1) * limit)
+      .limit(limit);
+
       res.render("user/shop-sidebar", {
         products,
         categories,
@@ -599,6 +625,8 @@ const advanceSearch = async (req, res) => {
         priceSort,
         alphabetSort,
         category,
+        currentPage: page,
+      totalPages,
       });
     }
   } catch (error) {

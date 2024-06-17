@@ -6,7 +6,7 @@ const adminOrder = async (req, res) => {
   try {
     const order = await Order.find({})
       .populate("items.productId")
-      .populate("userId");
+      .populate("userId").sort({orderId:-1});
     console.log(order);
     res.render("admin/orders", { order });
   } catch {

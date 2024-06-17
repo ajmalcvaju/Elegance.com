@@ -585,7 +585,7 @@ const orderStatus = async (req, res) => {
     const email = req.session.email;
     const user = await User.findOne({ email });
     const userId = user._id;
-    const order = await Order.find({ userId }).populate("items.productId");
+    const order = await Order.find({ userId }).populate("items.productId").sort({orderId:-1});
     console.log(order);
     res.render("user/orderStatus", { order });
   } catch (error) {
