@@ -34,6 +34,7 @@ const checkUserExist=async(req,res)=>{
   }
 }
 
+
 const shop = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;

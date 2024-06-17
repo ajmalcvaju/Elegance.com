@@ -136,6 +136,14 @@ const updateProfile = async (req, res) => {
     res.redirect("/error");
   }
 };
+const addAddres=async (req, res) => {
+  try {
+    res.render("user/add-address", { checkout: 0 });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
+  }
+}
 
 module.exports = {
   openProfile,
@@ -147,4 +155,5 @@ module.exports = {
   deleteAddress,
   editProfile,
   updateProfile,
+  addAddres
 };

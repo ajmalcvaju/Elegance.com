@@ -32,6 +32,7 @@ const addCategory = async (req, res) => {
   try {
     res.render("admin/addCategory");
   } catch {
+    console.log(error.message);
     res.redirect("/admin/error");
   }
 };
@@ -64,26 +65,40 @@ const updateCategory = async (req, res) => {
   }
 };
 const deleteCategory = async (req, res) => {
-  let proId = req.query.id;
-  const updatedInfo = await Category.updateOne(
-    { _id: proId },
-    { $set: { is_deleted: 1 } }
-  );
-  res.redirect("/admin/category");
+  try {
+    let proId = req.query.id;
+    const updatedInfo = await Category.updateOne(
+      { _id: proId },
+      { $set: { is_deleted: 1 } }
+    );
+    res.redirect("/admin/category");
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/admin/error");
+  }
 };
+
 const restoreCategory = async (req, res) => {
-  let proId = req.query.id;
-  const updatedInfo = await Category.updateOne(
-    { _id: proId },
-    { $set: { is_deleted: 0 } }
-  );
-  res.redirect("/admin/category");
+  try {
+    let proId = req.query.id;
+    const updatedInfo = await Category.updateOne(
+      { _id: proId },
+      { $set: { is_deleted: 0 } }
+    );
+    res.redirect("/admin/category");
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/admin/error");
+  }
 };
+
+
 const editCategory = async (req, res) => {
   let proId = req.query.id;
   const category = await Category.findOne({ _id: proId });
   res.render("admin/editCategory", { category });
 };
+
 const updatingCategory = async (req, res) => {
   const proId = req.query.id;
   console.log(req.query);

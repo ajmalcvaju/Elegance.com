@@ -59,4 +59,17 @@ const upload3 = multer({ storage: storage3 });
 
 const categoryImage=upload3.single("image")
 
-module.exports = { checkSession, checkSession2, checkSession3,productImage,uploadNone,userImage,categoryImage };
+const storage4 = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "../public/userImages"));
+  },
+  filename: function (req, file, cb) {
+    const name = Date.now() + "-" + file.originalname;
+    cb(null, name);
+  },
+});
+const upload4 = multer({ storage: storage });
+const signUpImage=upload4.single("image")
+
+
+module.exports = { checkSession, checkSession2, checkSession3,productImage,uploadNone,userImage,categoryImage,signUpImage };

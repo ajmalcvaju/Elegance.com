@@ -14,7 +14,6 @@ const cartController = require("../controllers/cartController");
 const userCheckoutOrderControll = require("../controllers/userCheckoutOrderControll");
 const Cart = require("../model/cartModel");
 
-// const passport = require("passport");
 const passport =require("../config/passport");
 
 router.get("/", userController.home);
@@ -22,27 +21,15 @@ router.get("/login", middleware.checkSession, userController.login);
 
 router.get("/auth/google", passport.authenticate("google", { scope: ['email', 'profile'] }));
 
-router.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: '/' }), (req, res) => {
-   req.session.email=req.user.email;
-    res.redirect('/');
-});
+router.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: '/' }), userauth.googleAuth);
 
 router.post("/login", userauth.login);
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../public/userImages"));
-  },
-  filename: function (req, file, cb) {
-    const name = Date.now() + "-" + file.originalname;
-    cb(null, name);
-  },
-});
-const upload = multer({ storage: storage });
+
 
 router.get("/signup", middleware.checkSession2, userController.loadRegister);
 router.post("/checkUserExist", userController.checkUserExist);
 
-router.post("/signup", upload.single("image"), userController.insertUser);
+router.post("/signup",  middleware.signUpImage, userController.insertUser);
 router.get("/otp", userController.otp);
 router.post("/signup/verify", userController.verifyMail);
 
@@ -54,18 +41,14 @@ router.post("/reset/verify", userController.changePassword);
 router.post("/reset/new-password", userController.updatePassword);
 
 router.get("/shop", userController.shop);
-router.get("/home", async (req, res) => {
-  res.render("user/home");
-});
+router.get("/home", userController.home);
 router.get("/product-details", userController.productDetails);
 router.post("/rate",userController.rating)
 router.get("/reviews",userController.review)
 
 router.get("/myProfile", userProfile.openProfile);
 
-router.get("/myProfile/add-address", async (req, res) => {
-  res.render("user/add-address", { checkout: 0 });
-});
+router.get("/myProfile/add-address", userProfile.addAddres);
 router.post("/myProfile/add-address", userProfile.addAddress);
 router.get("/edit-address", userProfile.changeAddress);
 router.get("/myProfile/changePassword", userProfile.changePassword);
@@ -95,23 +78,12 @@ router.get("/orderStatus", cartController.orderStatus);
 
 router.get("/advanceSearch", userController.advanceSearch);
 
-router.get("/AddAddress", async (req, res) => {
-  res.render("user/add-address", { checkout: 1 });
-});
+router.get("/AddAddress",userCheckoutOrderControll.addAddress);
 router.post("/AddAddress", userCheckoutOrderControll.checkoutAddAddress);
 
-router.get("/editAddress", async (req, res) => {
-  const addId = req.query.id;
-  const address = await Address.findOne({ _id: addId });
-  res.render("user/edit-address", { address, checkout: 1 });
-});
+router.get("/editAddress", userCheckoutOrderControll.editAddress);
 router.post("/editAddress", userCheckoutOrderControll.checkoutEditAddress);
-router.get("/deleteAddress", async (req, res) => {
-  const addId = req.query.id;
-  console.log(addId);
-  await Address.deleteOne({ _id: addId });
-  res.redirect("/checkout");
-});
+router.get("/deleteAddress", userCheckoutOrderControll.deleteAddress);
 router.post("/cancelOrder", userCheckoutOrderControll.orderCancell);
 router.post("/returnOrder", userCheckoutOrderControll.returnOrder);
 

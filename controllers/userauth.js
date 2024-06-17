@@ -22,11 +22,11 @@ const login = async (req, res) => {
 const googleAuth=(req, res) => {
   try {
     req.session.email=req.user.email;
-   res.redirect('/');}
+   res.redirect('/');
   } catch (error) {
-    
-  }
-  
+    console.log(error.message);
+    res.redirect("/error");
+  }}
 
 
 const error = async (req, res) => {

@@ -302,6 +302,37 @@ const removeWallet=async(req,res)=>{
   }
 }
 
+const addAddress= async (req, res) => {
+  try {
+    res.render("user/add-address", { checkout: 1 });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
+  }
+}
+const editAddress=async (req, res) => {
+  try {
+    const addId = req.query.id;
+    const address = await Address.findOne({ _id: addId });
+    res.render("user/edit-address", { address, checkout: 1 });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
+  }
+}
+
+const deleteAddress=async (req, res) => {
+  try {
+    const addId = req.query.id;
+    console.log(addId);
+    await Address.deleteOne({ _id: addId });
+    res.redirect("/checkout");
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
+  }
+}
+
 module.exports = {
   checkoutAddAddress,
   checkoutEditAddress,
@@ -315,5 +346,8 @@ module.exports = {
   removeCoupon,
   returnOrder,
   useWallet,
-  removeWallet
+  removeWallet,
+  addAddress,
+  editAddress,
+  deleteAddress
 };
