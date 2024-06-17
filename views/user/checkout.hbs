@@ -169,20 +169,26 @@
           </div>
         </div>
         <div style="overflow: hidden;margin-top: 10%;">
+          {{#if cart.amountAfterWallet}} 
+                  {{else}}
+                  {{#if (eq cart.amountAfterWallet 0)}}
+                  {{else}}
           {{#if cart.priceAfterCoupon}}
-          <h1 style="float: left;">You Already Have Applied A Coupon</h1><a style="float: right;align-self: center;"
-            class="btn btn-warning" href="/removeCoupon?couponId={{cart.couponId}}">Delete Coupon</a>
+          <h1 style="float: left;">You Already Have Applied A Coupon</h1><a style="float: right;align-self: center;background-color: red;"
+            class="btn btn-warning" href="/removeCoupon?couponId={{cart.couponId}}" >Delete Coupon</a>
           {{else}}
           <h1>Apply Coupon For Discount</h1>
-          {{/if}}
-        </div>
-        <div class="input-group w-75 couponcode-wrap" id="applyCoupon">
+          <div class="input-group w-75 couponcode-wrap" id="applyCoupon">
           <input type="text" class="form-control me-2" id="couponCode" placeholder="Coupon Code"
             aria-label="Coupon Code" aria-describedby="button-addon2" style="width: auto; margin-top: 5%;">
           <div class="input-group-append">
             <button class="btn btn-black btn-sm" type="button" id="applyCouponButton"
               style="margin-top: 2%;">Apply</button>
           </div>
+        </div>
+          {{/if}}
+          {{/if}}
+          {{/if}}
         </div>
       </div>
     </div>
@@ -196,11 +202,15 @@
         <div class="payment__info">
           <form action="/placeOrder" method="post" class="form">
             {{!-- <form class="form" method="post"> --}}
+              {{#if cart.amountAfterWallet}}
+              <input type="hidden" id="totalAmountPay" name="totalAmountPay" value="{{cart.amountAfterWallet}}">
+              {{else}}
               {{#if cart.priceAfterCoupon}}
               <input type="hidden" name="totalAmountPay" value="{{cart.totalAmountPay}}">
               <input type="hidden" id="totalAmountPay" name="priceAfterCoupon" value="{{cart.priceAfterCoupon}}">
               {{else}}
               <input type="hidden" id="totalAmountPay" name="totalAmountPay" value="{{cart.totalAmountPay}}">
+              {{/if}}
               {{/if}}
               <input type="hidden" name="totalPrice" value="{{cart.totalPriceBeforeOffer}}">
               <input type="hidden" name="discount" value="{{cart.discount}}">
@@ -212,18 +222,66 @@
                 <h3>Address</h3>
                 {{#each address}}
                 <div>
-                  <input type="radio" name="address" id="address" value="{{this._id}}" >
+  <input type="radio" name="address" id="address" value="{{this._id}}" onclick="updatePlaceOrderButton('{{this._id}}')">
 
-                  <label><u>{{this.addressType}}</u><br>{{this.houseName}},{{this.street}} <a
-                      href="/editAddress?id={{this._id}}" style="color:blue;">Edit
-                      Address</a><br>{{this.district}},{{this.state}}<br>Pincode:{{this.pincode}}<br><a
-                      style="color: red;" href="/deleteAddress?id={{this._id}}">Delete</a></label>
-                </div>
+  <label><u>{{this.addressType}}</u><br>{{this.houseName}}, {{this.street}} <a href="/editAddress?id={{this._id}}" style="color:blue;">Edit Address</a><br>{{this.district}}, {{this.state}}<br>Pincode: {{this.pincode}}<br><a style="color: red;" href="/deleteAddress?id={{this._id}}">Delete</a></label>
+</div>
                 <br>
 
                 {{/each}}
                 <a href="/addAddress">Add New Address</a>
               </div>
+              <div class="col-md-4">
+                <div class="wallet-balance">
+                  {{#if cart.amountAfterWallet}}
+                  <h2>Wallet Balance</h2>
+                  <h3>₹<span id="wallet-balance">{{wallet.amount}}</span></h3>
+                  <a style="float: right;align-self: center;background-color: red;"
+            class="btn btn-warning" id="remove-wallet">Remove Wallet</a>
+                  {{else}}
+                  {{#if (eq cart.amountAfterWallet 0)}}
+                  <h2>Wallet Balance</h2>
+                  <h3>₹<span id="wallet-balance">{{wallet.amount}}</span></h3>
+                  <a style="float: right;align-self: center;background-color: red;"
+            class="btn btn-warning" id="remove-wallet">Remove Wallet</a>
+                  {{else}}
+                  <h2>Wallet Balance</h2>
+                  {{#if wallet}}
+                  <h3>₹<span id="wallet-balance">{{wallet.amount}}</span></h3>
+                  <a class="btn btn-success" id="use-wallet-btn" >Use Wallet</a>
+                  {{else}}
+                  <h3>₹<span id="wallet-balance">00.00</span></h3>
+                  {{/if}}
+                  {{/if}}
+                  {{/if}}
+                  
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div style="display: flex;flex-direction: column;">
+
+                  {{#if cart.amountAfterWallet}}
+                  <h2>Amount After Wallet</h2>
+                  <h3>₹<span id="wallet-balance">{{cart.amountAfterWallet}}</span></h3>
+                  {{else}}
+                  {{#if (eq cart.amountAfterWallet 0)}}
+                  <h2>Amount have to be paid After Wallet</h2>
+                  <h3>₹<span id="wallet-balance">00.00</span></h3>
+                  {{/if}}
+                  {{/if}}
+                </div>
+              </div>
+              {{#if cart.amountAfterWallet}}
+              <div class="payment__title">
+                You can Only use online method along with wallet
+              </div>
+              <select id="select" name="paymentMethod" class="form-control">
+                <option value="online">Online Payment</option>
+              </select>
+               {{else}}
+              {{#if (eq cart.amountAfterWallet 0)}}
+              {{else}}
               <div class="payment__title">
                 Payment Method
               </div>
@@ -231,9 +289,20 @@
                 <option value="cod">Cash On Delivery</option>
                 <option value="online">Online Payment</option>
               </select>
+              {{/if}}
+              {{/if}}
+              {{#if (eq cart.amountAfterWallet 0)}}
               <div style="text-align: center;">
-                <button type="submit" class="btn btn-primary" style="margin-top: 10%;">Place Order</button>
+  <button id="place-order-button" class="btn btn-primary" style="margin-top: 10%; background-color: green; onclick='checkAddressSelection()'">
+    <a id="place-order-link" style="text-decoration: none; color: white;" >Place Order</a>
+  </button>
+</div>
+              {{else}}
+              <div style="text-align: center;">
+                <button type="submit" class="btn btn-primary" style="margin-top: 10%; background-color: green;">Place
+                  Order</button>
               </div>
+              {{/if}}
             </form>
         </div>
       </div>
@@ -252,6 +321,23 @@
       });
     });
   </script>
+  <script>
+  function updatePlaceOrderButton(addressId) {
+    const placeOrderLink = document.getElementById('place-order-link');
+    placeOrderLink.href = `/placeOrder?wallet=1&add=${addressId}`;
+    function checkAddressSelection() {
+    if (!selectedAddressId) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'No Address Selected',
+        text: 'Please select an address before placing your order.'
+      });
+    } else {
+      window.location.href = `/placeOrder?wallet=1&address=${selectedAddressId}`;
+    }
+  }
+  }
+</script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     $(document).ready(function () {
@@ -259,14 +345,14 @@
         e.preventDefault();
         console.log("Form submitted");
 
-       if (!$("input[name='address']:checked").val()) {
-            Swal.fire({
-                title: "Error!",
-                text: "Please select an address to proceed.",
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-            return;
+        if (!$("input[name='address']:checked").val()) {
+          Swal.fire({
+            title: "Error!",
+            text: "Please select an address to proceed.",
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+          return;
         }
 
         var formData = $(this).serialize();
@@ -315,8 +401,8 @@
                     icon: 'error',
                     confirmButtonText: 'Continue Shopping'
                   })
-                }else{
-                   window.location.href = `/placeOrder?paid=0&add=${address}`
+                } else {
+                  window.location.href = `/placeOrder?paid=0&add=${address}`
                 }
               }
             } else {
@@ -362,8 +448,8 @@
               setTimeout(() => {
                 window.location.href = '/checkout';
               }, 3000);
-            }else if(data.fail){
-                Swal.fire({
+            } else if (data.fail) {
+              Swal.fire({
                 text: 'You Have Used This code Before',
                 icon: 'error',
                 confirmButtonText: 'OK',
@@ -399,6 +485,83 @@
           });
       });
     });
+  </script>
+  <script>
+    document.getElementById('remove-wallet').addEventListener('click', function () {
+      
+    fetch('/remove-wallet', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+          Swal.fire({
+            title: 'Success!',
+            text: 'Wallet Amount removed successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = "/checkout";
+            };
+          })
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+        });
+  </script>
+  <script>
+    document.getElementById('use-wallet-btn').addEventListener('click', function () {
+      const walletAmount = {{wallet.amount}}
+    ;
+    const actualAmount = document.getElementById("totalAmountPay").value
+
+    // Send wallet amount to the backend
+    fetch('/use-wallet', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ walletAmount: walletAmount, actualAmount: actualAmount })
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          const amountBalance = data.amountBalance;
+          console.log(amountBalance)
+          console.log('Success:', data.amountBalance);
+          Swal.fire({
+            title: 'Success!',
+            text: 'Wallet Amount reduced successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = "/checkout";
+            };
+          })
+        } else {
+          // Failure case
+          console.log('Request succeeded but operation failed:', data);
+          Swal.fire({
+            title: 'Error!',
+            text: 'You have already reduced the Wallet amount',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.reload();
+            };
+          });
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+        });
   </script>
 </body>
 

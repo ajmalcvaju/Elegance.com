@@ -138,10 +138,16 @@
                                     <a href="/orderDetails?orderId={{this.orderId}}" class="btn btn-info">Order
                                         Details</a>
                                 </td>
+                                {{#if (eq this.status "Rejected")}}
+                                <td></td>
+                                {{else}}
                                 {{#if (eq this.status "Cancelled")}}
                                 <td></td>
                                 {{else}}
                                 {{#if (eq this.status "Return Completed")}}
+                                <td></td>
+                                {{else}}
+                                {{#if (eq this.status "Cancellation Completed")}}
                                 <td></td>
                                 {{else}}
                                 {{#if (eq this.status "Return Pending")}}
@@ -156,6 +162,8 @@
                                 <td>
                                     <a href="#" class="btn btn-danger" onclick="confirmCancel('{{this._id}}', '{{this.orderId}}')">Cancel</a>
                                 </td>
+                                {{/if}}
+                                {{/if}}
                                 {{/if}}
                                 {{/if}}
                                 {{/if}}
@@ -238,7 +246,7 @@
                 // Display a message for confirmation
                 Swal.fire({
                     title: 'Cancelling Order',
-                    text: 'Your order will be cancelled in 3 seconds.',
+                    text: 'Your order cancellation status will be updated in 3 seconds.',
                     icon: 'success',
                     timer: 3000,
                     showConfirmButton: false,

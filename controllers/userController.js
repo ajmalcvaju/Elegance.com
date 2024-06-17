@@ -69,13 +69,13 @@ const home = async (req, res) => {
       // const featured = await Product.find({});
       const topDeal = await Product.find({ discount: { $gt: 10 } })
         .sort({ discount: -1 })
-        .limit(10);
+        .limit(8);
       const newArrival = await Product.find({})
         .sort({ PurchaseDate: -1 })
-        .limit(10);
+        .limit(8);
       const bestSellerProduct = await Product.find({})
         .sort({ soldCount: -1 })
-        .limit(10);
+        .limit(8);
       console.log("hi")
       res.render("user/home", {
         login: 1,
@@ -478,6 +478,7 @@ const advanceSearch = async (req, res) => {
         }
       }
       const categories = await Category.find({});
+      
       res.render("user/shop-sidebar", {
         products,
         categories,

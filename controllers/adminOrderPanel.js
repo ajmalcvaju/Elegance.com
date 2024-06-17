@@ -1,4 +1,6 @@
 const Order = require("../model/orderModel");
+const Wallet=require("../model/walletModel");
+
 
 const adminOrder = async (req, res) => {
   try {
@@ -28,6 +30,26 @@ const updateOrder = async (req, res) => {
     const orderStatus = req.body.orderStatus;
     const orderId = req.query.orderId;
     console.log(req.body);
+    const orders = await Order.findOne({orderId});
+    if (orders.paymentStatus === "Successfull" && 
+      (orderStatus === "Cancellation Completed" || orderStatus === "Return Completed" ||orderStatus === "Rejected")) {
+        const order = await Order.updateOne(
+          { orderId: orderId },
+          {
+            $set: {
+              status: orderStatus,
+              expectedArrival: expectedArrival,
+              paymentStatus:"Refunded"
+            },
+          }
+        );
+        const wallet = await Wallet.findOneAndUpdate(
+          { userId: orders.userId }, 
+          { $set: { amount: orders.totalAmountPay } }, 
+          { upsert: true, new: true, setDefaultsOnInsert: true } 
+        );
+        
+  }
     const order = await Order.updateOne(
       { orderId: orderId },
       {
@@ -37,8 +59,7 @@ const updateOrder = async (req, res) => {
         },
       }
     );
-    const orders = await Order.find({});
-    console.log(orders);
+    
     res.redirect("/admin/orders");
   } catch (error) {
     console.log(error.message);

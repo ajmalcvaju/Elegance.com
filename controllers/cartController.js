@@ -1,4 +1,4 @@
-const Cart = require("../model/cartModel");
+var Cart = require("../model/cartModel");
 const Product = require("../model/productModel");
 const User = require("../model/userModel");
 const Address = require("../model/addressModel");
@@ -6,12 +6,10 @@ const Order = require("../model/orderModel");
 const Wishlist = require("../model/wishlistModel");
 const Coupon = require("../model/couponModel");
 const Category = require("../model/categoryModel");
+const Wallet=require("../model/walletModel");
 const Razorpay = require("razorpay");
 
-// const razorpayInstance=new Razorpay({
-//   key_id:"rzp_test_8qF3L1nSyCD4kf",
-//   key_secret:"XKCeAFQwm8d8xEv8684Sgqsh"
-// })
+
 
 const razorpayInstance = new Razorpay({
   key_id: process.env.key_id,
@@ -81,6 +79,15 @@ const cart = async (req, res) => {
       const email = req.session.email;
       const user = await User.findOne({ email });
       const userId = user._id;
+      if(req.session.wallet){
+        const wallet=req.session.wallet
+    const wallets=await Wallet.updateOne({userId},{$inc:{amount:wallet}})
+    await Cart.updateOne(
+      { userId },
+      { $unset: { amountAfterWallet: "" } }
+    );
+    delete req.session.wallet;
+      }
       const cart = await Cart.findOne({ userId }).populate("items.productId");
       let carts = await Cart.findOne({ userId });
       const coupon = await Coupon.find({});
@@ -96,7 +103,6 @@ const cart = async (req, res) => {
           const gst = Math.round(totalPrice * 0.12);
           const totalPriceIncGst = Math.round(totalPrice * 1.12);
           const totalAmountPay = Math.round(totalPriceIncGst + 50);
-
           res.render("user/cart", {
             cart,
             totalPrice,
@@ -219,14 +225,22 @@ const incCart = async (req, res) => {
     res.redirect("/error");
   }
 };
-const checkout = async (req, res) => {
+const checkout=async (req, res) => {
   try {
     const email = req.session.email;
+    if (!email) throw new Error("Email is missing from session.");
+    
     const user = await User.findOne({ email });
+    if (!user) throw new Error("User not found.");
+
     const userId = user._id;
     let carts = await Cart.findOne({ userId });
+    if (!carts) throw new Error("Cart not found.");
+
     let totalPriceAfterCoupon;
     let couponDiscount;
+    let cart;
+
     if (req.session.discount) {
       console.log(req.session.discount);
       const discount = req.session.discount;
@@ -234,7 +248,8 @@ const checkout = async (req, res) => {
       totalPriceAfterCoupon = Math.round(totalPrice * (1 - discount / 100));
       couponDiscount = Math.round((totalPrice * discount) / 100);
       console.log(couponDiscount);
-      const cart = await Cart.updateOne(
+
+      cart = await Cart.updateOne(
         { userId },
         {
           $set: {
@@ -243,41 +258,154 @@ const checkout = async (req, res) => {
           },
         }
       );
+      if (cart.nModified === 0) throw new Error("Failed to update cart with coupon details.");
     } else {
-      let cart = await Cart.updateOne(
+      cart = await Cart.updateOne(
         { userId },
         { $unset: { priceAfterCoupon: "" } }
       );
+      if (cart.nModified === 0) throw new Error("Failed to unset priceAfterCoupon.");
+
       cart = await Cart.updateOne({ userId }, { $set: { couponDiscount: 0 } });
+      if (cart.nModified === 0) throw new Error("Failed to update couponDiscount to 0.");
     }
+
+    // let wallet = req.session.wallet;
+    // if (wallet) {
+    //   let amountAfterWallet;
+    //   if (carts.priceAfterCoupon) {
+    //     if (carts.priceAfterCoupon > wallet) {
+    //       amountAfterWallet = carts.priceAfterCoupon - wallet;
+    //     } else {
+    //       amountAfterWallet = 0;
+    //     }
+    //   } else {
+    //     if (carts.totalAmountPay > wallet) {
+    //       amountAfterWallet = carts.totalAmountPay - wallet;
+    //     } else {
+    //       amountAfterWallet = 0;
+    //     }
+    //   }
+    //   cart = await Cart.updateOne({ userId }, { $set: { amountAfterWallet } });
+    //   if (cart.nModified === 0) throw new Error("Failed to update amountAfterWallet.");
+    // }
 
     if (!carts) {
       res.send(`
-            <script>
-        alert('No Item Present in The Cart.');
-        window.location.href = '/cart';
-      </script>`);
-    } else {
-      if (carts.items.length == 0) {
-        res.send(`
         <script>
-    alert('No Item Present in The Cart.');
-    window.location.href = '/cart';
-  </script>`);
-      } else {
-        console.log(totalPriceAfterCoupon);
-        const cart = await Cart.findOne({ userId }).populate("items.productId");
-        const address = await Address.find({ userId });
-        const coupon = await Coupon.find({});
-        console.log(req.session.discount);
-        res.render("user/checkout", { cart, address, coupon });
-      }
+          alert('No Item Present in The Cart.');
+          window.location.href = '/cart';
+        </script>`);
+    } else if (carts.items.length === 0) {
+      res.send(`
+        <script>
+          alert('No Item Present in The Cart.');
+          window.location.href = '/cart';
+        </script>`);
+    } else {
+      console.log(totalPriceAfterCoupon);
+      const cart = await Cart.findOne({ userId }).populate("items.productId");
+      const address = await Address.find({ userId });
+      const coupon = await Coupon.find({});
+      const wallet = await Wallet.findOne({ userId });
+      console.log(req.session.discount);
+      res.render("user/checkout", { cart, address, coupon, wallet });
     }
   } catch (error) {
-    console.log(error.message);
+    console.log("Error: ", error.message);
     res.redirect("/error");
   }
 };
+
+
+// const checkout = async (req, res) => {
+//   try {
+//     const email = req.session.email;
+//     const user = await User.findOne({ email });
+//     const userId = user._id;
+//     let carts = await Cart.findOne({ userId });
+//     let totalPriceAfterCoupon;
+//     let couponDiscount;
+//     if (req.session.discount) {
+//       console.log(req.session.discount);
+//       const discount = req.session.discount;
+//       const totalPrice = carts.totalPrice;
+//       totalPriceAfterCoupon = Math.round(totalPrice * (1 - discount / 100));
+//       couponDiscount = Math.round((totalPrice * discount) / 100);
+//       console.log(couponDiscount);
+//       const cart = await Cart.updateOne(
+//         { userId },
+//         {
+//           $set: {
+//             priceAfterCoupon: totalPriceAfterCoupon,
+//             couponDiscount: couponDiscount,
+//           },
+//         }
+//       );
+//     } else {
+//       let cart = await Cart.updateOne(
+//         { userId },
+//         { $unset: { priceAfterCoupon: "" } }
+//       );
+//       cart = await Cart.updateOne({ userId }, { $set: { couponDiscount: 0 } });
+//     }
+//     let wallet=req.session.wallet
+//     if(req.session.wallet){
+//       if(carts.priceAfterCoupon){
+//          if(carts.priceAfterCoupon>wallet){
+//           console.log("a",carts.priceAfterCoupon)
+//           amountAfterWallet=carts.priceAfterCoupon-wallet
+//           cart = await Cart.updateOne({ userId }, { $set: { amountAfterWallet } });
+//          }else{
+//           console.log("b",carts.priceAfterCoupon)
+//           amountAfterWallet=0
+//           cart = await Cart.updateOne({ userId }, { $set: { amountAfterWallet } });
+//          }
+//     }
+//     else{
+//       if(carts.totalAmountPay>wallet){
+//         console.log("c",carts.totalAmountPay)
+//         const amountAfterWallet=carts.totalAmountPay-wallet
+//         console.log(amountAfterWallet)
+//           cart = await Cart.updateOne({ userId }, { $set: { amountAfterWallet } });
+//       }else{
+//         console.log("d",carts.totalAmountPay)
+//         const amountAfterWallet=0
+//         console.log(amountAfterWallet)
+//         console.log(userId)
+//           cart = await Cart.updateOne({ userId }, { $set: { amountAfterWallet } });
+//       }
+//     }
+//   }
+
+//     if (!carts) {
+//       res.send(`
+//             <script>
+//         alert('No Item Present in The Cart.');
+//         window.location.href = '/cart';
+//       </script>`);
+//     } else {
+//       if (carts.items.length == 0) {
+//         res.send(`
+//         <script>
+//     alert('No Item Present in The Cart.');
+//     window.location.href = '/cart';
+//   </script>`);
+//       } else {
+//         console.log(totalPriceAfterCoupon);
+//         const cart = await Cart.findOne({ userId }).populate("items.productId");
+//         const address = await Address.find({ userId });
+//         const coupon = await Coupon.find({});
+//         const wallet = await Wallet.findOne({userId});
+//         console.log(req.session.discount);
+//         res.render("user/checkout", { cart, address, coupon,wallet });
+//       }
+//     }
+//   } catch (error) {
+//     console.log(error.message);
+//     res.redirect("/error");
+//   }
+// };
 const createOrder = async (req, res) => {
   try {
     const { totalAmountPay, priceAfterCoupon, paymentMethod } = req.body;
@@ -363,11 +491,21 @@ const placeOrder = async (req, res) => {
     couponDiscount = cart.couponDiscount;
     let order;
     let paymentStatus;
+    let wallet=req.query.wallet
+    
     if (paid == 1) {
       if (payment == 1) {
         paymentStatus = "Successfull";
       } else {
         paymentStatus = "Failed";
+        if(req.session.wallet){
+          const wallet=req.session.wallet
+      const wallets=await Wallet.updateOne({userId},{$inc:{amount:wallet}})
+      await Cart.updateOne(
+        { userId },
+        { $unset: { amountAfterWallet: "" } }
+      );
+        }
       }
       order = new Order({
         userId,
@@ -384,6 +522,24 @@ const placeOrder = async (req, res) => {
         couponDiscount,
         paymentStatus,
         paymentMethod: "Online Payment",
+      });
+    }else if(wallet==1){
+      paymentStatus = "Successfull"
+      order = new Order({
+        userId,
+        items: orderItems,
+        totalPrice,
+        addressId,
+        discount,
+        discountedPrice,
+        gst,
+        totalPriceIncludingGst,
+        shippingCharge,
+        totalAmountPay,
+        priceAfterCoupon,
+        couponDiscount,
+        paymentStatus,
+        paymentMethod: "wallet",
       });
     } else {
       paymentStatus = "Pending";
@@ -407,6 +563,13 @@ const placeOrder = async (req, res) => {
     await order.save();
     await Cart.deleteOne({ userId });
     req.session.discount = null;
+    req.session.wallet = null; 
+req.session.save((err) => {
+    if (err) {
+        console.error('Error saving session:', err);
+    } else {
+        console.log('Wallet session variable cleared');    }
+});
     if (paymentStatus == "Pending" || paymentStatus == "Successfull") {
       res.render("user/orderSuccess", { paid: 1 });
     } else {
@@ -611,5 +774,4 @@ module.exports = {
   myWishlist,
   wishlistToAddCart,
   deleteWishlist,
-  deleteCart,
-};
+  deleteCart};

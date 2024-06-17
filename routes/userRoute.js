@@ -89,6 +89,8 @@ router.get("/decrementItem", cartController.decCart);
 router.get("/checkout", cartController.checkout);
 router.post("/checkout", userCheckoutOrderControll.checkout);
 router.post("/createOrder", cartController.createOrder);
+router.post("/use-wallet", userCheckoutOrderControll.useWallet);
+router.get("/remove-wallet",userCheckoutOrderControll.removeWallet)
 
 router.get("/placeOrder", cartController.placeOrder);
 

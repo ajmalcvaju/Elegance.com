@@ -3,6 +3,7 @@ const Address = require("../model/addressModel");
 const Order = require("../model/orderModel");
 const Coupon = require("../model/couponModel");
 const Cart = require("../model/cartModel");
+const Wallet=require("../model/walletModel");
 const Razorpay = require("razorpay");
 
 const razorpayInstance = new Razorpay({
@@ -63,7 +64,7 @@ const orderCancell = async (req, res) => {
     const reason=req.body.reason
     const order = await Order.updateOne(
       { _id: orderId },
-      { $set: { status: "Cancelled",reasonForCancelation:reason } }
+      { $set: { status: "Cancelation Pending",reasonForCancelation:reason } }
     );
     res.redirect("/orderStatus");
   } catch (error) {
@@ -79,6 +80,7 @@ const returnOrder = async (req, res) => {
       { _id: orderId },
       { $set: { status: "Return Pending",reasonForReturn:reason } }
     );
+
     res.redirect("/orderStatus");
   } catch (error) {
     console.log(error.message);
@@ -150,6 +152,8 @@ const checkout = async (req, res) => {
     const email = req.session.email;
     const user = await User.findOne({ email });
     const userId = user._id;
+    const carts = await Cart.findOne({ userId })
+    req.session.amountBalanceAfterwallet
     const cart = await Cart.updateOne({ userId }, { $set: orderDetails });
     res.redirect("/checkout");
   } catch (error) {
@@ -244,6 +248,60 @@ const removeCoupon = async (req, res) => {
   }
 };
 
+const useWallet=async(req,res)=>{
+  try {
+    if(req.session.wallet){
+      console.log("hi",req.session.wallet)
+    res.json({success:false})
+      }else{
+        const email = req.session.email;
+    const user = await User.findOne({ email });
+    const userId = user._id;
+    const walletAmount=req.body.walletAmount
+    const actualAmount=Number(req.body.actualAmount)
+  if(actualAmount>=walletAmount){
+     const amountBalance=actualAmount-walletAmount
+     const wallet=await Wallet.updateOne({userId},{$set:{amount:0}})
+     await Cart.updateOne({ userId }, { $set: { amountAfterWallet:amountBalance } });
+     req.session.wallet=walletAmount
+     res.json({success:true})
+  }else{
+    const amountBalance=0
+    const walletBalance=walletAmount-actualAmount
+    const wallet=await Wallet.updateOne({userId},{$set:{amount:walletBalance}})
+    await Cart.updateOne({ userId }, { $set: { amountAfterWallet:amountBalance } });
+    req.session.wallet=actualAmount
+    res.json({success:true})
+  }
+  }
+    
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
+  }
+}
+
+const removeWallet=async(req,res)=>{
+  try {
+    const email = req.session.email;
+    const user = await User.findOne({ email });
+    const userId = user._id;
+    const cart = await Cart.findOne({ userId });
+    const wallet=req.session.wallet
+    const wallets=await Wallet.updateOne({userId},{$inc:{amount:wallet}})
+    await Cart.updateOne(
+      { userId },
+      { $unset: { amountAfterWallet: "" } }
+    );
+    console.log("hi aju")
+    delete req.session.wallet;
+    res.json({success:true})
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
+  }
+}
+
 module.exports = {
   checkoutAddAddress,
   checkoutEditAddress,
@@ -256,4 +314,6 @@ module.exports = {
   invoice,
   removeCoupon,
   returnOrder,
+  useWallet,
+  removeWallet
 };
