@@ -111,11 +111,11 @@ const editProduct = async (req, res) => {
 };
 const updatingProduct = async (req, res) => {
   const proId = req.query.id;
-  const { pname, description, price, discount, purchase } = req.body;
+  const { pname, description,category, price, discount, purchase } = req.body;
 
   await Product.updateOne(
     { _id: proId },
-    { $set: { pname, description, price, discount, purchase } }
+    { $set: { pname, description, price,category, discount, purchase } }
   );
   res.redirect("/admin/product");
 };

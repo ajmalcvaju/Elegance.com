@@ -19,11 +19,18 @@ const login = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
-
+const googleAuth=(req, res) => {
+  try {
+    req.session.email=req.user.email;
+   res.redirect('/');}
+  } catch (error) {
+    
+  }
+  
 
 
 const error = async (req, res) => {
   res.render("user/errorPage");
 };
 
-module.exports = { login, error };
+module.exports = { login, error,googleAuth };

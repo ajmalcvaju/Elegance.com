@@ -46,6 +46,7 @@ const updateCategory = async (req, res) => {
       console.log(req.file);
       const category = new Category({
         cname: req.body.cname,
+        discount:req.body.discount,
         Type: req.body.Type,
         image: req.file.filename,
       });

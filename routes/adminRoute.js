@@ -11,8 +11,6 @@ const multer = require("multer");
 const path = require("path");
 const middleware = require("../middlewares/middlewares");
 
-
-
 router.get("/", middleware.checkSession3, adminController.loginLoad);
 
 router.get("/adminLogin", adminController.loginLoad);
@@ -27,46 +25,21 @@ router.get("/addProduct", adminProductPanel.addProduct);
 router.post("/ProductExist", adminProductPanel.ProductExist);
 
 
-router.post(
-  "/addProduct",
-  upload.array("image", 4),
-  adminProductPanel.updateProduct
-);
+router.post("/addProduct",middleware.productImage,adminProductPanel.updateProduct);
 
 router.get("/user", adminUserPanel.adminUser);
 router.get("/addUser", adminUserPanel.addUser);
 
-const storage2 = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../public/userImages"));
-  },
-  filename: function (req, file, cb) {
-    const name = Date.now() + "-" + file.originalname;
-    cb(null, name);
-  },
-});
-const upload2 = multer({ storage: storage2 });
-router.post("/addUser", upload2.single("image"), adminUserPanel.updateUser);
+
+
+router.post("/addUser", middleware.userImage, adminUserPanel.updateUser);
 router.post("/UserExist", adminUserPanel.UserExist);
 
 router.get("/category", adminCategoryPanel.adminCategory);
 router.post("/CategoryExist", adminCategoryPanel.CategoryExist);
 router.get("/addcategory", adminCategoryPanel.addCategory);
-const storage3 = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../public/categoryImages"));
-  },
-  filename: function (req, file, cb) {
-    const name = Date.now() + "-" + file.originalname;
-    cb(null, name);
-  },
-});
-const upload3 = multer({ storage: storage3 });
-router.post(
-  "/addCategory",
-  upload3.single("image"),
-  adminCategoryPanel.updateCategory
-);
+
+router.post("/addCategory", middleware.categoryImage,adminCategoryPanel.updateCategory);
 
 router.get("/delete-product", adminProductPanel.deleteUser);
 router.get("/restore-product", adminProductPanel.restoreUser);
@@ -78,7 +51,7 @@ router.get("/edit-user", adminUserPanel.editUser);
 router.get("/edit-product", adminProductPanel.editProduct);
 router.get("/edit-category", adminCategoryPanel.editCategory);
 
-router.post("/edit-user",upload.none(),adminUserPanel.updatingUser);
+router.post("/edit-user",middleware.uploadNone,adminUserPanel.updatingUser);
 router.post("/edit-product", adminProductPanel.updatingProduct);
 router.post("/edit-category", adminCategoryPanel.updatingCategory);
 
