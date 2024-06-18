@@ -11,19 +11,19 @@ const adminProduct = async (req, res) => {
   }
 };
 
-const ProductExist=async (req, res) => {
+const ProductExist = async (req, res) => {
   try {
-   const {pname,productId}=req.body
-   if(productId){
-    const product = await Product.findOne({ _id:productId })
-    if(pname!=product.pname){
-      const products = await Product.findOne({pname})
+    const { pname, productId } = req.body;
+    if (productId) {
+      const product = await Product.findOne({ _id: productId });
+      if (pname != product.pname) {
+        const products = await Product.findOne({ pname });
+        res.json({ exists: !!products });
+      }
+    } else {
+      const products = await Product.findOne({ pname });
       res.json({ exists: !!products });
     }
-   }else{
-    const products = await Product.findOne({pname})
-    res.json({ exists: !!products });
-   }
   } catch {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -39,7 +39,6 @@ const addProduct = async (req, res) => {
     res.redirect("/admin/error");
   }
 };
-
 
 const updateProduct = async (req, res) => {
   try {
@@ -89,11 +88,11 @@ const updateProduct = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     let proId = req.query.id;
-  const updatedInfo = await Product.updateOne(
-    { _id: proId },
-    { $set: { is_deleted: 1 } }
-  );
-  res.redirect("/admin/product");
+    const updatedInfo = await Product.updateOne(
+      { _id: proId },
+      { $set: { is_deleted: 1 } }
+    );
+    res.redirect("/admin/product");
   } catch (error) {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -103,11 +102,11 @@ const deleteUser = async (req, res) => {
 const restoreUser = async (req, res) => {
   try {
     let proId = req.query.id;
-  const updatedInfo = await Product.updateOne(
-    { _id: proId },
-    { $set: { is_deleted: 0 } }
-  );
-  res.redirect("/admin/product");
+    const updatedInfo = await Product.updateOne(
+      { _id: proId },
+      { $set: { is_deleted: 0 } }
+    );
+    res.redirect("/admin/product");
   } catch (error) {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -128,12 +127,13 @@ const editProduct = async (req, res) => {
 const updatingProduct = async (req, res) => {
   try {
     const proId = req.query.id;
-  const { pname, description,category, price, discount, purchase } = req.body;
-  await Product.updateOne(
-    { _id: proId },
-    { $set: { pname, description, price,category, discount, purchase } }
-  );
-  res.redirect("/admin/product");
+    const { pname, description, category, price, discount, purchase } =
+      req.body;
+    await Product.updateOne(
+      { _id: proId },
+      { $set: { pname, description, price, category, discount, purchase } }
+    );
+    res.redirect("/admin/product");
   } catch (error) {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -148,5 +148,5 @@ module.exports = {
   restoreUser,
   editProduct,
   updatingProduct,
-  ProductExist
+  ProductExist,
 };

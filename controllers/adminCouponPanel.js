@@ -18,26 +18,25 @@ const editCoupon = async (req, res) => {
     res.redirect("/admin/error");
   }
 };
-const CouponExist=async (req,res)=>{
+const CouponExist = async (req, res) => {
   try {
-    const {couponCode,couponId}=req.body
-    console.log(req.body)
-    if(couponId){
-     const coupon = await Coupon.findOne({ _id:couponId })
-     if(couponCode!= coupon.couponCode){
-       const coupons = await Coupon.findOne({couponCode})
-       res.json({ exists: !!coupons });
-     }
-    }else{
-     const coupons = await Coupon.findOne({couponCode})
-     res.json({ exists: !!coupons});
+    const { couponCode, couponId } = req.body;
+    console.log(req.body);
+    if (couponId) {
+      const coupon = await Coupon.findOne({ _id: couponId });
+      if (couponCode != coupon.couponCode) {
+        const coupons = await Coupon.findOne({ couponCode });
+        res.json({ exists: !!coupons });
+      }
+    } else {
+      const coupons = await Coupon.findOne({ couponCode });
+      res.json({ exists: !!coupons });
     }
-   } catch {
-     console.log(error.message);
-     res.redirect("/admin/error");
-   }
-}
-
+  } catch {
+    console.log(error.message);
+    res.redirect("/admin/error");
+  }
+};
 
 const deleteCoupon = async (req, res) => {
   try {
@@ -86,5 +85,5 @@ module.exports = {
   addCoupon,
   editingCoupon,
   addingCoupon,
-  CouponExist
+  CouponExist,
 };

@@ -17,9 +17,9 @@ const verifyLogin = async (req, res) => {
     if (email === admin.email && password === admin.password) {
       req.session.email = email;
       console.log(req.session.email);
-      res.json({ success: true})
+      res.json({ success: true });
     } else {
-      res.json({ success: false})
+      res.json({ success: false });
     }
   } catch (error) {
     console.log(error.message);

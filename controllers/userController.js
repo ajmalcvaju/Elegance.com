@@ -6,7 +6,6 @@ const Category = require("../model/categoryModel");
 const Address = require("../model/addressModel");
 const Review = require("../model/reviewModel");
 
-
 const login = async (req, res) => {
   try {
     res.render("user/login");
@@ -15,25 +14,24 @@ const login = async (req, res) => {
     res.redirect("/error");
   }
 };
-const checkUserExist=async(req,res)=>{
+const checkUserExist = async (req, res) => {
   try {
-    const { username,email, mobileNumber } = req.body;
-    if(username){
+    const { username, email, mobileNumber } = req.body;
+    if (username) {
       const user = await User.findOne({ username });
-  res.json({ exists: !!user });
-    }else if(email){
+      res.json({ exists: !!user });
+    } else if (email) {
       const user = await User.findOne({ email });
-    res.json({ exists: !!user });
-    }else if(mobileNumber){
+      res.json({ exists: !!user });
+    } else if (mobileNumber) {
       const user = await User.findOne({ mobileNumber });
-    res.json({ exists: !!user });
+      res.json({ exists: !!user });
     }
   } catch (error) {
     console.log(error.message);
     res.redirect("/error");
   }
-}
-
+};
 
 const shop = async (req, res) => {
   try {
@@ -77,7 +75,7 @@ const home = async (req, res) => {
       const bestSellerProduct = await Product.find({})
         .sort({ soldCount: -1 })
         .limit(8);
-      console.log("hi")
+      console.log("hi");
       res.render("user/home", {
         login: 1,
         bestSellerProduct,
@@ -101,7 +99,7 @@ const home = async (req, res) => {
         newArrival,
         topDeal,
       });
-      console.log("hello")
+      console.log("hello");
     }
   } catch (error) {
     console.log(error.message);
@@ -182,51 +180,51 @@ const loadRegister = async (req, res) => {
 };
 const insertUser = async (req, res) => {
   const { username, email, mobileNumber, password, confirmPassword } = req.body;
-    try {
-      const user = new User({
-        username: req.body.username,
-        email: req.body.email,
-        fname: req.body.fname,
-        lname: req.body.lname,
-        mobileNumber: req.body.mobileNumber,
-        password: req.body.password,
-        image: req.file.filename,
-        is_admin: 0,
-      });
-      console.log();
-      const userData = await user.save();
-      const OTP = Math.floor(100000 + Math.random() * 900000);
-      const otp = new OTPcode({
-        userId: userData._id,
-        otp: OTP,
-        createdAt: Date.now(),
-        expiresAt: Date.now() + 300000,
-      });
-      const otpData = await otp.save();
-        sendVerifyMail(req.body.fname, req.body.lname, req.body.email, OTP);
-        res.json({success:true,userId:userData._id})
-    } catch (error) {
-      console.log(error.message);
-      res.redirect("/error");
-    }
-};
-const otp=async(req,res)=>{
   try {
-    const userId=req.query.id
-    console.log(userId)
-    res.render("user/otp",{ userId:userId})
+    const user = new User({
+      username: req.body.username,
+      email: req.body.email,
+      fname: req.body.fname,
+      lname: req.body.lname,
+      mobileNumber: req.body.mobileNumber,
+      password: req.body.password,
+      image: req.file.filename,
+      is_admin: 0,
+    });
+    console.log();
+    const userData = await user.save();
+    const OTP = Math.floor(100000 + Math.random() * 900000);
+    const otp = new OTPcode({
+      userId: userData._id,
+      otp: OTP,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + 300000,
+    });
+    const otpData = await otp.save();
+    sendVerifyMail(req.body.fname, req.body.lname, req.body.email, OTP);
+    res.json({ success: true, userId: userData._id });
   } catch (error) {
     console.log(error.message);
     res.redirect("/error");
   }
-}
+};
+const otp = async (req, res) => {
+  try {
+    const userId = req.query.id;
+    console.log(userId);
+    res.render("user/otp", { userId: userId });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/error");
+  }
+};
 const verifyMail = async (req, res) => {
   try {
-    let {otp,userId} = req.body;
-    console.log(req.body)
-    const Otps = await OTPcode.find({userId});
-    console.log(Otps)
-    const user = await User.findOne({_id:userId});
+    let { otp, userId } = req.body;
+    console.log(req.body);
+    const Otps = await OTPcode.find({ userId });
+    console.log(Otps);
+    const user = await User.findOne({ _id: userId });
     console.log(user);
     const otpSend = Otps[0].otp;
     console.log(otpSend);
@@ -239,8 +237,8 @@ const verifyMail = async (req, res) => {
         { _id: userId },
         { $set: { is_verified: 1 } }
       );
-      req.session.email=user.email
-      console.log(req.session.email)
+      req.session.email = user.email;
+      console.log(req.session.email);
       res.redirect("/");
     } else {
       res.render("user/otp", { invalid: true, userId });
@@ -269,23 +267,24 @@ const resetPass = async (req, res) => {
   try {
     const { email } = req.body;
     const fUser = await User.findOne({ email });
-    if(fUser){
-    const OTP = Math.floor(100000 + Math.random() * 900000);
-    const otp = new OTPcode({
-      userId: fUser._id,
-      otp: OTP,
-      createdAt: Date.now(),
-      expiresAt: Date.now() + 300000,
-    });
-    const otpData = await otp.save();
-    console.log(otpData);
-    sendVerifyMail(fUser.fname, fUser.lname, fUser.email, OTP);
-    res.render("user/otpForgetPassword", {
-      email: fUser.email,
-      UserId: fUser._id,
-      Otp: otpData.otp,
-    });}else{
-      res.render("user/forgetPassword",{invalid:true})
+    if (fUser) {
+      const OTP = Math.floor(100000 + Math.random() * 900000);
+      const otp = new OTPcode({
+        userId: fUser._id,
+        otp: OTP,
+        createdAt: Date.now(),
+        expiresAt: Date.now() + 300000,
+      });
+      const otpData = await otp.save();
+      console.log(otpData);
+      sendVerifyMail(fUser.fname, fUser.lname, fUser.email, OTP);
+      res.render("user/otpForgetPassword", {
+        email: fUser.email,
+        UserId: fUser._id,
+        Otp: otpData.otp,
+      });
+    } else {
+      res.render("user/forgetPassword", { invalid: true });
     }
   } catch (error) {
     console.log(error.message);
@@ -322,26 +321,26 @@ const changePassword = async (req, res) => {
   }
 };
 
-const resendOtp=async(req,res)=>{
+const resendOtp = async (req, res) => {
   try {
-    const userId= req.body.userId
-      const OTP = Math.floor(100000 + Math.random() * 900000);
-      const otp = new OTPcode({
-        userId: userId,
-        otp: OTP,
-        createdAt: Date.now(),
-        expiresAt: Date.now() + 300000,
-      });
-      const otpData = await otp.save();
-    const user = await User.findOne({_id:userId});
-    console.log(user)
+    const userId = req.body.userId;
+    const OTP = Math.floor(100000 + Math.random() * 900000);
+    const otp = new OTPcode({
+      userId: userId,
+      otp: OTP,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + 300000,
+    });
+    const otpData = await otp.save();
+    const user = await User.findOne({ _id: userId });
+    console.log(user);
     sendVerifyMail(user.fname, user.lname, user.email, OTP);
-    res.json({success:true})
+    res.json({ success: true });
   } catch (error) {
     console.log(error.message);
     res.redirect("/error");
   }
-}
+};
 
 const updatePassword = async (req, res) => {
   try {
@@ -352,7 +351,7 @@ const updatePassword = async (req, res) => {
       console.log(UserId);
       updateInfo = await User.updateOne(
         { _id: UserId },
-        { $set: { password: password,is_verified: 1 } }
+        { $set: { password: password, is_verified: 1 } }
       );
       res.redirect("/");
     } else {
@@ -472,17 +471,17 @@ const advanceSearch = async (req, res) => {
       const categories = await Category.find({});
 
       const page = parseInt(req.query.page) || 1;
-    const limit = 6;
+      const limit = 6;
 
-    const query = category ? { category } : {};
+      const query = category ? { category } : {};
 
-    const totalProducts = await Product.countDocuments(query);
-    const totalPages = Math.ceil(totalProducts / limit);
+      const totalProducts = await Product.countDocuments(query);
+      const totalPages = Math.ceil(totalProducts / limit);
 
-    products = await Product.find(query)
-      .skip((page - 1) * limit)
-      .limit(limit);
-      
+      products = await Product.find(query)
+        .skip((page - 1) * limit)
+        .limit(limit);
+
       res.render("user/shop-sidebar", {
         products,
         categories,
@@ -491,7 +490,7 @@ const advanceSearch = async (req, res) => {
         alphabetSort,
         category,
         currentPage: page,
-      totalPages,
+        totalPages,
       });
     } else {
       req.session.category = req.query.category;
@@ -599,16 +598,16 @@ const advanceSearch = async (req, res) => {
       const categories = await Category.find({});
 
       const page = parseInt(req.query.page) || 1;
-    const limit = 6;
+      const limit = 6;
 
-    const query = category ? { category } : {};
+      const query = category ? { category } : {};
 
-    const totalProducts = await Product.countDocuments(query);
-    const totalPages = Math.ceil(totalProducts / limit);
+      const totalProducts = await Product.countDocuments(query);
+      const totalPages = Math.ceil(totalProducts / limit);
 
-    products = await Product.find(query)
-      .skip((page - 1) * limit)
-      .limit(limit);
+      products = await Product.find(query)
+        .skip((page - 1) * limit)
+        .limit(limit);
 
       res.render("user/shop-sidebar", {
         products,
@@ -618,7 +617,7 @@ const advanceSearch = async (req, res) => {
         alphabetSort,
         category,
         currentPage: page,
-      totalPages,
+        totalPages,
       });
     }
   } catch (error) {
@@ -684,16 +683,16 @@ const rating = async (req, res) => {
     res.redirect("/error");
   }
 };
-const review= async (req, res) => {
+const review = async (req, res) => {
   try {
-      const productId = req.query.productId;
-      const reviews = await Review.find({ productId }).populate('userId')
-      res.json({ success: true, reviews });
+    const productId = req.query.productId;
+    const reviews = await Review.find({ productId }).populate("userId");
+    res.json({ success: true, reviews });
   } catch (error) {
     console.log(error.message);
     res.redirect("/error");
   }
-}
+};
 
 module.exports = {
   home,
@@ -712,5 +711,5 @@ module.exports = {
   rating,
   resendOtp,
   checkUserExist,
-  otp
+  otp,
 };

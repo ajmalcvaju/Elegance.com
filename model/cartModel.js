@@ -60,7 +60,7 @@ const cartSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Coupon",
   },
-  amountAfterWallet:Number
+  amountAfterWallet: Number,
 });
 
 cartItemSchema.pre("save", async function (next) {
@@ -89,7 +89,7 @@ cartSchema.pre("save", function (next) {
   });
   this.totalPriceBeforeOffer = totalPriceBeforeOffer;
 
-  next();
+  next();   
 });
 
 const Cart = mongoose.model("Cart", cartSchema);

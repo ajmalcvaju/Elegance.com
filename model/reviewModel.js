@@ -5,11 +5,11 @@ const mongoose = require("mongoose");
 const reviewSchema = new mongoose.Schema({
   productId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Product"
+    ref: "Product",
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: "User",
   },
   rating: {
     type: Number,
@@ -18,7 +18,7 @@ const reviewSchema = new mongoose.Schema({
     max: 5,
   },
   comment: {
-    type: String
+    type: String,
   },
   createdAt: {
     type: Date,

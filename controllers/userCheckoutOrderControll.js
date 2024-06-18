@@ -3,7 +3,7 @@ const Address = require("../model/addressModel");
 const Order = require("../model/orderModel");
 const Coupon = require("../model/couponModel");
 const Cart = require("../model/cartModel");
-const Wallet=require("../model/walletModel");
+const Wallet = require("../model/walletModel");
 const Razorpay = require("razorpay");
 
 const razorpayInstance = new Razorpay({
@@ -60,10 +60,10 @@ const checkoutEditAddress = async (req, res) => {
 const orderCancell = async (req, res) => {
   try {
     const orderId = req.body.orderId;
-    const reason=req.body.reason
+    const reason = req.body.reason;
     const order = await Order.updateOne(
       { _id: orderId },
-      { $set: { status: "Cancelation Pending",reasonForCancelation:reason } }
+      { $set: { status: "Cancelation Pending", reasonForCancelation: reason } }
     );
     res.redirect("/orderStatus");
   } catch (error) {
@@ -74,10 +74,10 @@ const orderCancell = async (req, res) => {
 const returnOrder = async (req, res) => {
   try {
     const orderId = req.body.orderId;
-    const reason=req.body.reason
+    const reason = req.body.reason;
     const order = await Order.updateOne(
       { _id: orderId },
-      { $set: { status: "Return Pending",reasonForReturn:reason } }
+      { $set: { status: "Return Pending", reasonForReturn: reason } }
     );
 
     res.redirect("/orderStatus");
@@ -151,8 +151,8 @@ const checkout = async (req, res) => {
     const email = req.session.email;
     const user = await User.findOne({ email });
     const userId = user._id;
-    const carts = await Cart.findOne({ userId })
-    req.session.amountBalanceAfterwallet
+    const carts = await Cart.findOne({ userId });
+    req.session.amountBalanceAfterwallet;
     const cart = await Cart.updateOne({ userId }, { $set: orderDetails });
     res.redirect("/checkout");
   } catch (error) {
@@ -247,69 +247,80 @@ const removeCoupon = async (req, res) => {
   }
 };
 
-const useWallet=async(req,res)=>{
+const useWallet = async (req, res) => {
   try {
-    if(req.session.wallet){
-      console.log("hi",req.session.wallet)
-    res.json({success:false})
-      }else{
-        const email = req.session.email;
-    const user = await User.findOne({ email });
-    const userId = user._id;
-    const walletAmount=req.body.walletAmount
-    const actualAmount=Number(req.body.actualAmount)
-  if(actualAmount>=walletAmount){
-     const amountBalance=actualAmount-walletAmount
-     const wallet=await Wallet.updateOne({userId},{$set:{amount:0}})
-     await Cart.updateOne({ userId }, { $set: { amountAfterWallet:amountBalance } });
-     req.session.wallet=walletAmount
-     res.json({success:true})
-  }else{
-    const amountBalance=0
-    const walletBalance=walletAmount-actualAmount
-    const wallet=await Wallet.updateOne({userId},{$set:{amount:walletBalance}})
-    await Cart.updateOne({ userId }, { $set: { amountAfterWallet:amountBalance } });
-    req.session.wallet=actualAmount
-    res.json({success:true})
-  }
-  }
-    
+    if (req.session.wallet) {
+      console.log("hi", req.session.wallet);
+      res.json({ success: false });
+    } else {
+      const email = req.session.email;
+      const user = await User.findOne({ email });
+      const userId = user._id;
+      const walletAmount = req.body.walletAmount;
+      const actualAmount = Number(req.body.actualAmount);
+      if (actualAmount >= walletAmount) {
+        const amountBalance = actualAmount - walletAmount;
+        const wallet = await Wallet.updateOne(
+          { userId },
+          { $set: { amount: 0 } }
+        );
+        await Cart.updateOne(
+          { userId },
+          { $set: { amountAfterWallet: amountBalance } }
+        );
+        req.session.wallet = walletAmount;
+        res.json({ success: true });
+      } else {
+        const amountBalance = 0;
+        const walletBalance = walletAmount - actualAmount;
+        const wallet = await Wallet.updateOne(
+          { userId },
+          { $set: { amount: walletBalance } }
+        );
+        await Cart.updateOne(
+          { userId },
+          { $set: { amountAfterWallet: amountBalance } }
+        );
+        req.session.wallet = actualAmount;
+        res.json({ success: true });
+      }
+    }
   } catch (error) {
     console.log(error.message);
     res.redirect("/error");
   }
-}
+};
 
-const removeWallet=async(req,res)=>{
+const removeWallet = async (req, res) => {
   try {
     const email = req.session.email;
     const user = await User.findOne({ email });
     const userId = user._id;
     const cart = await Cart.findOne({ userId });
-    const wallet=req.session.wallet
-    const wallets=await Wallet.updateOne({userId},{$inc:{amount:wallet}})
-    await Cart.updateOne(
+    const wallet = req.session.wallet;
+    const wallets = await Wallet.updateOne(
       { userId },
-      { $unset: { amountAfterWallet: "" } }
+      { $inc: { amount: wallet } }
     );
-    console.log("hi aju")
+    await Cart.updateOne({ userId }, { $unset: { amountAfterWallet: "" } });
+    console.log("hi aju");
     delete req.session.wallet;
-    res.json({success:true})
+    res.json({ success: true });
   } catch (error) {
     console.log(error.message);
     res.redirect("/error");
   }
-}
+};
 
-const addAddress= async (req, res) => {
+const addAddress = async (req, res) => {
   try {
     res.render("user/add-address", { checkout: 1 });
   } catch (error) {
     console.log(error.message);
     res.redirect("/error");
   }
-}
-const editAddress=async (req, res) => {
+};
+const editAddress = async (req, res) => {
   try {
     const addId = req.query.id;
     const address = await Address.findOne({ _id: addId });
@@ -318,9 +329,9 @@ const editAddress=async (req, res) => {
     console.log(error.message);
     res.redirect("/error");
   }
-}
+};
 
-const deleteAddress=async (req, res) => {
+const deleteAddress = async (req, res) => {
   try {
     const addId = req.query.id;
     console.log(addId);
@@ -330,7 +341,7 @@ const deleteAddress=async (req, res) => {
     console.log(error.message);
     res.redirect("/error");
   }
-}
+};
 
 module.exports = {
   checkoutAddAddress,
@@ -348,5 +359,5 @@ module.exports = {
   removeWallet,
   addAddress,
   editAddress,
-  deleteAddress
+  deleteAddress,
 };

@@ -6,10 +6,8 @@ const Order = require("../model/orderModel");
 const Wishlist = require("../model/wishlistModel");
 const Coupon = require("../model/couponModel");
 const Category = require("../model/categoryModel");
-const Wallet=require("../model/walletModel");
+const Wallet = require("../model/walletModel");
 const Razorpay = require("razorpay");
-
-
 
 const razorpayInstance = new Razorpay({
   key_id: process.env.key_id,
@@ -66,14 +64,14 @@ const cart = async (req, res) => {
       const email = req.session.email;
       const user = await User.findOne({ email });
       const userId = user._id;
-      if(req.session.wallet){
-        const wallet=req.session.wallet
-    const wallets=await Wallet.updateOne({userId},{$inc:{amount:wallet}})
-    await Cart.updateOne(
-      { userId },
-      { $unset: { amountAfterWallet: "" } }
-    );
-    delete req.session.wallet;
+      if (req.session.wallet) {
+        const wallet = req.session.wallet;
+        const wallets = await Wallet.updateOne(
+          { userId },
+          { $inc: { amount: wallet } }
+        );
+        await Cart.updateOne({ userId }, { $unset: { amountAfterWallet: "" } });
+        delete req.session.wallet;
       }
       const cart = await Cart.findOne({ userId }).populate("items.productId");
       let carts = await Cart.findOne({ userId });
@@ -212,11 +210,11 @@ const incCart = async (req, res) => {
     res.redirect("/error");
   }
 };
-const checkout=async (req, res) => {
+const checkout = async (req, res) => {
   try {
     const email = req.session.email;
     if (!email) throw new Error("Email is missing from session.");
-    
+
     const user = await User.findOne({ email });
     if (!user) throw new Error("User not found.");
 
@@ -245,18 +243,20 @@ const checkout=async (req, res) => {
           },
         }
       );
-      if (cart.nModified === 0) throw new Error("Failed to update cart with coupon details.");
+      if (cart.nModified === 0)
+        throw new Error("Failed to update cart with coupon details.");
     } else {
       cart = await Cart.updateOne(
         { userId },
         { $unset: { priceAfterCoupon: "" } }
       );
-      if (cart.nModified === 0) throw new Error("Failed to unset priceAfterCoupon.");
+      if (cart.nModified === 0)
+        throw new Error("Failed to unset priceAfterCoupon.");
 
       cart = await Cart.updateOne({ userId }, { $set: { couponDiscount: 0 } });
-      if (cart.nModified === 0) throw new Error("Failed to update couponDiscount to 0.");
+      if (cart.nModified === 0)
+        throw new Error("Failed to update couponDiscount to 0.");
     }
-
 
     if (!carts) {
       res.send(`
@@ -284,7 +284,6 @@ const checkout=async (req, res) => {
     res.redirect("/error");
   }
 };
-
 
 const createOrder = async (req, res) => {
   try {
@@ -345,13 +344,13 @@ const placeOrder = async (req, res) => {
     for (const item of orderItems) {
       await Product.updateOne(
         { _id: item.productId },
-        { 
-          $inc: { 
-            soldCount: item.quantity, 
-            purchase: -item.quantity 
-          } 
+        {
+          $inc: {
+            soldCount: item.quantity,
+            purchase: -item.quantity,
+          },
         }
-      )
+      );
     }
     for (const item of orderItems) {
       await Category.updateOne(
@@ -371,20 +370,23 @@ const placeOrder = async (req, res) => {
     couponDiscount = cart.couponDiscount;
     let order;
     let paymentStatus;
-    let wallet=req.query.wallet
-    
+    let wallet = req.query.wallet;
+
     if (paid == 1) {
       if (payment == 1) {
         paymentStatus = "Successfull";
       } else {
         paymentStatus = "Failed";
-        if(req.session.wallet){
-          const wallet=req.session.wallet
-      const wallets=await Wallet.updateOne({userId},{$inc:{amount:wallet}})
-      await Cart.updateOne(
-        { userId },
-        { $unset: { amountAfterWallet: "" } }
-      );
+        if (req.session.wallet) {
+          const wallet = req.session.wallet;
+          const wallets = await Wallet.updateOne(
+            { userId },
+            { $inc: { amount: wallet } }
+          );
+          await Cart.updateOne(
+            { userId },
+            { $unset: { amountAfterWallet: "" } }
+          );
         }
       }
       order = new Order({
@@ -403,8 +405,8 @@ const placeOrder = async (req, res) => {
         paymentStatus,
         paymentMethod: "Online Payment",
       });
-    }else if(wallet==1){
-      paymentStatus = "Successfull"
+    } else if (wallet == 1) {
+      paymentStatus = "Successfull";
       order = new Order({
         userId,
         items: orderItems,
@@ -443,13 +445,14 @@ const placeOrder = async (req, res) => {
     await order.save();
     await Cart.deleteOne({ userId });
     req.session.discount = null;
-    req.session.wallet = null; 
-req.session.save((err) => {
-    if (err) {
-        console.error('Error saving session:', err);
-    } else {
-        console.log('Wallet session variable cleared');    }
-});
+    req.session.wallet = null;
+    req.session.save((err) => {
+      if (err) {
+        console.error("Error saving session:", err);
+      } else {
+        console.log("Wallet session variable cleared");
+      }
+    });
     if (paymentStatus == "Pending" || paymentStatus == "Successfull") {
       res.render("user/orderSuccess", { paid: 1 });
     } else {
@@ -465,7 +468,9 @@ const orderStatus = async (req, res) => {
     const email = req.session.email;
     const user = await User.findOne({ email });
     const userId = user._id;
-    const order = await Order.find({ userId }).populate("items.productId").sort({orderId:-1});
+    const order = await Order.find({ userId })
+      .populate("items.productId")
+      .sort({ orderId: -1 });
     console.log(order);
     res.render("user/orderStatus", { order });
   } catch (error) {
@@ -526,13 +531,12 @@ const myWishlist = async (req, res) => {
         "items.productId"
       );
       let wishlists = await Wishlist.findOne({ userId });
-  
-      if(!wishlist){
-        console.log('Wishlist is not present');
-        
+
+      if (!wishlist) {
+        console.log("Wishlist is not present");
+
         res.render("user/wishlist", { noProduct: 1 });
-      }
-      else if (wishlists.items.length == 0) {
+      } else if (wishlists.items.length == 0) {
         res.render("user/wishlist", { wishlist, noProduct: 1 });
       } else {
         res.render("user/wishlist", { wishlist });
@@ -650,4 +654,5 @@ module.exports = {
   myWishlist,
   wishlistToAddCart,
   deleteWishlist,
-  deleteCart};
+  deleteCart,
+};

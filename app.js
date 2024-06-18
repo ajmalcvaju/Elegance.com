@@ -6,13 +6,12 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const noCache = require("nocache");
 const mongoose = require("mongoose");
-require("dotenv").config()
-const MongoStore = require('connect-mongo');
-const Passport = require('./config/passport');
-const passport = require('passport');
-const Razorpay=require('razorpay')
-const cors = require('cors');
-
+require("dotenv").config();
+const MongoStore = require("connect-mongo");
+const Passport = require("./config/passport");
+const passport = require("passport");
+const Razorpay = require("razorpay");
+const cors = require("cors");
 
 var usersRouter = require("./routes/userRoute");
 var adminRouter = require("./routes/adminRoute");
@@ -38,7 +37,9 @@ app.use(
     secret: "my_key",
     resave: false,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: "mongodb://localhost:27017/NewUsers" })
+    store: MongoStore.create({
+      mongoUrl: "mongodb://localhost:27017/NewUsers",
+    }),
   })
 );
 
@@ -115,7 +116,5 @@ hbs.registerHelper("lt", function (value1, value2) {
 hbs.registerHelper("eq", function (value1, value2) {
   return value1 === value2;
 });
-
-
 
 module.exports = app;

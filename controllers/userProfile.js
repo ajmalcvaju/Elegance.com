@@ -4,9 +4,9 @@ const openProfile = async (req, res) => {
   try {
     if (req.session && req.session.email) {
       const email = req.session.email;
-      const user = await User.findOne({email});
+      const user = await User.findOne({ email });
       const userId = user._id;
-      const addresses = await Address.find({userId});
+      const addresses = await Address.find({ userId });
       res.render("user/my-profile", { user, addresses });
     } else {
       res.redirect("/login");
@@ -136,14 +136,14 @@ const updateProfile = async (req, res) => {
     res.redirect("/error");
   }
 };
-const addAddres=async (req, res) => {
+const addAddres = async (req, res) => {
   try {
     res.render("user/add-address", { checkout: 0 });
   } catch (error) {
     console.log(error.message);
     res.redirect("/error");
   }
-}
+};
 
 module.exports = {
   openProfile,
@@ -155,5 +155,5 @@ module.exports = {
   deleteAddress,
   editProfile,
   updateProfile,
-  addAddres
+  addAddres,
 };

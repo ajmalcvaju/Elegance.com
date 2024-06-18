@@ -28,32 +28,32 @@ const addUser = async (req, res) => {
   }
 };
 
-const UserExist= async (req, res) => {
+const UserExist = async (req, res) => {
   try {
-    
-    const userId=req.body.userId
-    const { username,email, mobileNumber } = req.body;
-    if(userId){
-    const users = await User.findOne({ _id:userId })
-    if(username && username!=users.username){
-      const user = await User.findOne({ username });
-  res.json({ exists: !!user });
-    }else if(email && email!=users.email){
-      const user = await User.findOne({ email });
-    res.json({ exists: !!user });
-    }else if(mobileNumber && mobileNumber!=users.mobileNumber){
-      const user = await User.findOne({ mobileNumber });
-    res.json({ exists: !!user });
-    }}else{
-      if(username){
+    const userId = req.body.userId;
+    const { username, email, mobileNumber } = req.body;
+    if (userId) {
+      const users = await User.findOne({ _id: userId });
+      if (username && username != users.username) {
         const user = await User.findOne({ username });
-    res.json({ exists: !!user });
-      }else if(email){
+        res.json({ exists: !!user });
+      } else if (email && email != users.email) {
         const user = await User.findOne({ email });
-      res.json({ exists: !!user });
-      }else if(mobileNumber){
+        res.json({ exists: !!user });
+      } else if (mobileNumber && mobileNumber != users.mobileNumber) {
         const user = await User.findOne({ mobileNumber });
-      res.json({ exists: !!user });
+        res.json({ exists: !!user });
+      }
+    } else {
+      if (username) {
+        const user = await User.findOne({ username });
+        res.json({ exists: !!user });
+      } else if (email) {
+        const user = await User.findOne({ email });
+        res.json({ exists: !!user });
+      } else if (mobileNumber) {
+        const user = await User.findOne({ mobileNumber });
+        res.json({ exists: !!user });
       }
     }
   } catch (error) {
@@ -66,18 +66,18 @@ const updateUser = async (req, res) => {
   try {
     const { username, email, mobileNumber, password, confirmPassword } =
       req.body;
-      const user = new User({
-        username: req.body.username,
-        email: req.body.email,
-        fname: req.body.fname,
-        lname: req.body.lname,
-        mobileNumber: req.body.mobileNumber,
-        password: req.body.password,
-        image: req.file.filename,
-        is_admin: 0,
-      });
-      const userData = await user.save();
-        res.json({success:true})
+    const user = new User({
+      username: req.body.username,
+      email: req.body.email,
+      fname: req.body.fname,
+      lname: req.body.lname,
+      mobileNumber: req.body.mobileNumber,
+      password: req.body.password,
+      image: req.file.filename,
+      is_admin: 0,
+    });
+    const userData = await user.save();
+    res.json({ success: true });
   } catch (error) {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -96,7 +96,6 @@ const blockUser = async (req, res) => {
     res.redirect("/admin/error");
   }
 };
-
 
 const unBlockUser = async (req, res) => {
   try {
@@ -122,15 +121,14 @@ const editUser = async (req, res) => {
   }
 };
 
-
-const updatingUser = async (req, res) => { 
-  const userId=req.body.userId
+const updatingUser = async (req, res) => {
+  const userId = req.body.userId;
   const { username, email, fname, lname, password, mobileNumber } = req.body;
   await User.updateOne(
     { _id: userId },
     { $set: { username, email, fname, lname, password, mobileNumber } }
   );
-  res.json({success:true})
+  res.json({ success: true });
 };
 module.exports = {
   adminUser,
@@ -141,5 +139,5 @@ module.exports = {
   updateUser,
   editUser,
   updatingUser,
-  UserExist
+  UserExist,
 };

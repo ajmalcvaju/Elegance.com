@@ -119,12 +119,12 @@ const orderSchema = new mongoose.Schema({
   priceAfterCoupon: {
     type: Number,
   },
-  reasonForCancelation:{
-    type:String
+  reasonForCancelation: {
+    type: String,
   },
-  reasonForReturn:{
-    type:String
-  }
+  reasonForReturn: {
+    type: String,
+  },
 });
 
 orderSchema.pre("save", async function (next) {

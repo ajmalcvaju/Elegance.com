@@ -9,24 +9,24 @@ const adminCategory = async (req, res) => {
     res.redirect("/admin/error");
   }
 };
-const CategoryExist=async (req,res)=>{
+const CategoryExist = async (req, res) => {
   try {
-    const {cname,categoryId}=req.body
-    if(categoryId){
-     const category = await Category.findOne({ _id:categoryId })
-     if(cname!=category.cname){
-       const categories = await Category.findOne({cname})
-       res.json({ exists: !!categories });
-     }
-    }else{
-     const categories = await Category.findOne({cname})
-     res.json({ exists: !!categories });
+    const { cname, categoryId } = req.body;
+    if (categoryId) {
+      const category = await Category.findOne({ _id: categoryId });
+      if (cname != category.cname) {
+        const categories = await Category.findOne({ cname });
+        res.json({ exists: !!categories });
+      }
+    } else {
+      const categories = await Category.findOne({ cname });
+      res.json({ exists: !!categories });
     }
-   } catch {
-     console.log(error.message);
-     res.redirect("/admin/error");
-   }
-}
+  } catch {
+    console.log(error.message);
+    res.redirect("/admin/error");
+  }
+};
 
 const addCategory = async (req, res) => {
   try {
@@ -47,7 +47,7 @@ const updateCategory = async (req, res) => {
       console.log(req.file);
       const category = new Category({
         cname: req.body.cname,
-        discount:req.body.discount,
+        discount: req.body.discount,
         Type: req.body.Type,
         image: req.file.filename,
       });
@@ -92,25 +92,27 @@ const restoreCategory = async (req, res) => {
   }
 };
 
-
 const editCategory = async (req, res) => {
-try {
-  let proId = req.query.id;
-  const category = await Category.findOne({ _id: proId });
-  res.render("admin/editCategory", { category })
-} catch (error) {
-  console.log(error.message);
+  try {
+    let proId = req.query.id;
+    const category = await Category.findOne({ _id: proId });
+    res.render("admin/editCategory", { category });
+  } catch (error) {
+    console.log(error.message);
     res.redirect("/admin/error");
-};
+  }
 };
 
 const updatingCategory = async (req, res) => {
   try {
     const proId = req.query.id;
-  console.log(req.query);
-  const { cname, discount, Type } = req.body;
-  await Category.updateOne({ _id: proId }, { $set: { cname, discount, Type } });
-  res.redirect("/admin/category");
+    console.log(req.query);
+    const { cname, discount, Type } = req.body;
+    await Category.updateOne(
+      { _id: proId },
+      { $set: { cname, discount, Type } }
+    );
+    res.redirect("/admin/category");
   } catch (error) {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -125,5 +127,5 @@ module.exports = {
   restoreCategory,
   editCategory,
   updatingCategory,
-  CategoryExist
+  CategoryExist,
 };

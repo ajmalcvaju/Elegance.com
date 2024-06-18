@@ -1,7 +1,7 @@
 const Order = require("../model/orderModel");
 const salesReport = async (req, res) => {
   try {
-    const orders = await Order.find({})
+    const orders = await Order.find({ status: "Delivered" })
       .populate("items.productId")
       .populate("userId");
     const ordersString = JSON.stringify(orders);
