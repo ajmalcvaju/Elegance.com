@@ -36,10 +36,7 @@ app.use(
   session({
     secret: "my_key",
     resave: false,
-    saveUninitialized: true,
-    store: MongoStore.create({
-      mongoUrl: "mongodb://localhost:27017/NewUsers",
-    }),
+    saveUninitialized: true
   })
 );
 
