@@ -117,9 +117,14 @@ hbs.registerHelper("eq", function (value1, value2) {
   return value1 === value2;
 });
 
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).render('user/errorPage');
+
+  if (res.headersSent) {
+      return next(err);
+  }
+
+  res.status(500).render('error', { error: err });
 });
 
 module.exports = app;
