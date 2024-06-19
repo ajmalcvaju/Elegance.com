@@ -98,7 +98,9 @@ hbs.registerHelper("eq", function (value1, value2) {
   return value1 === value2;
 });
 
-mongoose.connect("mongodb://localhost:27017/NewUsers")
+
+const mongoURI = process.env.MONGODB_URI;
+mongoose.connect(mongoURI)
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => console.error('Could not connect to MongoDB', err));
 
