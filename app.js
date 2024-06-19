@@ -53,14 +53,9 @@ app.use(function (req, res, next) {
   res.header("X-Content-Type-Options", "nosniff");
   next();
 });
-mongoose
-  .connect("mongodb://localhost:27017/NewUsers")
-  .then(() => {
-    console.log("mongodb connected successfuly");
-  })
-  .catch(() => {
-    console.log("Failed to connect");
-  });
+
+
+
 app.use("/", usersRouter);
 app.use("/admin", adminRouter);
 app.get("/signout", (req, resp) => {
@@ -102,6 +97,10 @@ hbs.registerHelper("lt", function (value1, value2) {
 hbs.registerHelper("eq", function (value1, value2) {
   return value1 === value2;
 });
+
+mongoose.connect("mongodb://localhost:27017/NewUsers", { useNewUrlParser: true, useUnifiedTopology: true })
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('Could not connect to MongoDB', err));
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
