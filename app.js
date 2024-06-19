@@ -123,8 +123,7 @@ app.use((err, req, res, next) => {
   if (res.headersSent) {
       return next(err);
   }
-
-  res.status(500).render('error', { error: err });
-});
+  res.status(500).render('user/errorPage'); 
+})
 
 module.exports = app;
