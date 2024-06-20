@@ -1,4 +1,10 @@
 const User = require("../model/userModel");
+const fs=require('fs')
+const path = require('path');
+const cloudinary = require('cloudinary').v2;
+require('dotenv').config();
+
+
 const adminUser = async (req, res) => {
   try {
     const users = await User.find({});
@@ -64,6 +70,7 @@ const UserExist = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
+    const result = await cloudinary.uploader.upload(req.file.path);
     const { username, email, mobileNumber, password, confirmPassword } =
       req.body;
     const user = new User({
@@ -73,7 +80,7 @@ const updateUser = async (req, res) => {
       lname: req.body.lname,
       mobileNumber: req.body.mobileNumber,
       password: req.body.password,
-      image: req.file.filename,
+      image: result.url,
       is_admin: 0,
     });
     const userData = await user.save();
