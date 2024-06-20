@@ -4,6 +4,12 @@ const path = require('path');
 const cloudinary = require('cloudinary').v2;
 require('dotenv').config();
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDNAME,
+  api_key: process.env.CLOUDAPIKEY,
+  api_secret: process.env.CLOUDINARYSECRET,
+});
+
 
 const adminUser = async (req, res) => {
   try {
@@ -71,8 +77,7 @@ const UserExist = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const result = await cloudinary.uploader.upload(req.file.path);
-    const { username, email, mobileNumber, password, confirmPassword } =
-      req.body;
+    const { username, email, mobileNumber, password, confirmPassword }=req.body;
     const user = new User({
       username: req.body.username,
       email: req.body.email,
