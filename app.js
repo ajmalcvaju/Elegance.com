@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 const paths=path.join(__dirname,"public")
-app.use(express.static(path.join(__dirname,"public")));
+app.use(express.static("public"));
 console.log(paths)
 
 
