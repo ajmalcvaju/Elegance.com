@@ -22,7 +22,7 @@ const checkSession3 = (req, res, next) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../public/productImages"));
+    cb(null, "public/productImages/");
   },
   filename: function (req, file, cb) {
     const name = Date.now() + "-" + file.originalname;
@@ -36,7 +36,7 @@ const uploadNone = upload.none();
 
 const storage2 = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/userImages');
+    cb(null, 'public/userImages/');
   },
   filename: function (req, file, cb) {
     const name = Date.now() + "-" + file.originalname;
@@ -48,7 +48,7 @@ const userImage = upload2.single("image");
 
 const storage3 = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../public/categoryImages"));
+    cb(null,"public/categoryImages/");
   },
   filename: function (req, file, cb) {
     const name = Date.now() + "-" + file.originalname;
