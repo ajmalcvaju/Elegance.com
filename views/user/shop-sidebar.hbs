@@ -31,7 +31,7 @@
                 <div class="top-bar d-flex flex-wrap align-items-center justify-content-between">
                     <div class="bar-left">
                         <ul class="list-unstyled">
-                            <li><a href="#"><i class="fa-solid fa-phone"></i> Call: 8714156151</a></li>
+                            <li><a href="#"><i class="fa-solid fa-phone"></i> Call: +91 8714156151</a></li>
                         </ul>
                     </div>
                     <div class="bar-right">
@@ -46,15 +46,6 @@
                             {{else}}
                             <li><a href="/login"><i class="fa-regular fa-user"></i> Login</a></li>
                             {{/if}}
-                            <li>
-                                <select class="form-select form-select-sm" aria-label=".form-select-sm example">
-                                    <option selected>USD</option>
-                                    <option value="1">PKR</option>
-                                    <option value="2">EUR</option>
-                                    <option value="3">RUB</option>
-                                </select>
-                            </li>
-
                         </ul>
                     </div>
                 </div>
@@ -66,16 +57,18 @@
                 <div class="main-header row w-100 d-flex align-items-center justify-content-between">
                     <div class="menu-left col-lg-4 col-md-4 d-flex flex-nowrap align-items-center">
 
-                        <div class="field-box position-relative" style="display: flex;flex-direction: row;">
-                            <form class="form-inline my-2 my-lg-0" style="display: flex; flex-direction: row;">
-                                <input class="form-control mr-sm-2" id="searchInput" type="text" placeholder="Search"
-                                    aria-label="Search">
-                                <button class="btn btn-outline-success my-2 my-sm-0" id="searchByIdButton"
-                                    type="button">Search</button>
-                            </form>
+                        <div class="field-box position-relative">
+                            <div class="search-field position-absolute">
+                                <a href="#">
+                                    <img src="/images/resources/search-outline.svg" alt="" width="28px" style="-webkit-transform: rotateY(180deg);
+                                   -moz-transform: rotateY(180deg);
+                                    -ms-transform: rotateY(180deg);
+                                     -o-transform: rotateY(180deg);
+                                        transform: rotateY(180deg);"></a>
+
+                            </div>
                         </div>
                     </div>
-
                     <div class="menu-mid col-lg-4 col-md-4 text-lg-center">
                         <h1>Elegance</h1>
                     </div>
@@ -97,24 +90,46 @@
                 <div class="border-top" style="opacity: 0.5;"></div>
                 <nav class="main-navigation">
                     <ul class="main-menu list-unstyled d-flex justify-content-center">
-                        <li><a href="/">Home</a>
-
-                            <div class="megamenu-wrap">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/shop">Shop </a>
                         </li>
-                        <li class="active"><a href="/shop">Shop </a>
-                        </li>
-                        
                     </ul>
                 </nav>
             </div>
         </div>
     </header>
+
+    <div class="res-header w-100">
+        <div class="res-topbar w-100">
+            <div class="container">
+                <div class="res-topbar-inner d-flex flex-wrap align-items-center justify-content-between">
+                    <div class="logo">
+                        <h1 class="mb-0">
+                            <a href="index.html"><img src="/images/logo.webp"></a>
+                        </h1>
+                    </div>
+                    <ul class="shp-lst list-unstyled d-flex align-items-center justify-content-end">
+                        <li class="bar">
+                            <a class="responsive-menu-trigger d-inline-block" href="#" onclick="showMenu()"><i
+                                    class="fi fi-rr-align-justify"></i></a>
+                        </li>
+                       <li><a style="font-weight: 300;" href="/myProfile"><i class="fa-regular fa-user"
+                                        style="transform: scale(1.4)"></i></a></li>
+                        <li><a style="font-weight: 300;" href="/myWishlist"><img src="/images/resources/icon-3.png" alt=""></a>
+                        </li>
+                        <li><a style="font-weight: 500;" href="/cart"><img src="/images/resources/icon-4.png" alt=""></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="mobile-nav position-relative">
         <div class="nav-links" id="navLinks">
             <a href="#" class="position-absolute res-menu-close" onclick="hideMenu()">
                 <i class="fa-solid fa-xmark"></i></a>
             <ul class="mobile-res list-unstyled mb-0">
-                <li><a href="/">Home</a></li>
+               <li><a href="/">Home</a></li>
                         <li><a href="/shop">Shop </a>
                         </li>
             </ul>
@@ -130,7 +145,6 @@
         }
 
     </script>
-
     <div class="border-top" style="opacity: .3;"></div>
     <div class="container">
         <div class="breadcrumbs row align-items-center justify-content-between d-flex">

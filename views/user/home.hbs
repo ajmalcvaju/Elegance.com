@@ -18,13 +18,13 @@
 </head>
 
 <body>
-    <header>
+   <header>
         <div class="w-100 bg-1 header-pd">
             <div class="container">
                 <div class="top-bar d-flex flex-wrap align-items-center justify-content-between">
                     <div class="bar-left">
                         <ul class="list-unstyled">
-                            <li><a href="#"><i class="fa-solid fa-phone"></i> Call: 8714156151</a></li>
+                            <li><a href="#"><i class="fa-solid fa-phone"></i> Call: +91 8714156151</a></li>
                         </ul>
                     </div>
                     <div class="bar-right">
@@ -39,15 +39,6 @@
                             {{else}}
                             <li><a href="/login"><i class="fa-regular fa-user"></i> Login</a></li>
                             {{/if}}
-                            <li>
-                                <select class="form-select form-select-sm" aria-label=".form-select-sm example">
-                                    <option selected>USD</option>
-                                    <option value="1">PKR</option>
-                                    <option value="2">EUR</option>
-                                    <option value="3">RUB</option>
-                                </select>
-                            </li>
-
                         </ul>
                     </div>
                 </div>
@@ -60,7 +51,6 @@
                     <div class="menu-left col-lg-4 col-md-4 d-flex flex-nowrap align-items-center">
 
                         <div class="field-box position-relative">
-                            
                             <div class="search-field position-absolute">
                                 <a href="#">
                                     <img src="/images/resources/search-outline.svg" alt="" width="28px" style="-webkit-transform: rotateY(180deg);
@@ -92,29 +82,10 @@
             <div class="container">
                 <div class="border-top" style="opacity: 0.5;"></div>
                 <nav class="main-navigation">
-                    <ul class="main-menu list-unstyled d-flex">
-                        <li class="active"><a href="/">Home</a>
-
-                            <div class="megamenu-wrap">
-
-                                <div class="container">
-                                    <div class="megamenu-inner position-relative w-100">
-
-                                        <div class="row mrg30">
-
-                                            <div class="col-md-7 col-sm-12 col-lg-7">
-
-                                                <div class="megamenu-box-wrap position-relative w-100">
-
-                                                    <div class="row mrg30 active">
-
-
-                                                        <div class="col">
-                        </li>
+                    <ul class="main-menu list-unstyled d-flex justify-content-center">
+                        <li><a href="/">Home</a></li>
                         <li><a href="/shop">Shop </a>
                         </li>
-                        </li>
-                        
                     </ul>
                 </nav>
             </div>
@@ -127,7 +98,7 @@
                 <div class="res-topbar-inner d-flex flex-wrap align-items-center justify-content-between">
                     <div class="logo">
                         <h1 class="mb-0">
-                            <a href="index.html">Elegance</a>
+                            <a href="index.html"><img src="/images/logo.webp"></a>
                         </h1>
                     </div>
                     <ul class="shp-lst list-unstyled d-flex align-items-center justify-content-end">
@@ -135,11 +106,11 @@
                             <a class="responsive-menu-trigger d-inline-block" href="#" onclick="showMenu()"><i
                                     class="fi fi-rr-align-justify"></i></a>
                         </li>
-                        <li><a style="font-weight: 300;" href="/myProfile"><i class="fa-regular fa-user"
-                                        style="transform: scale(1.4)"></i> My Profile</a></li>
-                        <li><a style="font-weight: 300;" href="/myWishlist"><img src="/images/resources/icon-3.png" alt="">My wishlist</a>
+                       <li><a style="font-weight: 300;" href="/myProfile"><i class="fa-regular fa-user"
+                                        style="transform: scale(1.4)"></i></a></li>
+                        <li><a style="font-weight: 300;" href="/myWishlist"><img src="/images/resources/icon-3.png" alt=""></a>
                         </li>
-                        <li><a style="font-weight: 500;" href="/cart"><img src="/images/resources/icon-4.png" alt="">My Cart</a>
+                        <li><a style="font-weight: 500;" href="/cart"><img src="/images/resources/icon-4.png" alt=""></a>
                         </li>
                     </ul>
                 </div>
@@ -151,10 +122,9 @@
             <a href="#" class="position-absolute res-menu-close" onclick="hideMenu()">
                 <i class="fa-solid fa-xmark"></i></a>
             <ul class="mobile-res list-unstyled mb-0">
-                <li><a href="/home">Home</a></li>
-                <li><a 
-                        href="/shop">Shop </a> 
-                </li>
+               <li><a href="/">Home</a></li>
+                        <li><a href="/shop">Shop </a>
+                        </li>
             </ul>
         </div>
     </div>
@@ -168,7 +138,6 @@
         }
 
     </script>
-
     <section>
         <div class="hero-section">
             <!-- Swiper -->
