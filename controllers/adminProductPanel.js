@@ -1,5 +1,17 @@
 const Product = require("../model/productModel");
 const Category = require("../model/categoryModel");
+const fs=require('fs')
+const path = require('path');
+const cloudinary = require('cloudinary').v2;
+require('dotenv').config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDNAME,
+  api_key: process.env.CLOUDAPIKEY,
+  api_secret: process.env.CLOUDINARYSECRET,
+});
+
+
 
 const adminProduct = async (req, res) => {
   try {
@@ -59,10 +71,16 @@ const updateProduct = async (req, res) => {
         actualDiscount = categoryDiscount;
       }
       DiscountedPrice = req.body.price * (1 - actualDiscount / 100);
-      const imageFiles = req.files.map((file) => file.filename);
+      const files = req.files;
+    console.log(files);
+    const uploadedImages = [];
+    for (const file of files) {
+      const result = await cloudinary.uploader.upload(file.path+"a");
+      uploadedImages.push(result.url);
+    }
       const product = new Product({
         pname: req.body.pname,
-        image: imageFiles,
+        image: uploadedImages,
         description: req.body.description,
         price: req.body.price,
         discount: req.body.discount,

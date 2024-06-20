@@ -1,4 +1,14 @@
 const Category = require("../model/categoryModel");
+const fs=require('fs')
+const path = require('path');
+const cloudinary = require('cloudinary').v2;
+require('dotenv').config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDNAME,
+  api_key: process.env.CLOUDAPIKEY,
+  api_secret: process.env.CLOUDINARYSECRET,
+});
 
 const adminCategory = async (req, res) => {
   try {
@@ -43,13 +53,12 @@ const updateCategory = async (req, res) => {
     if (category1[0]) {
       res.render("admin/addCategory", { exist: true });
     } else {
-      console.log(req.body);
-      console.log(req.file);
+      const result = await cloudinary.uploader.upload(req.file.path);
       const category = new Category({
         cname: req.body.cname,
         discount: req.body.discount,
         Type: req.body.Type,
-        image: req.file.filename,
+        image: result.url,
       });
       const categoryData = await category.save();
       if (categoryData) {

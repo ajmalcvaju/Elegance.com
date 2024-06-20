@@ -5,6 +5,16 @@ const Product = require("../model/productModel");
 const Category = require("../model/categoryModel");
 const Address = require("../model/addressModel");
 const Review = require("../model/reviewModel");
+const fs=require('fs')
+const path = require('path');
+const cloudinary = require('cloudinary').v2;
+require('dotenv').config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDNAME,
+  api_key: process.env.CLOUDAPIKEY,
+  api_secret: process.env.CLOUDINARYSECRET,
+});
 
 const login = async (req, res) => {
   try {
@@ -179,8 +189,8 @@ const loadRegister = async (req, res) => {
   }
 };
 const insertUser = async (req, res) => {
-  const { username, email, mobileNumber, password, confirmPassword } = req.body;
   try {
+    const result = await cloudinary.uploader.upload(req.file.path);
     const user = new User({
       username: req.body.username,
       email: req.body.email,
@@ -188,7 +198,7 @@ const insertUser = async (req, res) => {
       lname: req.body.lname,
       mobileNumber: req.body.mobileNumber,
       password: req.body.password,
-      image: req.file.filename,
+      image: result.url,
       is_admin: 0,
     });
     console.log();
