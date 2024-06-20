@@ -72,12 +72,20 @@ const updateProduct = async (req, res) => {
       }
       DiscountedPrice = req.body.price * (1 - actualDiscount / 100);
       const files = req.files;
-    console.log(files);
-    const uploadedImages = [];
-    for (const file of files) {
-      const result = await cloudinary.uploader.upload(file.path+"a");
-      uploadedImages.push(result.url);
-    }
+      console.log(files);
+      
+      const uploadedImages = [];
+      
+      try {
+        for (const file of files) {
+          const result = await cloudinary.uploader.upload(file.path);
+          uploadedImages.push(result.url);
+        }
+        console.log(uploadedImages);
+      } catch (error) {
+        console.error("Error uploading images: ", error);
+      }
+    
       const product = new Product({
         pname: req.body.pname,
         image: uploadedImages,
