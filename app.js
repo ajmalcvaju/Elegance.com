@@ -29,8 +29,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+const paths=path.join(__dirname,"public")
 app.use(express.static(path.join(__dirname,"public")));
-
+console.log(paths)
 
 
 app.use(noCache());
