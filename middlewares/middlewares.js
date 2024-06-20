@@ -36,7 +36,7 @@ const uploadNone = upload.none();
 
 const storage2 = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../public/userImages"));
+    cb(null, 'public/userImages');
   },
   filename: function (req, file, cb) {
     const name = Date.now() + "-" + file.originalname;
