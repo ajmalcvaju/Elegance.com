@@ -398,7 +398,7 @@
                         <div class="block-product">
                             <div class="product-thumb position-relative">
                                 <a href="/product-details?id={{this._id}}">
-                                    <img src="/productImages/{{this.image.[0]}}">
+                                    <img src="{{this.image.[0]}}">
                                 </a>
                                 <span class="position-absolute sv">Save {{this.actualDiscount}}%</span>
 
@@ -422,7 +422,7 @@
                                         <a href="/product-details?id={{../this._id}}">
                                             <li>
                                                 <a href="#" onclick="changeMainImage('{{this}}')"><img
-                                                        src="/productImages/{{this}}"></a>
+                                                        src="{{this}}"></a>
                                             </li>
                                         </a>
                                         {{/each}}
@@ -528,7 +528,7 @@
     <script>
         function changeMainImage(imageSrc) {
             var mainImage = document.getElementById("mainImage");
-            mainImage.src = "/productImages/" + imageSrc;
+            mainImage.src = "" + imageSrc;
         }
     </script>
     <script>
