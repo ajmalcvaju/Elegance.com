@@ -114,7 +114,7 @@ const unBlockUser = async (req, res) => {
     let proId = req.query.id;
     const updatedInfo = await User.updateOne(
       { _id: proId },
-      { $set: { is_blocked: 0 } }
+      { $set: { is_blocked: 0 } } 
     );
     res.redirect("/admin/User");
   } catch (error) {
