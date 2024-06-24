@@ -16,56 +16,41 @@
     <link rel="stylesheet" href="/css/uicons-regular-rounded.css">
     <link rel="stylesheet" type="text/css" href="/css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
     <style>
         .big-img {
-    position: relative;
-    overflow: hidden;
-    width: fit-content; /* Adjust the width as needed */
-    height: fit-content; /* Adjust the height as needed */
-}
+            position: relative;
+            margin-left: 15%;
+        }
 
-.big-img img {
-    width: 100%;
-    display: block;
-}
+        .big-img img {
+            width: 50%;
+            display: block;
+        }
 
-.zoom-lens {
-    position: absolute;
-    border: 1px solid #d4d4d4;
-    width: 100px; /* Adjust the lens size as needed */
-    height: 100px; /* Adjust the lens size as needed */
-    visibility: hidden;
-    cursor: none;
-}
+        .zoom-result {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            width: 300px; /* Adjust the result size as needed */
+            height: 300px; /* Adjust the result size as needed */
+            overflow: hidden;
+            top: 0;
+            left: calc(100% + 10px); /* Adjust the position as needed */
+            visibility: hidden;
+            z-index: 1;
+        }
 
-.big-img:hover .zoom-lens {
-    visibility: visible;
-}
-
-.zoom-result {
-    position: absolute;
-    border: 1px solid #d4d4d4;
-    width: 300px; /* Adjust the result size as needed */
-    height: 300px; /* Adjust the result size as needed */
-    overflow: hidden;
-    top: 0;
-    left: calc(100% + 10px); /* Adjust the position as needed */
-}
-
-.zoom-result img {
-    position: absolute;
-    width: auto;
-    height: auto;
-    max-width: none;
-}
+        .zoom-result img {
+            position: absolute;
+            width: auto;
+            height: auto;
+            max-width: none;
+        }
     </style>
+</head>
     <style>
         #star:hover {
             color: brown;
-        }
-
-        #mainImage:hover {
-            transform: scale(1.20)
         }
 
         .rate {
@@ -283,9 +268,12 @@
 
                                 </ul>
 
-                                <div class="big-img" style="margin-left: 15%;">
-    <img id="mainImage" src="{{product.image.[0]}}" style="width: 50%;">
-</div>
+ <div class="big-img">
+        <img id="mainImage" src="{{product.image.[0]}}" alt="Product Image">
+        <div class="zoom-result">
+            <img id="zoomedImage" src="{{product.image.[0]}}" alt="Zoomed Image">
+        </div>
+    </div>
 
                                 <!--product-detail-imgs-->
                             </div>
@@ -850,95 +838,46 @@
         });
     </script>
     <script>
-        function fetchReviews() {
-            fetch(`/reviews?productId={{product._id}}`) // Replace with the actual product ID
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const reviewsContainer = document.getElementById('reviews-container');
-                        reviewsContainer.innerHTML = ''; // Clear the container
-                        data.reviews.forEach(review => {
-                            const reviewElement = document.createElement('div');
-                            reviewElement.className = 'review';
-                            reviewElement.innerHTML = `
-                                <div class="stars">${generateStars(review.rating)}</div>
-                                <p>${review.comment}</p>
-                                <small>Reviewed by: ${review.userId.fname} ${review.userId.lname}</small>
-                            `;
-                            reviewsContainer.appendChild(reviewElement);
-                        });
-                    } else {
-                        console.error('Error fetching reviews:', data.message);
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-        }
-
-        function generateStars(rating) {
-            let starsHtml = '';
-            for (let i = 1; i <= 5; i++) {
-                if (i <= rating) {
-                    starsHtml += '<i class="fas fa-star"></i>';
-                } else {
-                    starsHtml += '<i class="far fa-star"></i>';
-                }
-            }
-            return starsHtml;
-        }
-
-        // Fetch reviews on page load
-        fetchReviews();
-    </script>
-    <script>
         document.addEventListener('DOMContentLoaded', function() {
-    const bigImg = document.querySelector('.big-img');
-    const mainImage = document.getElementById('mainImage');
-    const zoomLens = document.createElement('div');
-    zoomLens.classList.add('zoom-lens');
-    bigImg.appendChild(zoomLens);
+            const mainImage = document.getElementById('mainImage');
+            const zoomResult = document.querySelector('.zoom-result');
+            const zoomedImage = document.getElementById('zoomedImage');
 
-    const zoomResult = document.createElement('div');
-    zoomResult.classList.add('zoom-result');
-    const zoomedImage = document.createElement('img');
-    zoomedImage.src = mainImage.src;
-    zoomResult.appendChild(zoomedImage);
-    bigImg.appendChild(zoomResult);
+            mainImage.addEventListener('mousemove', function(event) {
+                zoomResult.style.visibility = 'visible';
+                moveLens(event);
+            });
 
-    zoomLens.addEventListener('mousemove', moveLens);
-    mainImage.addEventListener('mousemove', moveLens);
-    zoomLens.addEventListener('touchmove', moveLens);
-    mainImage.addEventListener('touchmove', moveLens);
+            mainImage.addEventListener('mouseleave', function() {
+                zoomResult.style.visibility = 'hidden';
+            });
 
-    function moveLens(e) {
-        let pos, x, y;
-        e.preventDefault();
-        pos = getCursorPos(e);
-        x = pos.x - (zoomLens.offsetWidth / 2);
-        y = pos.y - (zoomLens.offsetHeight / 2);
+            function moveLens(e) {
+                const pos = getCursorPos(e);
+                const cx = zoomResult.offsetWidth / mainImage.offsetWidth;
+                const cy = zoomResult.offsetHeight / mainImage.offsetHeight;
 
-        if (x > mainImage.width - zoomLens.offsetWidth) { x = mainImage.width - zoomLens.offsetWidth; }
-        if (x < 0) { x = 0; }
-        if (y > mainImage.height - zoomLens.offsetHeight) { y = mainImage.height - zoomLens.offsetHeight; }
-        if (y < 0) { y = 0; }
+                let x = pos.x - (zoomResult.offsetWidth / 2) / cx;
+                let y = pos.y - (zoomResult.offsetHeight / 2) / cy;
 
-        zoomLens.style.left = x + 'px';
-        zoomLens.style.top = y + 'px';
+                if (x > mainImage.width - zoomResult.offsetWidth / cx) { x = mainImage.width - zoomResult.offsetWidth / cx; }
+                if (x < 0) { x = 0; }
+                if (y > mainImage.height - zoomResult.offsetHeight / cy) { y = mainImage.height - zoomResult.offsetHeight / cy; }
+                if (y < 0) { y = 0; }
 
-        zoomedImage.style.width = mainImage.width * 2 + 'px'; /* Adjust the zoom factor */
-        zoomedImage.style.height = mainImage.height * 2 + 'px';
-        zoomedImage.style.left = -(x * 2) + 'px'; /* Adjust the zoom factor */
-        zoomedImage.style.top = -(y * 2) + 'px'; /* Adjust the zoom factor */
-    }
+                zoomedImage.style.width = mainImage.width * cx + 'px';
+                zoomedImage.style.height = mainImage.height * cy + 'px';
+                zoomedImage.style.left = -(x * cx) + 'px';
+                zoomedImage.style.top = -(y * cy) + 'px';
+            }
 
-    function getCursorPos(e) {
-        const a = mainImage.getBoundingClientRect();
-        const x = e.pageX - a.left;
-        const y = e.pageY - a.top;
-        return { x: x - window.pageXOffset, y: y - window.pageYOffset };
-    }
-});
+            function getCursorPos(e) {
+                const a = mainImage.getBoundingClientRect();
+                const x = e.pageX - a.left - window.pageXOffset;
+                const y = e.pageY - a.top - window.pageYOffset;
+                return { x: x, y: y };
+            }
+        });
     </script>
 </body>
 
