@@ -17,6 +17,49 @@
     <link rel="stylesheet" type="text/css" href="/css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+        .big-img {
+    position: relative;
+    overflow: hidden;
+    width: fit-content; /* Adjust the width as needed */
+    height: fit-content; /* Adjust the height as needed */
+}
+
+.big-img img {
+    width: 100%;
+    display: block;
+}
+
+.zoom-lens {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    width: 100px; /* Adjust the lens size as needed */
+    height: 100px; /* Adjust the lens size as needed */
+    visibility: hidden;
+    cursor: none;
+}
+
+.big-img:hover .zoom-lens {
+    visibility: visible;
+}
+
+.zoom-result {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    width: 300px; /* Adjust the result size as needed */
+    height: 300px; /* Adjust the result size as needed */
+    overflow: hidden;
+    top: 0;
+    left: calc(100% + 10px); /* Adjust the position as needed */
+}
+
+.zoom-result img {
+    position: absolute;
+    width: auto;
+    height: auto;
+    max-width: none;
+}
+    </style>
+    <style>
         #star:hover {
             color: brown;
         }
@@ -241,8 +284,8 @@
                                 </ul>
 
                                 <div class="big-img" style="margin-left: 15%;">
-                                    <img id="mainImage" src="{{product.image.[0]}}" style="width: 50%;">
-                                </div>
+    <img id="mainImage" src="{{product.image.[0]}}" style="width: 50%;">
+</div>
 
                                 <!--product-detail-imgs-->
                             </div>
@@ -847,6 +890,55 @@
 
         // Fetch reviews on page load
         fetchReviews();
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const bigImg = document.querySelector('.big-img');
+    const mainImage = document.getElementById('mainImage');
+    const zoomLens = document.createElement('div');
+    zoomLens.classList.add('zoom-lens');
+    bigImg.appendChild(zoomLens);
+
+    const zoomResult = document.createElement('div');
+    zoomResult.classList.add('zoom-result');
+    const zoomedImage = document.createElement('img');
+    zoomedImage.src = mainImage.src;
+    zoomResult.appendChild(zoomedImage);
+    bigImg.appendChild(zoomResult);
+
+    zoomLens.addEventListener('mousemove', moveLens);
+    mainImage.addEventListener('mousemove', moveLens);
+    zoomLens.addEventListener('touchmove', moveLens);
+    mainImage.addEventListener('touchmove', moveLens);
+
+    function moveLens(e) {
+        let pos, x, y;
+        e.preventDefault();
+        pos = getCursorPos(e);
+        x = pos.x - (zoomLens.offsetWidth / 2);
+        y = pos.y - (zoomLens.offsetHeight / 2);
+
+        if (x > mainImage.width - zoomLens.offsetWidth) { x = mainImage.width - zoomLens.offsetWidth; }
+        if (x < 0) { x = 0; }
+        if (y > mainImage.height - zoomLens.offsetHeight) { y = mainImage.height - zoomLens.offsetHeight; }
+        if (y < 0) { y = 0; }
+
+        zoomLens.style.left = x + 'px';
+        zoomLens.style.top = y + 'px';
+
+        zoomedImage.style.width = mainImage.width * 2 + 'px'; /* Adjust the zoom factor */
+        zoomedImage.style.height = mainImage.height * 2 + 'px';
+        zoomedImage.style.left = -(x * 2) + 'px'; /* Adjust the zoom factor */
+        zoomedImage.style.top = -(y * 2) + 'px'; /* Adjust the zoom factor */
+    }
+
+    function getCursorPos(e) {
+        const a = mainImage.getBoundingClientRect();
+        const x = e.pageX - a.left;
+        const y = e.pageY - a.top;
+        return { x: x - window.pageXOffset, y: y - window.pageYOffset };
+    }
+});
     </script>
 </body>
 
