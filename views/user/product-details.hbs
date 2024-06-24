@@ -17,7 +17,7 @@
     <link rel="stylesheet" type="text/css" href="/css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
-    <style>
+       <style>
         .big-img {
             position: relative;
             margin-left: 15%;
@@ -26,6 +26,17 @@
         .big-img img {
             width: 50%;
             display: block;
+        }
+
+        .zoom-lens {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            width: 6mm; /* 3mm radius * 2 */
+            height: 6mm; /* 3mm radius * 2 */
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            visibility: hidden;
+            cursor: none;
         }
 
         .zoom-result {
@@ -267,9 +278,9 @@
 
 
                                 </ul>
-
- <div class="big-img">
+    <div class="big-img">
         <img id="mainImage" src="{{product.image.[0]}}" alt="Product Image">
+        <div class="zoom-lens" id="zoomLens"></div>
         <div class="zoom-result">
             <img id="zoomedImage" src="{{product.image.[0]}}" alt="Zoomed Image">
         </div>
@@ -840,35 +851,40 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const mainImage = document.getElementById('mainImage');
+            const zoomLens = document.getElementById('zoomLens');
             const zoomResult = document.querySelector('.zoom-result');
             const zoomedImage = document.getElementById('zoomedImage');
 
             mainImage.addEventListener('mousemove', function(event) {
                 zoomResult.style.visibility = 'visible';
+                zoomLens.style.visibility = 'visible';
                 moveLens(event);
             });
 
             mainImage.addEventListener('mouseleave', function() {
                 zoomResult.style.visibility = 'hidden';
+                zoomLens.style.visibility = 'hidden';
             });
 
             function moveLens(e) {
                 const pos = getCursorPos(e);
-                const cx = zoomResult.offsetWidth / mainImage.offsetWidth;
-                const cy = zoomResult.offsetHeight / mainImage.offsetHeight;
+                const lensRadius = zoomLens.offsetWidth / 2;
+                let x = pos.x - lensRadius;
+                let y = pos.y - lensRadius;
 
-                let x = pos.x - (zoomResult.offsetWidth / 2) / cx;
-                let y = pos.y - (zoomResult.offsetHeight / 2) / cy;
-
-                if (x > mainImage.width - zoomResult.offsetWidth / cx) { x = mainImage.width - zoomResult.offsetWidth / cx; }
+                if (x > mainImage.width - zoomLens.offsetWidth) { x = mainImage.width - zoomLens.offsetWidth; }
                 if (x < 0) { x = 0; }
-                if (y > mainImage.height - zoomResult.offsetHeight / cy) { y = mainImage.height - zoomResult.offsetHeight / cy; }
+                if (y > mainImage.height - zoomLens.offsetHeight) { y = mainImage.height - zoomLens.offsetHeight; }
                 if (y < 0) { y = 0; }
 
-                zoomedImage.style.width = mainImage.width * cx + 'px';
-                zoomedImage.style.height = mainImage.height * cy + 'px';
-                zoomedImage.style.left = -(x * cx) + 'px';
-                zoomedImage.style.top = -(y * cy) + 'px';
+                zoomLens.style.left = x + 'px';
+                zoomLens.style.top = y + 'px';
+
+                const zoomFactor = 2; // Adjust the zoom factor
+                zoomedImage.style.width = mainImage.width * zoomFactor + 'px';
+                zoomedImage.style.height = mainImage.height * zoomFactor + 'px';
+                zoomedImage.style.left = -(pos.x * zoomFactor - lensRadius * zoomFactor) + 'px';
+                zoomedImage.style.top = -(pos.y * zoomFactor - lensRadius * zoomFactor) + 'px';
             }
 
             function getCursorPos(e) {
