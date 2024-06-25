@@ -12,8 +12,15 @@ cloudinary.config({
 
 const adminCategory = async (req, res) => {
   try {
-    const categories = await Category.find({});
-    res.render("admin/category", { categories });
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const totalcategories = await Category.countDocuments({});
+    const totalPages = Math.ceil(totalcategories / limit);
+    const categories = await Category.find({})
+      .skip((page - 1) * limit)
+      .limit(limit);
+    res.render("admin/category", { categories,currentPage: page,
+      totalPages });
   } catch {
     console.log(error.message);
     res.redirect("/admin/error");

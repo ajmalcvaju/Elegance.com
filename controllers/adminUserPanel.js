@@ -13,8 +13,17 @@ cloudinary.config({
 
 const adminUser = async (req, res) => {
   try {
-    const users = await User.find({});
-    res.render("admin/User", { users });
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+
+    const totalusers = await User.countDocuments({});
+    const totalPages = Math.ceil(totalusers / limit);
+
+    const users = await User.find({})
+      .skip((page - 1) * limit)
+      .limit(limit);
+    res.render("admin/User", { users,currentPage: page,
+      totalPages });
   } catch {
     console.log(error.message);
     res.redirect("/admin/error");
