@@ -84,15 +84,14 @@
     }
 
     label {
-      display: block;
-      margin-top: 30px;
-      font-size: 16px;
-      font-weight: 500;
-    }
+            display: block;
+            font-size: 10px;
+            font-weight: 300;
+        }
 
     input {
       display: block;
-      height: 30px;
+      height: 25px;
       width: 100%;
       background-color: rgba(255, 255, 255, 0.07);
       border-radius: 3px;
@@ -107,16 +106,16 @@
     }
 
     button {
-      margin-top: 50px;
-      width: 100%;
-      background-color: #ffffff;
-      color: #080710;
-      padding: 15px 0;
-      font-size: 18px;
-      font-weight: 600;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+            margin-top: 40px;
+            width: 80%;
+            background-color: #ffffff;
+            color: #080710;
+            padding: 12px 0;
+            font-size: 15px;
+            font-weight: 400;
+            border-radius: 3px;
+            cursor: pointer;
+        }
 
     .social {
       margin-top: 30px;
@@ -177,12 +176,16 @@
   
        <form id="couponForm" action="/admin/edit-Coupons?id={{coupon._id}}" method="post">
     <h3>Edit Coupons</h3>
+        
+        <label for="">Coupon Code</label>
         <input type="text" name="couponCode" id="couponCode" placeholder="Coupon Code" onblur="validatecouponCode()" value="{{coupon.couponCode}}">
         <span id="couponCodeError" class="error-message"></span>
-
+        
+        <label for="">Description</label>
         <input type="text" name="description" id="description" placeholder="Description" value="{{coupon.description}}">
         <span id="descriptionError" class="error-message"></span>
-
+          
+          <label for="">Min Purchase Amount</label>
         <input type="number" name="minPurchaseAmount" id="minPurchaseAmount" placeholder="Min Purchase Amount"  value="{{coupon.minPurchaseAmount}}">
         <span id="minPurchaseAmountError" class="error-message"></span>
 

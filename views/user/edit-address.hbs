@@ -106,14 +106,14 @@
         }
 
         button {
-            margin-top: 50px;
-            width: 100%;
+            margin-top: 40px;
+            width: 80%;
             background-color: #ffffff;
             color: #080710;
-            padding: 15px 0;
-            font-size: 18px;
-            font-weight: 600;
-            border-radius: 5px;
+            padding: 12px 0;
+            font-size: 15px;
+            font-weight: 400;
+            border-radius: 3px;
             cursor: pointer;
         }
 
@@ -209,14 +209,19 @@
             {{/if}}
 
             <h3>Edit Address</h3>
+            <label for="">House Name</label>
             <input type="text" name="houseName" placeholder="House Name" value="{{address.houseName}}" >
             <div id="houseNameError" class="error"></div>
+            <label for="">Street Name/Location</label>
             <input type="text" name="street" placeholder="Street Name/Location" value="{{address.street}}" >
             <div id="streetError" class="error"></div>
+            <label for="">District</label>
             <input type="text" name="district" placeholder="District" value="{{address.district}}">
             <div id="districtError" class="error"></div>
+            <label for="">State</label>
             <input type="text" name="state" placeholder="State" value="{{address.state}}" >
             <div id="stateError" class="error"></div>
+            <label for="">Pincode</label>
             <input type="text" name="pincode" placeholder="Pincode" value="{{address.pincode}}" >
             <div id="pincodeError" class="error"></div>
 

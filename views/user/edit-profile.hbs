@@ -106,14 +106,14 @@
         }
 
         button {
-            margin-top: 50px;
-            width: 100%;
+            margin-top: 40px;
+            width: 80%;
             background-color: #ffffff;
             color: #080710;
-            padding: 15px 0;
-            font-size: 18px;
-            font-weight: 600;
-            border-radius: 5px;
+            padding: 12px 0;
+            font-size: 15px;
+            font-weight: 400;
+            border-radius: 3px;
             cursor: pointer;
         }
 
@@ -163,15 +163,20 @@
     </div>
     <form action="/edit-profile?id={{user._id}}" method="post" onsubmit="return validateForm()">
         <h3>Edit Profile</h3>
+
+        <label for="">Username</label>
         <input type="text" id="username" name="username" placeholder="Username" value="{{user.username}}">
         <div id="usernameError" class="error"></div>
-
+        
+        <label for="">First Name</label>
         <input type="text" id="fname" name="fname" placeholder="First Name" value="{{user.fname}}">
         <div id="fnameError" class="error"></div>
-
+         
+         <label for="">Last Name</label>
         <input type="text" id="lname" name="lname" placeholder="Last Name" value="{{user.lname}}">
         <div id="lnameError" class="error"></div>
-
+        
+        <label for="">Mobile Number</label>
         <input type="text" id="mobileNumber" name="mobileNumber" placeholder="Mobile Number" value="{{user.mobileNumber}}">
         <div id="mobileNumberError" class="error"></div>
 
