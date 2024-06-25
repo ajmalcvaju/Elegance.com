@@ -13,8 +13,20 @@ cloudinary.config({
 
 const adminProduct = async (req, res) => {
   try {
-    const products = await Product.find({});
-    res.render("admin/product", { products });
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+
+    const totalProducts = await Product.countDocuments({});
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    const products = await Product.find({})
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+
+    res.render("admin/product", { products,
+      currentPage: page,
+      totalPages });
   } catch {
     console.log(error.message);
     res.redirect("/admin/error");

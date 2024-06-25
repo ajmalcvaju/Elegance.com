@@ -158,7 +158,23 @@
                     {{/each}}
                 </tbody>
             </table>
-            
+             <div class="pagination-controls">
+                            {{#if (gt currentPage 1)}}
+                            <a href="?page={{subtract currentPage 1}}"
+                                class="btn btn-primary">Previous</a>
+                            {{/if}}
+
+                            {{#each (range 1 totalPages)}}
+                            <a href="?page={{this}}"
+                                class="btn btn-primary {{#if (eq this ../currentPage)}}active{{/if}}">
+                                {{this}}
+                            </a>
+                            {{/each}}
+
+                            {{#if (lt currentPage totalPages)}}
+                            <a href="?page={{add currentPage 1}}" class="btn btn-primary">Next</a>
+                            {{/if}}
+                        </div>
         </div>
         <!-- Content End -->
 
