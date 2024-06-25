@@ -102,12 +102,10 @@
                 </div>
             </nav>
             <div style="display: flex;flex-direction: column;">
-            <form class="form-inline my-2 my-lg-0" style="display: flex;flex-direction: row;width: 30%;float: right;">
-                    <input class="form-control mr-sm-2" id="searchInput" type="text" placeholder="Search"
-                        aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0 mx-2" id="searchByIdButton"
-                        type="submit">Search</button>
-                </form>
+            <form class="form-inline my-2 my-lg-0" style="display: flex;flex-direction: row;width: 30%;float: right;" id="searchForm">
+    <input class="form-control mr-sm-2" id="searchInput" type="text" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0 mx-2" id="searchByIdButton" type="submit">Search</button>
+</form>
            <div style="display: flex; justify-content: flex-end;margin-top: 2%;">
     <a href="/admin/addUser" class="btn btn-success">Add Users</a>
 </div>
@@ -232,13 +230,25 @@
             });
         }
     </script>
-        <script>
+       <script>
     $(document).ready(function () {
-        $("#searchInput").on("keyup", function () {
-            var value = $(this).val().toLowerCase();
+        // Function to filter table rows
+        function filterTable() {
+            var value = $("#searchInput").val().toLowerCase();
             $("table tbody tr").filter(function () {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
             });
+        }
+
+        // Filter table rows on keyup event in the input field
+        $("#searchInput").on("keyup", function () {
+            filterTable();
+        });
+
+        // Filter table rows on form submit event
+        $("#searchForm").on("submit", function (event) {
+            event.preventDefault();  // Prevent the default form submission
+            filterTable();
         });
     });
 </script>
