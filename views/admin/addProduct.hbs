@@ -172,21 +172,28 @@
   </div>
   <form id="productForm" action="/admin/addProduct" method="post" enctype="multipart/form-data">
     <h3>Add Products</h3>
+
+    <label for="">Product Name</label>
     <input type="text" name="pname" placeholder="Product Name" id="pname" onblur="validateProductName()">
     <span id="pnameError" class="error-message"></span>
     
+    <label for="">Product Images</label>
     <input type="file" name="image" id="img" multiple>
     <span id="imgError" class="error-message"></span>
     
+    <label for="">Description</label>
     <input type="text" name="description" placeholder="Description" id="description">
     <span id="descriptionError" class="error-message"></span>
     
+    <label for="">Price</label>
     <input type="number" name="price" placeholder="Price" id="price">
     <span id="priceError" class="error-message"></span>
     
+    <label for="">Discount</label>
     <input type="number" name="discount" placeholder="Discount" id="discount" min="0" max="90">
     <span id="discountError" class="error-message"></span>
     
+    <label for="">Stock</label>
     <input type="number" name="purchase" placeholder="Stock" id="purchase">
     <span id="purchaseError" class="error-message"></span>
     

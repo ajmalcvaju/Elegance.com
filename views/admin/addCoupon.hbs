@@ -120,10 +120,12 @@
         .is-invalid {
             border-color: red;
         }
-        option{
+
+        option {
             color: white;
         }
-        #couponStatus{
+
+        #couponStatus {
             background-color: #080710;
         }
     </style>
@@ -136,13 +138,16 @@
     </div>
     <form id="couponForm" action="/admin/addCoupons" method="post">
         <h3>Add Coupons</h3>
+        <label for="">Coupon Code</label>
         <input type="text" name="couponCode" id="couponCode" placeholder="Coupon Code" onblur="validatecouponCode()">
         <span id="couponCodeError" class="error-message"></span>
 
-        <input type="text" name="description" id="description" placeholder="Description" >
+        <label for="">Description</label>
+        <input type="text" name="description" id="description" placeholder="Description">
         <span id="descriptionError" class="error-message"></span>
 
-        <input type="number" name="minPurchaseAmount" id="minPurchaseAmount" placeholder="Min Purchase Amount" >
+        <label for="">Min Purchase Amount</label>
+        <input type="number" name="minPurchaseAmount" id="minPurchaseAmount" placeholder="Min Purchase Amount">
         <span id="minPurchaseAmountError" class="error-message"></span>
 
         <label>Discount (%)</label>
@@ -150,7 +155,7 @@
         <span id="discountError" class="error-message"></span>
 
         <label>Expiry Date</label>
-        <input type="date" name="expiryDate" id="expiryDate" placeholder="Expiry Date" >
+        <input type="date" name="expiryDate" id="expiryDate" placeholder="Expiry Date">
         <span id="expiryDateError" class="error-message"></span>
 
         <label for="couponStatus">Coupon Status</label>
@@ -163,32 +168,32 @@
     </form>
 
     <script>
-            async function validatecouponCode() {
-        var couponCode = document.getElementById("couponCode").value;
-        var couponCodeError = document.getElementById("couponCodeError");
-        console.log(couponCode);
-        try {
-            const response = await fetch("/admin/CouponExist", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ couponCode })
-            });
+        async function validatecouponCode() {
+            var couponCode = document.getElementById("couponCode").value;
+            var couponCodeError = document.getElementById("couponCodeError");
+            console.log(couponCode);
+            try {
+                const response = await fetch("/admin/CouponExist", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ couponCode })
+                });
 
-            const data = await response.json();
+                const data = await response.json();
 
-            if (data.exists) {
-                couponCodeError.textContent = "Coupon code already exists.";
-                document.getElementById("couponCode").classList.add('is-invalid');
-            } else {
-                couponCodeError.textContent = "";
-                document.getElementById("couponCode").classList.remove('is-invalid');
+                if (data.exists) {
+                    couponCodeError.textContent = "Coupon code already exists.";
+                    document.getElementById("couponCode").classList.add('is-invalid');
+                } else {
+                    couponCodeError.textContent = "";
+                    document.getElementById("couponCode").classList.remove('is-invalid');
+                }
+            } catch (error) {
+                console.error("Error validating coupon code:", error);
             }
-        } catch (error) {
-            console.error("Error validating coupon code:", error);
         }
-    }
 
         document.getElementById('couponForm').addEventListener('submit', function (event) {
             event.preventDefault();

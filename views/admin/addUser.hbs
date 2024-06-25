@@ -164,24 +164,32 @@
     </div>
     <form id="addUserForm" action="/admin/addUser" method="post" enctype="multipart/form-data">
         <h3>Add User</h3>
+
+        <label for="">Username</label>
         <input type="text" name="username" placeholder="Username" id="username" onblur="validateUsername()">
         <span id="usernameError" style="color: red;"></span>
-
+        
+        <label for="">Email</label>
         <input type="text" name="email" placeholder="Email" id="email" onblur="validateEmail(this.value)">
         <span id="emailError" style="color: red;"></span>
-
+         
+         <label for="">First Name</label>
         <input type="text" name="fname" placeholder="First Name">
         <span id="fnameError" style="color: red;"></span>
-
+         
+         <label for="">Last Name</label>
         <input type="text" name="lname" placeholder="Last Name">
         <span id="lnameError" style="color: red;"></span>
 
+        <label for="">Mobile Number</label>
         <input type="text" name="mobileNumber" placeholder="Mobile Number" id="mobileNumber" onblur="validateMobileNumber(this.value)">
         <span id="mobileNumberError" style="color: red;"></span>
-
+         
+         <label for="">User Image</label>
         <input type="file" name="image" id="img">
         <span id="imageError" style="color: red;"></span>
-
+          
+          <label for="">Password</label>
         <input type="password" name="password" placeholder="Password" id="password" onblur="validatePassword(this.value)">
         <span id="passwordErrors" style="color: red;"></span>
 
