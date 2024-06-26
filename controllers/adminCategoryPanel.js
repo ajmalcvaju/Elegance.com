@@ -68,12 +68,7 @@ const updateCategory = async (req, res) => {
         image: result.url,
       });
       const categoryData = await category.save();
-      if (categoryData) {
-        const categories = await Category.find({});
-        res.render("admin/category", { categories });
-      } else {
-        res.redirect("admin/addProduct");
-      }
+      res.redirect("/admin/category");
     }
   } catch (error) {
     console.log(error.message);

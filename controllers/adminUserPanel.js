@@ -98,7 +98,7 @@ const updateUser = async (req, res) => {
       is_admin: 0,
     });
     const userData = await user.save();
-    res.json({ success: true });
+    res.redirect("/admin/User");
   } catch (error) {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -149,7 +149,7 @@ const updatingUser = async (req, res) => {
     { _id: userId },
     { $set: { username, email, fname, lname, password, mobileNumber } }
   );
-  res.json({ success: true });
+  res.redirect("/admin/User");
 };
 module.exports = {
   adminUser,
