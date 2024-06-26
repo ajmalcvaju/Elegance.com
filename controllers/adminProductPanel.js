@@ -165,9 +165,21 @@ const updatingProduct = async (req, res) => {
     const proId = req.query.id;
     const { pname, description, category, price, discount, purchase } =
       req.body;
+      const products = await Product.findOne({ pname });
+      const categories = await Category.findOne({ cname:category });
+      let actualDiscount;
+      let productDiscount = discount;
+      let categoryDiscount = categories.discount;
+      if (productDiscount >= categoryDiscount) {
+        actualDiscount = productDiscount;
+      } else {
+        actualDiscount = categoryDiscount;
+      }
+      const DiscountedPrice = req.body.price * (1 - actualDiscount / 100);
+      const imageFiles = req.files.map((file) => file.filename);
     await Product.updateOne(
       { _id: proId },
-      { $set: { pname, description, price, category, discount, purchase } }
+      { $set: { pname, description, price, category, discount, purchase,image: imageFiles,actualDiscount: actualDiscount,discountedPrice: DiscountedPrice } }
     );
     res.redirect("/admin/product");
   } catch (error) {

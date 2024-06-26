@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <!-- Design by foolishdeveloper.com -->
-  <title>Edit Product</title>
-
-  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <title>Edit Products</title>
+ <link rel="preconnect" href="https://fonts.gstatic.com">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-  <!--Stylesheet-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
   <style media="screen">
     *,
     *:before,
@@ -39,22 +38,19 @@
     }
 
     .shape:first-child {
-      background: linear-gradient(#1845ad,
-          #23a2f6);
+      background: linear-gradient(#1845ad, #23a2f6);
       left: -80px;
       top: -80px;
     }
 
     .shape:last-child {
-      background: linear-gradient(to right,
-          #ff512f,
-          #f09819);
+      background: linear-gradient(to right, #ff512f, #f09819);
       right: -30px;
       bottom: -80px;
     }
 
     form {
-      height: 520px;
+      height: auto;
       width: 400px;
       background-color: rgba(255, 255, 255, 0.13);
       position: absolute;
@@ -90,8 +86,19 @@
         }
 
     input {
+            display: block;
+            height: 25px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.07);
+            border-radius: 3px;
+            padding: 0 10px;
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 300;
+        }
+    select {
       display: block;
-      height: 25px;
+      height: 30px;
       width: 100%;
       background-color: rgba(255, 255, 255, 0.07);
       border-radius: 3px;
@@ -117,41 +124,6 @@
             cursor: pointer;
         }
 
-    .social {
-      margin-top: 30px;
-      display: flex;
-    }
-
-    .social div {
-      background: red;
-      width: 150px;
-      border-radius: 3px;
-      padding: 5px 10px 10px 5px;
-      background-color: rgba(255, 255, 255, 0.27);
-      color: #eaf0fb;
-      text-align: center;
-    }
-
-    .social div:hover {
-      background-color: rgba(255, 255, 255, 0.47);
-    }
-
-    .social .fb {
-      margin-left: 25px;
-    }
-
-    .social i {
-      margin-right: 4px;
-    }
-
-    select {
-      color: #080710;
-    }
-
-    option {
-      color: #080710;
-    }
-    
     .is-invalid {
       border-color: red;
     }
@@ -159,6 +131,45 @@
     .error-message {
       color: red;
       font-size: 12px;
+    }
+     .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0, 0, 0);
+      background-color: rgba(0, 0, 0, 0.4);
+      padding-top: 60px;
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 700px;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    option{
+      color: #080710;
     }
   </style>
 </head>
@@ -168,12 +179,18 @@
     <div class="shape"></div>
     <div class="shape"></div>
   </div>
-  <form id="productForm" action="/admin/edit-product?id={{product._id}}" method="post">
+  <form id="productForm" action="/admin/edit-product?id={{product._id}}" method="post" enctype="multipart/form-data">
     <h3>Edit Products</h3>
 
     <label for="">Product Name</label>
     <input type="text" name="pname" placeholder="Product Name" id="pname" onblur="validateProductName()" value="{{product.pname}}">
     <span id="pnameError" class="error-message"></span>
+    
+    <label for="">Product Images</label>
+    <input type="file" name="image" id="img" multiple value="{{product.image}}">
+    <span id="imgError" class="error-message"></span>
+
+    <button type="button" id="previewBtn" style="margin-top: 5px ; width: 100%;background-color: #ffffff;color: #080710;padding: 6px 0;font-size: 15px;font-weight: 500;border-radius: 1px;cursor: pointer;">Preview Images</button>
     
     <label for="">Description</label>
     <input type="text" name="description" placeholder="Description" id="description" value="{{product.description}}">
@@ -192,7 +209,7 @@
     <span id="purchaseError" class="error-message"></span>
     
     <label for="cat">Choose Category</label>
-    <select id="cat" name="category" value="{{product.category}}">
+    <select id="cat" name="category">
       <option value="" disabled selected>Choose Category</option>
       {{#each categories}}
       <option value="{{this.cname}}">{{this.cname}}</option>
@@ -206,7 +223,30 @@
     
     <button type="submit">Edit Products</button>
   </form>
-  <script>
+
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div>
+        <img id="image" style="max-width: 100%;">
+      </div>
+      <button id="cropBtn">Crop</button>
+    </div>
+  </div>
+
+  <div id="previewModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div>
+        <img id="previewImage" style="max-width: 100%;">
+      </div>
+      <button id="prevBtn">Previous</button>
+      <button id="nextBtn">Next</button>
+      <button id="deleteBtn">Delete</button>
+    </div>
+  </div>
+
+ <script>
   async function validateProductName() {
     const pname = document.getElementById("pname").value;
     const pnameError = document.getElementById("pnameError");
@@ -252,6 +292,7 @@
 
       // Validate each input field
       var pname = document.getElementById('pname');
+      var img = document.getElementById('img');
       var description = document.getElementById('description');
       var price = document.getElementById('price');
       var discount = document.getElementById('discount');
@@ -262,6 +303,12 @@
         isValid = false;
         pname.classList.add('is-invalid');
         document.getElementById('pnameError').textContent = 'Product Name is required.';
+      }
+
+      if (!img.value) {
+        isValid = false;
+        img.classList.add('is-invalid');
+        document.getElementById('imgError').textContent = 'Image is required.';
       }
 
       if (!description.value.trim()) {
@@ -302,6 +349,166 @@
       } --}}
     });
   </script>
-</body>
+  <script>
+    var modal = document.getElementById("myModal");
+    var span = document.getElementsByClassName("close")[0];
+    var cropper;
+    var image = document.getElementById('image');
+    var input = document.getElementById('img');
+    var cropBtn = document.getElementById('cropBtn');
 
+    var currentIndex = 0;
+    var fileList;
+    var croppedFiles = [];
+
+    input.addEventListener('change', function (e) {
+      fileList = e.target.files;
+      currentIndex = 0;
+      croppedFiles = [];
+      showNextImage();
+    });
+
+    span.onclick = function () {
+      modal.style.display = "none";
+      if (cropper) {
+        cropper.destroy();
+      }
+    };
+
+    cropBtn.addEventListener('click', function () {
+      var canvas = cropper.getCroppedCanvas({
+        width: 400,
+        height: 400,
+      });
+      canvas.toBlob(function (blob) {
+        var file = new File([blob], 'cropped_image_' + currentIndex + '.png', { type: 'image/png' });
+        croppedFiles.push(file);
+
+        currentIndex++;
+        if (currentIndex < fileList.length) {
+          showNextImage();
+        } else {
+          modal.style.display = "none";
+          var dataTransfer = new DataTransfer();
+          croppedFiles.forEach(function (file) {
+            dataTransfer.items.add(file);
+          });
+          input.files = dataTransfer.files;
+          if (cropper) {
+            cropper.destroy();
+          }
+        }
+      });
+    });
+
+    function showNextImage() {
+      if (currentIndex >= fileList.length) {
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function (event) {
+        image.src = event.target.result;
+        modal.style.display = "block";
+        if (cropper) {
+          cropper.destroy();
+        }
+        cropper = new Cropper(image, {
+          aspectRatio: 1,
+          viewMode: 1,
+        });
+      };
+      reader.readAsDataURL(fileList[currentIndex]);
+    }
+  </script>
+  <script>
+    var input = document.getElementById('img');
+    var previewBtn = document.getElementById('previewBtn');
+    var previewModal = document.getElementById("previewModal");
+    var previewImage = document.getElementById('previewImage');
+    var prevBtn = document.getElementById('prevBtn');
+    var nextBtn = document.getElementById('nextBtn');
+    var deleteBtn = document.getElementById('deleteBtn');
+    var fileList;
+    var previewIndex = 0;
+
+    // Open preview modal and update file input
+    previewBtn.addEventListener('click', function () {
+      if (input.files && input.files.length > 0) {
+        fileList = Array.from(input.files);
+        previewIndex = 0;
+        showPreviewImage(previewIndex);
+        previewModal.style.display = "block";
+      }
+    });
+
+    // Close preview modal
+    function closePreviewModal() {
+      previewModal.style.display = "none";
+    }
+
+    // Show previous image in preview
+    prevBtn.addEventListener('click', function () {
+      if (previewIndex > 0) {
+        previewIndex--;
+        showPreviewImage(previewIndex);
+      }
+    });
+
+    // Show next image in preview
+    nextBtn.addEventListener('click', function () {
+      if (previewIndex < fileList.length - 1) {
+        previewIndex++;
+        showPreviewImage(previewIndex);
+      }
+    });
+
+    // Delete selected image from preview
+    deleteBtn.addEventListener('click', function () {
+      if (fileList && fileList.length > 0) {
+        fileList.splice(previewIndex, 1);
+        if (fileList.length > 0) {
+          previewIndex = Math.min(previewIndex, fileList.length - 1);
+          showPreviewImage(previewIndex);
+        } else {
+          closePreviewModal();
+        }
+        updateOriginalFileInput();
+      }
+    });
+
+    // Update original file input with selected files
+    function updateOriginalFileInput() {
+      var dataTransfer = new DataTransfer();
+      fileList.forEach(function (file) {
+        dataTransfer.items.add(file);
+      });
+      input.files = dataTransfer.files;
+    }
+
+    // Show selected image in preview modal
+    function showPreviewImage(index) {
+      var reader = new FileReader();
+      reader.onload = function (event) {
+        previewImage.src = event.target.result;
+      };
+      reader.readAsDataURL(fileList[index]);
+    }
+
+    // Handle file input change for original file selection
+    input.addEventListener('change', function (e) {
+      fileList = Array.from(e.target.files);
+      previewIndex = 0;
+      showPreviewImage(previewIndex);
+    });
+
+    // Close modal on close button click
+    var closeBtns = document.getElementsByClassName("close");
+    for (var i = 0; i < closeBtns.length; i++) {
+      closeBtns[i].addEventListener('click', function () {
+        closePreviewModal();
+      });
+    }
+  </script>
+
+</body>
 </html>
