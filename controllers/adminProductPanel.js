@@ -176,10 +176,23 @@ const updatingProduct = async (req, res) => {
         actualDiscount = categoryDiscount;
       }
       const DiscountedPrice = req.body.price * (1 - actualDiscount / 100);
-      const imageFiles = req.files.map((file) => file.filename);
+      const files = req.files;
+      console.log(files);
+
+      const uploadedImages = [];
+
+      try {
+        for (const file of files) {
+          const result = await cloudinary.uploader.upload(file.path);
+          uploadedImages.push(result.url);
+        }
+        console.log(uploadedImages);
+      } catch (error) {
+        console.error("Error uploading images: ", error);
+      }
     await Product.updateOne(
       { _id: proId },
-      { $set: { pname, description, price, category, discount, purchase,image: imageFiles,actualDiscount: actualDiscount,discountedPrice: DiscountedPrice } }
+      { $set: { pname, description, price, category, discount, purchase,image: uploadedImages,actualDiscount: actualDiscount,discountedPrice: DiscountedPrice } }
     );
     res.redirect("/admin/product");
   } catch (error) {
