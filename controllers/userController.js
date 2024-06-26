@@ -5,6 +5,7 @@ const Product = require("../model/productModel");
 const Category = require("../model/categoryModel");
 const Address = require("../model/addressModel");
 const Review = require("../model/reviewModel");
+const Wallet = require("../model/walletModel");
 const fs=require('fs')
 const path = require('path');
 const cloudinary = require('cloudinary').v2;
@@ -42,6 +43,14 @@ const checkUserExist = async (req, res) => {
     res.redirect("/error");
   }
 };
+
+const checkreferralCodeExist=async(req,res)=>{
+  const {referralCode}=req.body
+  if(referralCode){
+    const user = await User.findOne({ referralCode });
+    res.json({ notExists: !user });
+  }
+}
 
 const shop = async (req, res) => {
   try {
@@ -190,6 +199,7 @@ const loadRegister = async (req, res) => {
 };
 const insertUser = async (req, res) => {
   try {
+    const { username, email, mobileNumber, password,referralCode,confirmPassword } = req.body;
     const result = await cloudinary.uploader.upload(req.file.path);
     const user = new User({
       username: req.body.username,
@@ -203,6 +213,22 @@ const insertUser = async (req, res) => {
     });
     console.log();
     const userData = await user.save();
+
+    if(referralCode){
+      const referrencedUser = await User.findOne({ referralCode });
+      const referrencedUserID=referrencedUser._id
+      const userID=userData._id
+      const wallet = await Wallet.findOneAndUpdate(
+        { userId: userID },
+        { $inc: { amount: 600 } }, // Increment the amount by 600
+        { new: true, upsert: true, setDefaultsOnInsert: true }
+      );
+      const refferalWallet = await Wallet.findOneAndUpdate(
+        { userId: referrencedUserID },
+        { $inc: { amount: 600 } }, // Increment the amount by 600
+        { new: true, upsert: true, setDefaultsOnInsert: true }
+      );
+    }
     const OTP = Math.floor(100000 + Math.random() * 900000);
     const otp = new OTPcode({
       userId: userData._id,
@@ -722,4 +748,5 @@ module.exports = {
   resendOtp,
   checkUserExist,
   otp,
+  checkreferralCodeExist
 };

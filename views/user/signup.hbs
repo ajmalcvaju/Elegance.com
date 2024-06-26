@@ -193,10 +193,41 @@
         <input type="password" name="password" id="password" placeholder="Password" onblur="validatePassword(this.value)">
         <span id="passwordErrors" style="color: red;"></span>
 
+        <label for="">Referral code(optional)</label>
+         <input type="text" name="referralCode" id="referralCode" placeholder="Referral Code"
+            onblur="validateReferralCode(this.value)">
+        <span id="referralCodeError" style="color: red;"></span>
+
         <button type="submit">Sign Up</button>
     </form>
 
     <script>
+        async function validateReferralCode() {
+            const referralCode = document.getElementById("referralCode").value;
+            const referralCodeError = document.getElementById("referralCodeError");
+
+            try {
+                const response = await fetch("/checkreferralCodeExist", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ referralCode })
+                });
+
+                const data = await response.json();
+
+                if (data.notExists) {
+                    referralCodeError.textContent = "ReferralCode Not Exists.";
+                    document.getElementById("referralCode").style.border = "1px solid red";
+                } else {
+                    usernameError.textContent = "";
+                    document.getElementById("username").style.border = "1px solid #ccc";
+                }
+            } catch (error) {
+                console.error("Error validating username:", error);
+            }
+        }
         async function validateUsername() {
             const username = document.getElementById("username").value;
             const usernameError = document.getElementById("usernameError");
