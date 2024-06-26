@@ -109,12 +109,7 @@ const updateProduct = async (req, res) => {
       });
       console.log(req.body);
       const productData = await product.save();
-      if (productData) {
-        const products = await Product.find({});
-        res.render("admin/product", { products });
-      } else {
-        res.redirect("admin/addProduct");
-      }
+      res.redirect("/admin/product");
     }
   } catch (error) {
     console.log(error.message);
