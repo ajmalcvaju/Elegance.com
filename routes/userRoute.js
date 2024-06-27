@@ -59,6 +59,8 @@ router.post("/editAddress", userCheckoutOrderControll.checkoutEditAddress);
 router.get("/deleteAddress", userCheckoutOrderControll.deleteAddress);
 router.post("/cancelOrder", userCheckoutOrderControll.orderCancell);
 router.post("/returnOrder", userCheckoutOrderControll.returnOrder);
+router.post("/returnItem", userCheckoutOrderControll.returnItem);
+router.post("/cancelItem", userCheckoutOrderControll.cancelItem);
 router.get("/orderDetails", userCheckoutOrderControll.orderDetails);
 router.get("/invoice", userCheckoutOrderControll.invoice);
 router.get("/addWishlist", cartController.addWishlist);

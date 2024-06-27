@@ -40,6 +40,8 @@ router.post("/edit-product",middleware.productImage, adminProductPanel.updatingP
 router.post("/edit-category", adminCategoryPanel.updatingCategory);
 router.get("/manage", adminOrderPanel.manageOrder);
 router.post("/manage", adminOrderPanel.updateOrder);
+router.post("/returnItem", adminOrderPanel.returnItem);
+router.post("/cancelItem", adminOrderPanel.cancelItem);
 router.get("/coupons", adminCouponPanel.manageCoupon);
 router.get("/edit-coupon", adminCouponPanel.editCoupon);
 router.post("/edit-coupons", adminCouponPanel.editingCoupon);

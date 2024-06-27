@@ -45,6 +45,24 @@
 						<div class="col">
 							</a>{{this.priceBeforeOffer}}</a>
 						</div>
+						{{#if (eq this.status "Cancellation Pending")}}
+                        <div class="col">
+                            <a id="return" class="btn btn-danger" style=" color: white; padding: 3px 8px;"
+                                 onclick="confirmCancel('{{this._id}}','{{this.productId.pname}}','{{this.productId.discountedPrice}}')">Cancellation Approve</a>
+                        </div>
+						{{else}}
+                        {{#if (eq this.status "Return Pending")}}
+                        <div class="col">
+							<a id="return" class="btn btn-danger" style=" color: white; padding: 3px 8px;"
+                                href="#" onclick="confirmReturn('{{this._id}}','{{this.productId.pname}}','{{this.productId.discountedPrice}}')">Return Approve</a>
+                            
+                        </div>
+						{{else}}
+						  <div class="col">
+							</a>{{this.status}}</a>
+						</div>
+						{{/if}}
+                        {{/if}}
 					</div>
 				</div>
 				{{/each}}
@@ -109,6 +127,20 @@
 							<h6 style="display: inline;"><b>{{order.totalAmountPay}} ₹</b></h6>
 						</div>
 					</div>
+					{{#if order.cancelledOrReturnedProductPrice}}
+					<div style="overflow: hidden;">
+						<h6 style="float: left;">Returned/Cancelled Product Price:</h6>
+						<div style="float: right;">
+							<h6 style="display: inline;color: green;"><b>{{order.cancelledOrReturnedProductPrice}} ₹</b></h6>
+						</div>
+					</div>
+					<div style="overflow: hidden;">
+						<h6 style="float: left;">Tota Amount Has to Pay excluding Returned/Cancelled Product:</h6>
+						<div style="float: right;">
+							<h6 style="display: inline;"><b>{{order.priceAfterCancellationOrReturn}} ₹</b></h6>
+						</div>
+					</div>
+					{{/if}}
 				</form>
 				{{#if (eq order.status "Delivered")}}
 						<a href="/invoice?orderId={{order.orderId}}" class="btn btn-warning">Invoice</a>
@@ -121,7 +153,92 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+	function confirmCancel(itemId, displayOrderId,price) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `Are you Ready to approve cancel of product ${displayOrderId}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, cancel it!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const reason = result.value; // Get the reason from the input
 
+                // Display a message for confirmation
+                Swal.fire({
+                    title: 'Cancelling Order',
+                    text: 'Your order cancellation status will be updated in 3 seconds,and The Amount will refund to Your wallet',
+                    icon: 'success',
+                    timer: 3000,
+                    showConfirmButton: false,
+                    willClose: () => {
+                        // Send the reason to the backend
+                        $.ajax({
+                            url: `/admin/cancelItem`,
+                            method: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify({ itemId: itemId,price:price }),
+                            success: function(response) {
+                                console.log(response);
+                               window.location.reload() // Navigate to the orderStatus page
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("An error occurred while cancelling the order:", error);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+</script>
+
+
+        <script>
+        function confirmReturn(itemId, displayOrderId,price) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `Are you Ready to approve return of product ${displayOrderId}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, return it!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const reason = result.value; // Get the reason from the input
+
+                    // Display a message for confirmation
+                    Swal.fire({
+                        title: 'Returning Order',
+                        text: 'Your order return status will be updated in 3 seconds,and The Amount will refund to Your wallet',
+                        icon: 'success',
+                        timer: 3000,
+                        showConfirmButton: false,
+                        willClose: () => {
+                            // Send the reason to the backend
+                            $.ajax({
+                                url: `/admin/returnItem`,
+                                method: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify({ itemId: itemId,price:price}),
+                                success: function(response) {
+                                    console.log(response);
+                                    window.location.reload() // Navigate to the orderStatus page
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error("An error occurred while returning the order:", error);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

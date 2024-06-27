@@ -343,6 +343,46 @@ const deleteAddress = async (req, res) => {
   }
 };
 
+const returnItem=async(req,res)=>{
+  try {
+    console.log(req.body)
+      const {itemId,reason}=req.body
+      const order = await Order.updateOne(
+        {"items._id": itemId },
+        {
+          $set: {
+            "items.$.status": "Return Pending",
+            "items.$.reasonForCancelation": reason
+          }
+        }
+      );
+    
+      res.json({success:true})
+  } catch (error) {
+    console.log(error.message);
+      res.redirect("/admin/error");
+  }
+  }
+  const cancelItem=async(req,res)=>{
+    try {
+      console.log(req.body)
+      const {itemId,reason}=req.body
+      const order = await Order.updateOne(
+        {"items._id": itemId },
+        {
+          $set: {
+            "items.$.status": "Cancellation Pending",
+            "items.$.reasonForCancelation": reason
+          }
+        }
+      );
+      res.json({success:true})
+    } catch (error) {
+      console.log(error.message);
+      res.redirect("/admin/error");
+    } 
+  }
+
 module.exports = {
   checkoutAddAddress,
   checkoutEditAddress,
@@ -360,4 +400,6 @@ module.exports = {
   addAddress,
   editAddress,
   deleteAddress,
+  returnItem,
+  cancelItem
 };
