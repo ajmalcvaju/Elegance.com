@@ -143,8 +143,8 @@ const editUser = async (req, res) => {
 };
 
 const updatingUser = async (req, res) => {
-  const userId = req.body.userId;
-  const { username, email, fname, lname, password, mobileNumber } = req.body;
+  
+  const { userId,username, email, fname, lname, password, mobileNumber } = req.body;
   await User.updateOne(
     { _id: userId },
     { $set: { username, email, fname, lname, password, mobileNumber } }

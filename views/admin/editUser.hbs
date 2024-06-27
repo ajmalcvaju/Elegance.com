@@ -178,6 +178,9 @@
         <input type="password" name="password" placeholder="Password" id="password" onblur="validatePassword(this.value)" value="{{user.password}}">
         <span id="passwordErrors" style="color: red;"></span>
 
+        <input type="hidden" name="userId" value="{{user._id}}">
+
+
         <button type="submit">Edit User</button>
     </form>
 
