@@ -76,16 +76,9 @@
             text-align: center;
         }
 
-        label {
-            display: block;
-            margin-top: 30px;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
         input {
             display: block;
-            height: 30px;
+            height: 25px;
             width: 100%;
             background-color: rgba(255, 255, 255, 0.07);
             border-radius: 3px;
@@ -100,14 +93,14 @@
         }
 
         button {
-            margin-top: 50px;
+            margin-top: 40px;
             width: 100%;
             background-color: #ffffff;
             color: #080710;
-            padding: 15px 0;
-            font-size: 18px;
-            font-weight: 600;
-            border-radius: 5px;
+            padding: 12px 0;
+            font-size: 15px;
+            font-weight: 400;
+            border-radius: 3px;
             cursor: pointer;
         }
 
@@ -147,7 +140,9 @@
         }
 
         label {
-            display: none;
+            display: block;
+            font-size: 10px;
+            font-weight: 300;
         }
     </style>
 </head>
@@ -158,23 +153,33 @@
     </div>
     <form id="editUserForm" action="/admin/edit-user" method="post" enctype="multipart/form-data">
         <h3>Edit User</h3>
+
+        <label for="">Username</label>
         <input type="text" name="username" placeholder="Username" id="username" onblur="validateUsername()" value="{{user.username}}">
         <span id="usernameError" style="color: red;"></span>
-
+         
+         <label for="">Email</label>
         <input type="text" name="email" placeholder="Email" id="email" onblur="validateEmail(this.value)" value="{{user.email}}">
         <span id="emailError" style="color: red;"></span>
-
+         
+         <label for="">First Name</label>
         <input type="text" name="fname" placeholder="First Name" value="{{user.fname}}">
         <span id="fnameError" style="color: red;"></span>
-
+          
+          <label for="">Last Name</label>
         <input type="text" name="lname" placeholder="Last Name" value="{{user.lname}}">
         <span id="lnameError" style="color: red;"></span>
-
+         
+         <label for="">Mobile Number</label>
         <input type="text" name="mobileNumber" placeholder="Mobile Number" id="mobileNumber" onblur="validateMobileNumber(this.value)" value="{{user.mobileNumber}}">
         <span id="mobileNumberError" style="color: red;"></span>
-
+        
+        <label for="">Password</label>
         <input type="password" name="password" placeholder="Password" id="password" onblur="validatePassword(this.value)" value="{{user.password}}">
         <span id="passwordErrors" style="color: red;"></span>
+
+        <input type="hidden" name="userId" value="{{user._id}}">
+
 
         <button type="submit">Edit User</button>
     </form>
@@ -355,29 +360,8 @@
             }
 
             if (isValid) {
-                const formData = new FormData(this);
-                formData.append('userId', '{{user._id}}');
-                try {
-                    const response = await fetch("/admin/edit-user", {
-                        method: "POST",
-                        body: formData
-                    });
-
-                    const result = await response.json();
-
-                    if (result.success) {
-                        window.location.href = "/admin/user"; // Redirect on success
-                    } else {
-                        // Handle specific error cases here if necessary
-                        console.error("Error editing user:", result.message);
-                    }
-                } catch (error) {
-                    console.error("Error editing user:", error);
+                document.getElementById("editUserForm").submit();
                 }
-            } else {
-                // Handle the case where some fields are not valid
-                console.error("Form fields are not valid.");
-            }
         });
     </script>
 </body>

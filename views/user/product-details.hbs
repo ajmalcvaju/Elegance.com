@@ -17,53 +17,145 @@
     <link rel="stylesheet" type="text/css" href="/css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        #star:hover {
-            color: brown;
+        .big-img {
+            position: relative;
+            margin-left: 15%;
+        }
+
+        .big-img img {
+            width: 50%;
+            display: block;
+        }
+
+        .zoom-lens {
+            position: relative;
+            border: 1px solid #d4d4d4;
+            width: 2cm;
+            height: 2cm;
+            background: rgba(255, 255, 255, 0.4);
+            border: black;
+            visibility: hidden;
+            cursor: none;
+        }
+
+        .zoom-result {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            width: 600px;
+            /* Adjusted to twice the original size */
+            height: 600px;
+            /* Adjusted to twice the original size */
+            overflow: hidden;
+            top: 0;
+            left: calc(100% + 10px);
+            /* Adjust the position as needed */
+            visibility: hidden;
+            z-index: 1;
+        }
+
+        .zoom-result img {
+            position: absolute;
+            width: auto;
+            height: auto;
+            max-width: none;
         }
 
         #mainImage:hover {
-            transform: scale(1.20)
-        }
-
-        .rate {
-            display: flex;
-            cursor: pointer;
-        }
-
-        .rate .fa-star {
-            font-size: 2em;
-            color: grey;
-        }
-
-        .rate .fa-star.on {
-            color: gold;
-        }
-
-        .comment-section {
-            margin-top: 10px;
-            width: 100%;
-        }
-
-        .comment-section textarea {
-            width: 100%;
-            height: 80px;
-            padding: 10px;
-            margin-bottom: 10px;
-            resize: none;
-        }
-
-        .comment-section button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        .comment-section button:hover {
-            background-color: #0056b3;
+            cursor: move;
         }
     </style>
+
+    <style>
+        .big-img {
+            position: relative;
+            margin-left: 15%;
+        }
+
+        .big-img img {
+            width: 50%;
+            display: block;
+        }
+
+        .zoom-lens {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            width: 6mm;
+            /* 3mm radius * 2 */
+            height: 6mm;
+            /* 3mm radius * 2 */
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            visibility: hidden;
+            cursor: none;
+        }
+
+        .zoom-result {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            width: 300px;
+            /* Adjust the result size as needed */
+            height: 300px;
+            /* Adjust the result size as needed */
+            overflow: hidden;
+            top: 0;
+            left: calc(100% + 10px);
+            /* Adjust the position as needed */
+            visibility: hidden;
+            z-index: 1;
+        }
+
+        .zoom-result img {
+            position: absolute;
+            width: auto;
+            height: auto;
+            max-width: none;
+        }
+    </style>
+</head>
+<style>
+    #star:hover {
+        color: brown;
+    }
+
+    .rate {
+        display: flex;
+        cursor: pointer;
+    }
+
+    .rate .fa-star {
+        font-size: 2em;
+        color: grey;
+    }
+
+    .rate .fa-star.on {
+        color: gold;
+    }
+
+    .comment-section {
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .comment-section textarea {
+        width: 100%;
+        height: 80px;
+        padding: 10px;
+        margin-bottom: 10px;
+        resize: none;
+    }
+
+    .comment-section button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    .comment-section button:hover {
+        background-color: #0056b3;
+    }
+</style>
 </head>
 
 <body>
@@ -155,11 +247,13 @@
                             <a class="responsive-menu-trigger d-inline-block" href="#" onclick="showMenu()"><i
                                     class="fi fi-rr-align-justify"></i></a>
                         </li>
-                       <li><a style="font-weight: 300;" href="/myProfile"><i class="fa-regular fa-user"
-                                        style="transform: scale(1.4)"></i></a></li>
-                        <li><a style="font-weight: 300;" href="/myWishlist"><img src="/images/resources/icon-3.png" alt=""></a>
+                        <li><a style="font-weight: 300;" href="/myProfile"><i class="fa-regular fa-user"
+                                    style="transform: scale(1.4)"></i></a></li>
+                        <li><a style="font-weight: 300;" href="/myWishlist"><img src="/images/resources/icon-3.png"
+                                    alt=""></a>
                         </li>
-                        <li><a style="font-weight: 500;" href="/cart"><img src="/images/resources/icon-4.png" alt=""></a>
+                        <li><a style="font-weight: 500;" href="/cart"><img src="/images/resources/icon-4.png"
+                                    alt=""></a>
                         </li>
                     </ul>
                 </div>
@@ -171,9 +265,9 @@
             <a href="#" class="position-absolute res-menu-close" onclick="hideMenu()">
                 <i class="fa-solid fa-xmark"></i></a>
             <ul class="mobile-res list-unstyled mb-0">
-               <li><a href="/">Home</a></li>
-                        <li><a href="/shop">Shop </a>
-                        </li>
+                <li><a href="/">Home</a></li>
+                <li><a href="/shop">Shop </a>
+                </li>
             </ul>
         </div>
     </div>
@@ -239,9 +333,13 @@
 
 
                                 </ul>
-
-                                <div class="big-img" style="margin-left: 15%;">
-                                    <img id="mainImage" src="{{product.image.[0]}}" style="width: 50%;">
+                                <div class="big-img">
+                                    <img id="mainImage" src="{{product.image.[0]}}" alt="Product Image">
+                                    <div class="zoom-lens" id="zoomLens"></div>
+                                    <div class="zoom-result">
+                                        <img id="zoomedImage" src="{{product.image.[0]}}"
+                                            alt="Zoomed Image">
+                                    </div>
                                 </div>
 
                                 <!--product-detail-imgs-->
@@ -310,20 +408,20 @@
 
                                         <!--product-quanty-->
                                     </div>
-                                    <div  style="display: flex;flex-direction: column;">
-                                    
-                                     <button class="theme-btn bg-color1 btn btn-success"
-                                        onclick="addToCart(event, '{{product._id}}')">Add to Cart
+                                    <div style="display: flex;flex-direction: column;">
 
-                                    </button>
-                                    <button class="theme-btn bg-color1 btn btn-warning mt-3"
-                                       onclick="addTowishlist(event, '{{product._id}}')">Add to Wishlist
+                                        <button class="theme-btn bg-color1 btn btn-success"
+                                            onclick="addToCart(event, '{{product._id}}')">Add to Cart
 
-                                    </button>
+                                        </button>
+                                        <button class="theme-btn bg-color1 btn btn-warning mt-3"
+                                            onclick="addTowishlist(event, '{{product._id}}')">Add to Wishlist
+
+                                        </button>
                                     </div>
                                     <!--product-bottom-->
                                 </div>
-                               
+
 
 
                                 <!--porduct-detail-info-->
@@ -449,7 +547,11 @@
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="widget widget-about">
                             <h1 style="color: white;">Elegance</h1>
-                            <p class="ft-info">Discover style and comfort at Elegance, your go-to apparel store for trendy and timeless pieces. From chic everyday wear to elegant evening outfits, we offer a curated selection for every occasion. Experience quality craftsmanship, sustainable fabrics, and personalized service. Elevate your wardrobe with Elegance—where fashion meets function.</p>
+                            <p class="ft-info">Discover style and comfort at Elegance, your go-to apparel store for
+                                trendy and timeless pieces. From chic everyday wear to elegant evening outfits, we offer
+                                a curated selection for every occasion. Experience quality craftsmanship, sustainable
+                                fabrics, and personalized service. Elevate your wardrobe with Elegance—where fashion
+                                meets function.</p>
                             <div class="widget-info">
                                 <div class="row">
                                     <div class="col-sm-6 col-md-4">
@@ -472,8 +574,8 @@
                             <ul class="widget-list list-unstyled">
                                 <li>
                                     <a title="Home" href="/" itemprop="url">
-                            <span>Home</span>
-                        </a>
+                                        <span>Home</span>
+                                    </a>
                                 </li>
                                 <li>
                                     <a href="/shop">Shop </a>
@@ -489,9 +591,9 @@
                                 </li>
                             </ul>
                         </div>
-                        
+
                     </div>
-                    
+
                 </div>
                 <div class="footer-bottom">
                     <div class="row justify-content-between">
@@ -807,46 +909,52 @@
         });
     </script>
     <script>
-        function fetchReviews() {
-            fetch(`/reviews?productId={{product._id}}`) // Replace with the actual product ID
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const reviewsContainer = document.getElementById('reviews-container');
-                        reviewsContainer.innerHTML = ''; // Clear the container
-                        data.reviews.forEach(review => {
-                            const reviewElement = document.createElement('div');
-                            reviewElement.className = 'review';
-                            reviewElement.innerHTML = `
-                                <div class="stars">${generateStars(review.rating)}</div>
-                                <p>${review.comment}</p>
-                                <small>Reviewed by: ${review.userId.fname} ${review.userId.lname}</small>
-                            `;
-                            reviewsContainer.appendChild(reviewElement);
-                        });
-                    } else {
-                        console.error('Error fetching reviews:', data.message);
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const mainImage = document.getElementById('mainImage');
+            const zoomLens = document.getElementById('zoomLens');
+            const zoomResult = document.querySelector('.zoom-result');
+            const zoomedImage = document.getElementById('zoomedImage');
 
-        function generateStars(rating) {
-            let starsHtml = '';
-            for (let i = 1; i <= 5; i++) {
-                if (i <= rating) {
-                    starsHtml += '<i class="fas fa-star"></i>';
-                } else {
-                    starsHtml += '<i class="far fa-star"></i>';
-                }
+            mainImage.addEventListener('mousemove', function (event) {
+                zoomResult.style.visibility = 'visible';
+                zoomLens.style.visibility = 'visible';
+                moveLens(event);
+            });
+
+            mainImage.addEventListener('mouseleave', function () {
+                zoomResult.style.visibility = 'hidden';
+                zoomLens.style.visibility = 'hidden';
+            });
+
+            function moveLens(e) {
+                const pos = getCursorPos(e);
+                const lensHalfWidth = zoomLens.offsetWidth / 2;
+                const lensHalfHeight = zoomLens.offsetHeight / 2;
+                let x = pos.x - lensHalfWidth;
+                let y = pos.y - lensHalfHeight;
+
+                if (x > mainImage.width - zoomLens.offsetWidth) { x = mainImage.width - zoomLens.offsetWidth; }
+                if (x < 0) { x = 0; }
+                if (y > mainImage.height - zoomLens.offsetHeight) { y = mainImage.height - zoomLens.offsetHeight; }
+                if (y < 0) { y = 0; }
+
+                zoomLens.style.left = x + 'px';
+                zoomLens.style.top = y + 'px';
+
+                const zoomFactor = 2; // Adjust the zoom factor
+                zoomedImage.style.width = mainImage.width * zoomFactor + 'px';
+                zoomedImage.style.height = mainImage.height * zoomFactor + 'px';
+                zoomedImage.style.left = -(x * zoomFactor - lensHalfWidth * zoomFactor) + 'px';
+                zoomedImage.style.top = -(y * zoomFactor - lensHalfHeight * zoomFactor) + 'px';
             }
-            return starsHtml;
-        }
 
-        // Fetch reviews on page load
-        fetchReviews();
+            function getCursorPos(e) {
+                const a = mainImage.getBoundingClientRect();
+                const x = e.pageX - a.left - window.pageXOffset;
+                const y = e.pageY - a.top - window.pageYOffset;
+                return { x: x, y: y };
+            }
+        });
     </script>
 </body>
 

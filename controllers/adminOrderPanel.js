@@ -3,12 +3,17 @@ const Wallet = require("../model/walletModel");
 
 const adminOrder = async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const totalorders = await Order.countDocuments({});
+    const totalPages = Math.ceil(totalorders / limit);
     const order = await Order.find({})
       .populate("items.productId")
       .populate("userId")
-      .sort({ orderId: -1 });
-    console.log(order);
-    res.render("admin/orders", { order });
+      .sort({ orderId: -1 }).skip((page - 1) * limit)
+      .limit(limit);;
+    res.render("admin/orders", { order,currentPage: page,
+      totalPages });
   } catch {
     console.log(error.message);
     res.redirect("/admin/error");

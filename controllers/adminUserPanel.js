@@ -13,8 +13,17 @@ cloudinary.config({
 
 const adminUser = async (req, res) => {
   try {
-    const users = await User.find({});
-    res.render("admin/User", { users });
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+
+    const totalusers = await User.countDocuments({});
+    const totalPages = Math.ceil(totalusers / limit);
+
+    const users = await User.find({})
+      .skip((page - 1) * limit)
+      .limit(limit);
+    res.render("admin/User", { users,currentPage: page,
+      totalPages });
   } catch {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -89,7 +98,7 @@ const updateUser = async (req, res) => {
       is_admin: 0,
     });
     const userData = await user.save();
-    res.json({ success: true });
+    res.redirect("/admin/User");
   } catch (error) {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -114,7 +123,7 @@ const unBlockUser = async (req, res) => {
     let proId = req.query.id;
     const updatedInfo = await User.updateOne(
       { _id: proId },
-      { $set: { is_blocked: 0 } }
+      { $set: { is_blocked: 0 } } 
     );
     res.redirect("/admin/User");
   } catch (error) {
@@ -134,13 +143,13 @@ const editUser = async (req, res) => {
 };
 
 const updatingUser = async (req, res) => {
-  const userId = req.body.userId;
-  const { username, email, fname, lname, password, mobileNumber } = req.body;
+  
+  const { userId,username, email, fname, lname, password, mobileNumber } = req.body;
   await User.updateOne(
     { _id: userId },
     { $set: { username, email, fname, lname, password, mobileNumber } }
   );
-  res.json({ success: true });
+  res.redirect("/admin/User");
 };
 module.exports = {
   adminUser,

@@ -1,9 +1,9 @@
 const Product = require("../model/productModel");
 const Category = require("../model/categoryModel");
-const fs=require('fs')
-const path = require('path');
-const cloudinary = require('cloudinary').v2;
-require('dotenv').config();
+const fs = require("fs");
+const path = require("path");
+const cloudinary = require("cloudinary").v2;
+require("dotenv").config();
 
 cloudinary.config({
   cloud_name: process.env.CLOUDNAME,
@@ -11,12 +11,22 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARYSECRET,
 });
 
-
-
 const adminProduct = async (req, res) => {
   try {
-    const products = await Product.find({});
-    res.render("admin/product", { products });
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+
+    const totalProducts = await Product.countDocuments({});
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    const products = await Product.find({})
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+
+    res.render("admin/product", { products,
+      currentPage: page,
+      totalPages });
   } catch {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -73,9 +83,9 @@ const updateProduct = async (req, res) => {
       DiscountedPrice = req.body.price * (1 - actualDiscount / 100);
       const files = req.files;
       console.log(files);
-      
+
       const uploadedImages = [];
-      
+
       try {
         for (const file of files) {
           const result = await cloudinary.uploader.upload(file.path);
@@ -85,7 +95,7 @@ const updateProduct = async (req, res) => {
       } catch (error) {
         console.error("Error uploading images: ", error);
       }
-    
+
       const product = new Product({
         pname: req.body.pname,
         image: uploadedImages,
@@ -99,12 +109,7 @@ const updateProduct = async (req, res) => {
       });
       console.log(req.body);
       const productData = await product.save();
-      if (productData) {
-        const products = await Product.find({});
-        res.render("admin/product", { products });
-      } else {
-        res.redirect("admin/addProduct");
-      }
+      res.redirect("/admin/product");
     }
   } catch (error) {
     console.log(error.message);
@@ -155,9 +160,34 @@ const updatingProduct = async (req, res) => {
     const proId = req.query.id;
     const { pname, description, category, price, discount, purchase } =
       req.body;
+      const products = await Product.findOne({ pname });
+      const categories = await Category.findOne({ cname:category });
+      let actualDiscount;
+      let productDiscount = discount;
+      let categoryDiscount = categories.discount;
+      if (productDiscount >= categoryDiscount) {
+        actualDiscount = productDiscount;
+      } else {
+        actualDiscount = categoryDiscount;
+      }
+      const DiscountedPrice = req.body.price * (1 - actualDiscount / 100);
+      const files = req.files;
+      console.log(files);
+
+      const uploadedImages = [];
+
+      try {
+        for (const file of files) {
+          const result = await cloudinary.uploader.upload(file.path);
+          uploadedImages.push(result.url);
+        }
+        console.log(uploadedImages);
+      } catch (error) {
+        console.error("Error uploading images: ", error);
+      }
     await Product.updateOne(
       { _id: proId },
-      { $set: { pname, description, price, category, discount, purchase } }
+      { $set: { pname, description, price, category, discount, purchase,image: uploadedImages,actualDiscount: actualDiscount,discountedPrice: DiscountedPrice } }
     );
     res.redirect("/admin/product");
   } catch (error) {
