@@ -357,27 +357,8 @@
             }
 
             if (isValid) {
-                const formData = new FormData(this);
-                formData.append('userId', '{{user._id}}');
-                try {
-                    const response = await fetch("/admin/edit-user", {
-                        method: "POST",
-                        body: formData
-                    });
-
-                    const result = await response.json();
-
-                    if (result.success) {
-                        window.location.href = "/admin/user"; // Redirect on success
-                    } else {
-                        // Handle specific error cases here if necessary
-                        console.error("Error editing user:", result.message);
-                    }
-                } catch (error) {
-                    console.error("Error editing user:", error);
-                }
+                form.submit();
             } else {
-                // Handle the case where some fields are not valid
                 console.error("Form fields are not valid.");
             }
         });
