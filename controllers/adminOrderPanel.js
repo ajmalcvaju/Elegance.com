@@ -146,7 +146,7 @@ const cancelItem=async(req,res)=>{
 }
 
 const error = async (req, res) => {
-  res.redirect("/admin/error");
+  res.render("admin/errorPage");
 };
 
 module.exports = { adminOrder, manageOrder, updateOrder, orderDetails,returnItem,cancelItem, error };
