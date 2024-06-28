@@ -199,15 +199,15 @@ const loadRegister = async (req, res) => {
 };
 const insertUser = async (req, res) => {
   try {
-    const { username, email, mobileNumber, password,referralCode,confirmPassword } = req.body;
+    const { username, email,fname,lname, mobileNumber, password,referralCode,confirmPassword } = req.body;
     const result = await cloudinary.uploader.upload(req.file.path);
     const user = new User({
-      username: req.body.username,
-      email: req.body.email,
-      fname: req.body.fname,
-      lname: req.body.lname,
-      mobileNumber: req.body.mobileNumber,
-      password: req.body.password,
+      username: username,
+      email: email,
+      fname: fname,
+      lname:lname,
+      mobileNumber: mobileNumber,
+      password: password,
       image: result.url,
       is_admin: 0,
     });
@@ -237,7 +237,8 @@ const insertUser = async (req, res) => {
       expiresAt: Date.now() + 300000,
     });
     const otpData = await otp.save();
-    sendVerifyMail(req.body.fname, req.body.lname, req.body.email, OTP);
+
+    sendVerifyMail(fname, lname, email, OTP);
     res.json({ success: true, userId: userData._id });
   } catch (error) {
     console.log(error.message);
@@ -692,10 +693,10 @@ const checkoutAddAddress = async (req, res) => {
 const rating = async (req, res) => {
   try {
     if (req.session.email) {
+      const {productId,comment,rating}=req.body
       const email = req.session.email;
       const user = await User.findOne({ email });
       const userId = user._id;
-      const productId = req.body.productId;
       const existingReview = await Review.findOne({ userId, productId });
       if (existingReview) {
         return res.json({
@@ -704,10 +705,10 @@ const rating = async (req, res) => {
         });
       }
       const newRating = new Review({
-        rating: req.body.rating,
+        rating: rating,
         userId: userId,
         productId: productId,
-        comment: req.body.comment,
+        comment: comment,
       });
       newRating.save();
       res.json({ success: true });

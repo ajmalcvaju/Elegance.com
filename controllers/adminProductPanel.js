@@ -64,23 +64,23 @@ const addProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    const pname = req.body.pname;
+    const{pname,description,price,discount,purchase,category}=req.body
     const products = await Product.findOne({ pname });
     if (products) {
       const categories = await Category.find({});
       res.render("admin/addProduct", { exist: true, categories });
     } else {
-      let cname = req.body.category;
+      let cname = category;
       const categories = await Category.findOne({ cname });
       let actualDiscount;
-      let productDiscount = req.body.discount;
+      let productDiscount = discount;
       let categoryDiscount = categories.discount;
       if (productDiscount >= categoryDiscount) {
         actualDiscount = productDiscount;
       } else {
         actualDiscount = categoryDiscount;
       }
-      DiscountedPrice = req.body.price * (1 - actualDiscount / 100);
+      DiscountedPrice = price * (1 - actualDiscount / 100);
       const files = req.files;
       console.log(files);
 
@@ -95,16 +95,16 @@ const updateProduct = async (req, res) => {
       } catch (error) {
         console.error("Error uploading images: ", error);
       }
-
+                      
       const product = new Product({
-        pname: req.body.pname,
+        pname: pname,
         image: uploadedImages,
-        description: req.body.description,
-        price: req.body.price,
-        discount: req.body.discount,
+        description: description,
+        price: price,
+        discount: discount,
         actualDiscount: actualDiscount,
-        purchase: req.body.purchase,
-        category: req.body.category,
+        purchase: purchase,
+        category: category,
         discountedPrice: DiscountedPrice,
       });
       console.log(req.body);
@@ -116,12 +116,16 @@ const updateProduct = async (req, res) => {
     res.redirect("/admin/error");
   }
 };
-const deleteUser = async (req, res) => {
+const updateProductStatus = async (req, res) => {
   try {
     let proId = req.query.id;
+    let status = req.query.status; 
+
+    let isDeleted = status === 'delete' ? 1 : 0;
+
     const updatedInfo = await Product.updateOne(
       { _id: proId },
-      { $set: { is_deleted: 1 } }
+      { $set: { is_deleted: isDeleted } }
     );
     res.redirect("/admin/product");
   } catch (error) {
@@ -130,19 +134,6 @@ const deleteUser = async (req, res) => {
   }
 };
 
-const restoreUser = async (req, res) => {
-  try {
-    let proId = req.query.id;
-    const updatedInfo = await Product.updateOne(
-      { _id: proId },
-      { $set: { is_deleted: 0 } }
-    );
-    res.redirect("/admin/product");
-  } catch (error) {
-    console.log(error.message);
-    res.redirect("/admin/error");
-  }
-};
 const editProduct = async (req, res) => {
   try {
     let proId = req.query.id;
@@ -170,7 +161,7 @@ const updatingProduct = async (req, res) => {
       } else {
         actualDiscount = categoryDiscount;
       }
-      const DiscountedPrice = req.body.price * (1 - actualDiscount / 100);
+      const DiscountedPrice = price * (1 - actualDiscount / 100);
       const files = req.files;
       console.log(files);
 
@@ -200,8 +191,7 @@ module.exports = {
   adminProduct,
   addProduct,
   updateProduct,
-  deleteUser,
-  restoreUser,
+  updateProductStatus,
   editProduct,
   updatingProduct,
   ProductExist,

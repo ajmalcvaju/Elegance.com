@@ -31,10 +31,8 @@ const manageOrder = async (req, res) => {
 };
 const updateOrder = async (req, res) => {
   try {
-    const expectedArrival = req.body.expectedArrival;
-    const orderStatus = req.body.orderStatus;
     const orderId = req.query.orderId;
-    console.log(req.body);
+    const {expectedArrival,orderStatus}=req.body;
     const orders = await Order.findOne({ orderId });
     if (
       orders.paymentStatus === "Successfull" &&
@@ -54,7 +52,7 @@ const updateOrder = async (req, res) => {
       );
       const wallet = await Wallet.findOneAndUpdate(
         { userId: orders.userId },
-        { $set: { amount: orders.totalAmountPay } },
+        { $inc: { amount: orders.totalAmountPay } },
         { upsert: true, new: true, setDefaultsOnInsert: true }
       );
     }
@@ -64,7 +62,7 @@ const updateOrder = async (req, res) => {
         $set: {
           status: orderStatus,
           expectedArrival: expectedArrival,
-        },
+        },"items.$[].status": orderStatus
       }
     );
 
@@ -87,8 +85,66 @@ const orderDetails = async (req, res) => {
     res.redirect("/admin/error");
   }
 };
+
+const returnItem=async(req,res)=>{
+  try {
+    console.log(req.body)
+    const {itemId,price}=req.body
+    const orders = await Order.findOne({"items._id": itemId })
+    const totalAmount=orders.totalAmountPay
+    const priceAfterCancellationOrReturn=totalAmount-price
+    const order = await Order.updateOne(
+      {"items._id": itemId },
+      {
+        $set: {
+          "items.$.status": "Return Completed",
+          cancelledOrReturnedProductPrice:price,
+          priceAfterCancellationOrReturn:priceAfterCancellationOrReturn
+        }
+      }
+    );
+    const wallet = await Wallet.findOneAndUpdate(
+      { userId: orders.userId },
+      { $inc: { amount: price } },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+    res.json({success:true})
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/admin/error");
+  }
+}
+const cancelItem=async(req,res)=>{
+  try {
+    console.log(req.body)
+    const {itemId,price}=req.body
+    const orders = await Order.findOne({"items._id": itemId })
+    const totalAmount=orders.totalAmountPay
+    const priceAfterCancellationOrReturn=totalAmount-price
+    const order = await Order.updateOne(
+      {"items._id": itemId },
+      {
+        $set: {
+          "items.$.status": "Cancellation Completed",
+          cancelledOrReturnedProductPrice:price,
+          priceAfterCancellationOrReturn:priceAfterCancellationOrReturn
+        }
+      }
+    );
+    const wallet = await Wallet.findOneAndUpdate(
+      { userId: orders.userId },
+      { $inc: { amount: price } },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+    res.json({success:true})
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/admin/error");
+  }
+}
+
 const error = async (req, res) => {
-  res.redirect("/admin/error");
+  res.render("admin/errorPage");
 };
 
-module.exports = { adminOrder, manageOrder, updateOrder, orderDetails, error };
+module.exports = { adminOrder, manageOrder, updateOrder, orderDetails,returnItem,cancelItem, error };

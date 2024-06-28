@@ -95,7 +95,7 @@
                             <tbody>
                                 {{#each order.items}}
                                 <tr>
-                                    <td>{{this.productId.pname}}</td>
+                                    <td>{{this.productId.pname}}  {{#if (eq this.status "Cancellation Completed")}}(Cancelled){{else}}{{#if (eq this.status "Return Completed")}}(Returned){{/if}}{{/if}}</td>
                                     <td>{{this.productId.category}}</td>
                                     <td class="text-center">₹{{this.productId.price}}</td>
                                     <td class="text-center">{{this.quantity}}</td>
@@ -143,6 +143,20 @@
                                     <td ></td>
                                     <td class="thick-line text-center"><strong>Total Amount has to Pay</strong></td>
                                     <td class="thick-line text-right">₹{{order.totalAmountPay}}</td>
+                                </tr>
+                                <tr>
+                                    <td ></td>
+                                    <td ></td>
+                                    <td ></td>
+                                    <td class="thick-line text-center"><strong>Returned/Cancelled Product Price</strong></td>
+                                    <td class="thick-line text-right">₹{{order.cancelledOrReturnedProductPrice}}</td>
+                                </tr>
+                                <tr>
+                                    <td ></td>
+                                    <td ></td>
+                                    <td ></td>
+                                    <td class="thick-line text-center"><strong>Amount has to pay exclude Returned/Cancelled Product</strong></td>
+                                    <td class="thick-line text-right">₹{{order.priceAfterCancellationOrReturn}}</td>
                                 </tr>
                                 <tr>
                                     <td ></td>

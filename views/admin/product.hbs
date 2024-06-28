@@ -207,7 +207,7 @@ function deleteProduct(id, pname) {
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = `/admin/delete-product?id=${id}`;
+            window.location.href = `/admin/delete-product?id=${id}&status=delete`;
         }
     });
 }

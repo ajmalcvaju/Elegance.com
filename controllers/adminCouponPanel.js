@@ -28,7 +28,6 @@ const editCoupon = async (req, res) => {
 const CouponExist = async (req, res) => {
   try {
     const { couponCode, couponId } = req.body;
-    console.log(req.body);
     if (couponId) {
       const coupon = await Coupon.findOne({ _id: couponId });
       if (couponCode != coupon.couponCode) {

@@ -51,8 +51,7 @@ const addUser = async (req, res) => {
 
 const UserExist = async (req, res) => {
   try {
-    const userId = req.body.userId;
-    const { username, email, mobileNumber } = req.body;
+    const { username,userId, email, mobileNumber } = req.body;
     if (userId) {
       const users = await User.findOne({ _id: userId });
       if (username && username != users.username) {
@@ -86,14 +85,14 @@ const UserExist = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const result = await cloudinary.uploader.upload(req.file.path);
-    const { username, email, mobileNumber, password, confirmPassword }=req.body;
+    const { username, email, mobileNumber,fname,lname, password, confirmPassword }=req.body;
     const user = new User({
-      username: req.body.username,
-      email: req.body.email,
-      fname: req.body.fname,
-      lname: req.body.lname,
-      mobileNumber: req.body.mobileNumber,
-      password: req.body.password,
+      username: username,
+      email: email,
+      fname: fname,
+      lname: lname,
+      mobileNumber:  mobileNumber,
+      password: password,
       image: result.url,
       is_admin: 0,
     });
@@ -104,26 +103,15 @@ const updateUser = async (req, res) => {
     res.redirect("/admin/error");
   }
 };
-const blockUser = async (req, res) => {
+const updateUserBlockStatus = async (req, res) => {
   try {
-    let proId = req.query.id;
-    const updatedInfo = await User.updateOne(
-      { _id: proId },
-      { $set: { is_blocked: 1 } }
-    );
-    res.redirect("/admin/User");
-  } catch (error) {
-    console.log(error.message);
-    res.redirect("/admin/error");
-  }
-};
+    let userId = req.query.id;
+    let status = req.query.status; 
+    let isBlocked = status === 'block' ? 1 : 0;
 
-const unBlockUser = async (req, res) => {
-  try {
-    let proId = req.query.id;
     const updatedInfo = await User.updateOne(
-      { _id: proId },
-      { $set: { is_blocked: 0 } } 
+      { _id: userId },
+      { $set: { is_blocked: isBlocked } }
     );
     res.redirect("/admin/User");
   } catch (error) {
@@ -155,8 +143,7 @@ module.exports = {
   adminUser,
   adminCategory,
   addUser,
-  blockUser,
-  unBlockUser,
+  updateUserBlockStatus,
   updateUser,
   editUser,
   updatingUser,
