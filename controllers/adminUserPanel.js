@@ -103,26 +103,15 @@ const updateUser = async (req, res) => {
     res.redirect("/admin/error");
   }
 };
-const blockUser = async (req, res) => {
+const updateUserBlockStatus = async (req, res) => {
   try {
-    let proId = req.query.id;
-    const updatedInfo = await User.updateOne(
-      { _id: proId },
-      { $set: { is_blocked: 1 } }
-    );
-    res.redirect("/admin/User");
-  } catch (error) {
-    console.log(error.message);
-    res.redirect("/admin/error");
-  }
-};
+    let userId = req.query.id;
+    let status = req.query.status; 
+    let isBlocked = status === 'block' ? 1 : 0;
 
-const unBlockUser = async (req, res) => {
-  try {
-    let proId = req.query.id;
     const updatedInfo = await User.updateOne(
-      { _id: proId },
-      { $set: { is_blocked: 0 } } 
+      { _id: userId },
+      { $set: { is_blocked: isBlocked } }
     );
     res.redirect("/admin/User");
   } catch (error) {
@@ -154,8 +143,7 @@ module.exports = {
   adminUser,
   adminCategory,
   addUser,
-  blockUser,
-  unBlockUser,
+  updateUserBlockStatus,
   updateUser,
   editUser,
   updatingUser,

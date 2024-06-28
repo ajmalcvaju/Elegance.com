@@ -75,26 +75,15 @@ const updateCategory = async (req, res) => {
     res.redirect("/admin/error");
   }
 };
-const deleteCategory = async (req, res) => {
+const updateCategoryStatus = async (req, res) => {
   try {
-    let proId = req.query.id;
-    const updatedInfo = await Category.updateOne(
-      { _id: proId },
-      { $set: { is_deleted: 1 } }
-    );
-    res.redirect("/admin/category");
-  } catch (error) {
-    console.log(error.message);
-    res.redirect("/admin/error");
-  }
-};
+    let catId = req.query.id;
+    let status = req.query.status; 
+    let isDeleted = status === 'delete' ? 1 : 0;
 
-const restoreCategory = async (req, res) => {
-  try {
-    let proId = req.query.id;
     const updatedInfo = await Category.updateOne(
-      { _id: proId },
-      { $set: { is_deleted: 0 } }
+      { _id: catId },
+      { $set: { is_deleted: isDeleted } }
     );
     res.redirect("/admin/category");
   } catch (error) {
@@ -134,8 +123,7 @@ module.exports = {
   adminCategory,
   updateCategory,
   addCategory,
-  deleteCategory,
-  restoreCategory,
+  updateCategoryStatus,
   editCategory,
   updatingCategory,
   CategoryExist,

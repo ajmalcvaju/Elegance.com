@@ -116,12 +116,16 @@ const updateProduct = async (req, res) => {
     res.redirect("/admin/error");
   }
 };
-const deleteUser = async (req, res) => {
+const updateProductStatus = async (req, res) => {
   try {
     let proId = req.query.id;
+    let status = req.query.status; 
+
+    let isDeleted = status === 'delete' ? 1 : 0;
+
     const updatedInfo = await Product.updateOne(
       { _id: proId },
-      { $set: { is_deleted: 1 } }
+      { $set: { is_deleted: isDeleted } }
     );
     res.redirect("/admin/product");
   } catch (error) {
@@ -130,19 +134,6 @@ const deleteUser = async (req, res) => {
   }
 };
 
-const restoreUser = async (req, res) => {
-  try {
-    let proId = req.query.id;
-    const updatedInfo = await Product.updateOne(
-      { _id: proId },
-      { $set: { is_deleted: 0 } }
-    );
-    res.redirect("/admin/product");
-  } catch (error) {
-    console.log(error.message);
-    res.redirect("/admin/error");
-  }
-};
 const editProduct = async (req, res) => {
   try {
     let proId = req.query.id;
@@ -200,8 +191,7 @@ module.exports = {
   adminProduct,
   addProduct,
   updateProduct,
-  deleteUser,
-  restoreUser,
+  updateProductStatus,
   editProduct,
   updatingProduct,
   ProductExist,
