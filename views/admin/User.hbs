@@ -209,7 +209,7 @@
                 confirmButtonText: 'Yes, block it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = `/admin/block-user?id=${id}`;
+                    window.location.href = `/admin/block-user?id=${id}&status=block`;
                 }
             });
         }
