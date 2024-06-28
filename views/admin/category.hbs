@@ -197,7 +197,7 @@ function confirmDelete(id, cname) {
     }).then((result) => {
         if (result.isConfirmed) {
             // If confirmed, redirect to the delete URL
-            window.location.href = `/admin/delete-category?id=${id}`;
+            window.location.href = `/admin/delete-category?id=${id}&status=delete`;
         }
     });
 }
