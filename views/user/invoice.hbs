@@ -95,7 +95,7 @@
                             <tbody>
                                 {{#each order.items}}
                                 <tr>
-                                    <td>{{this.productId.pname}}</td>
+                                    <td>{{this.productId.pname}}  {{#if (eq this.status "Cancellation Completed")}}(Cancelled){{else}}{{#if (eq this.status "Return Completed")}}(Returned){{/if}}{{/if}}</td>
                                     <td>{{this.productId.category}}</td>
                                     <td class="text-center">₹{{this.productId.price}}</td>
                                     <td class="text-center">{{this.quantity}}</td>
