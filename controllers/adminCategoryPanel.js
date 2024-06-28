@@ -55,16 +55,16 @@ const addCategory = async (req, res) => {
 };
 const updateCategory = async (req, res) => {
   try {
-    const cname = req.body.cname;
+    const {cname,discount,Type} = req.body;
     const category1 = await Category.find({ cname });
     if (category1[0]) {
       res.render("admin/addCategory", { exist: true });
     } else {
       const result = await cloudinary.uploader.upload(req.file.path);
       const category = new Category({
-        cname: req.body.cname,
-        discount: req.body.discount,
-        Type: req.body.Type,
+        cname: cname,
+        discount: discount,
+        Type: Type,
         image: result.url,
       });
       const categoryData = await category.save();

@@ -31,10 +31,8 @@ const manageOrder = async (req, res) => {
 };
 const updateOrder = async (req, res) => {
   try {
-    const expectedArrival = req.body.expectedArrival;
-    const orderStatus = req.body.orderStatus;
     const orderId = req.query.orderId;
-    console.log(req.body);
+    const {expectedArrival,orderStatus}=req.body;
     const orders = await Order.findOne({ orderId });
     if (
       orders.paymentStatus === "Successfull" &&

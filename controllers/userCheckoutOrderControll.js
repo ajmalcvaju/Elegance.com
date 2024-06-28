@@ -59,8 +59,7 @@ const checkoutEditAddress = async (req, res) => {
 };
 const orderCancell = async (req, res) => {
   try {
-    const orderId = req.body.orderId;
-    const reason = req.body.reason;
+    const {orderId,reason}=req.body
     const order = await Order.updateOne(
       { _id: orderId },
       { $set: { status: "Cancelation Pending", reasonForCancelation: reason } }
@@ -73,8 +72,7 @@ const orderCancell = async (req, res) => {
 };
 const returnOrder = async (req, res) => {
   try {
-    const orderId = req.body.orderId;
-    const reason = req.body.reason;
+    const {orderId,reason}=req.body
     const order = await Order.updateOne(
       { _id: orderId },
       { $set: { status: "Return Pending", reasonForReturn: reason } }

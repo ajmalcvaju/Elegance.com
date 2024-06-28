@@ -51,8 +51,7 @@ const addUser = async (req, res) => {
 
 const UserExist = async (req, res) => {
   try {
-    const userId = req.body.userId;
-    const { username, email, mobileNumber } = req.body;
+    const { username,userId, email, mobileNumber } = req.body;
     if (userId) {
       const users = await User.findOne({ _id: userId });
       if (username && username != users.username) {
@@ -86,14 +85,14 @@ const UserExist = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const result = await cloudinary.uploader.upload(req.file.path);
-    const { username, email, mobileNumber, password, confirmPassword }=req.body;
+    const { username, email, mobileNumber,fname,lname, password, confirmPassword }=req.body;
     const user = new User({
-      username: req.body.username,
-      email: req.body.email,
-      fname: req.body.fname,
-      lname: req.body.lname,
-      mobileNumber: req.body.mobileNumber,
-      password: req.body.password,
+      username: username,
+      email: email,
+      fname: fname,
+      lname: lname,
+      mobileNumber:  mobileNumber,
+      password: password,
       image: result.url,
       is_admin: 0,
     });
