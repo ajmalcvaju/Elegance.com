@@ -20,6 +20,29 @@ const checkSession3 = (req, res, next) => {
   next();
 };
 
+const notlogged = (req, res, next) => {
+  try {
+    if (req.session.email) {
+      res.redirect('/admin/dashboard')
+    } else {
+      next()
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+const loggedIn = (req, res, next) => {
+  try {
+    if (req.session.email) {
+      next()
+    } else {
+      res.redirect('/admin/adminLogin')
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/productImages/");
@@ -67,4 +90,8 @@ module.exports = {
   uploadNone,
   userImage,
   categoryImage,
+  notlogged,
+  loggedIn,
+  notlogged,
+  loggedIn
 };
