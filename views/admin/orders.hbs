@@ -119,7 +119,11 @@
                         <td>{{this.date}}</td>
                         <td>{{this.productQuantity}}</td>
                         <td>{{this.userId.fname}} {{this.userId.lname}}</td>
-                        <td>{{this.totalAmountPay}}</td>
+                        {{#if this.priceAfterCoupon}}
+                                    <td>{{this.priceAfterCoupon}}</td>
+                                    {{else}}
+                                    <td>{{this.totalAmountPay}}</td>
+                                    {{/if}}
                         <td>{{this.status}}</td>
                         <td>{{this.paymentStatus}}</td>
                         <td><a href="/admin/orderDetails?orderId={{this.orderId}}"

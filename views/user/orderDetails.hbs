@@ -113,7 +113,11 @@
                 <div style="overflow: hidden;">
                     <h6 style="float: left;">Tota Amount Has to Pay:</h6>
                     <div style="float: right;">
+                         {{#if order.priceAfterCoupon}}
+                        <h6 style="display: inline;"><b>{{order.priceAfterCoupon}} ₹</b></h6>
+                        {{else}}
                         <h6 style="display: inline;"><b>{{order.totalAmountPay}} ₹</b></h6>
+                        {{/if}}
                     </div>
                 </div>
                 {{#if order.cancelledOrReturnedProductPrice}}

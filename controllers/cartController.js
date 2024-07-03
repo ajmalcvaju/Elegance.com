@@ -229,7 +229,7 @@ const checkout = async (req, res) => {
     if (req.session.discount) {
       console.log(req.session.discount);
       const discount = req.session.discount;
-      const totalPrice = carts.totalPrice;
+      const totalPrice = carts.totalAmountPay;
       totalPriceAfterCoupon = Math.round(totalPrice * (1 - discount / 100));
       couponDiscount = Math.round((totalPrice * discount) / 100);
       console.log(couponDiscount);
