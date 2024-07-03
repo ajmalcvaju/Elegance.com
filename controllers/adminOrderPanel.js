@@ -55,6 +55,15 @@ const updateOrder = async (req, res) => {
         { $inc: { amount: orders.totalAmountPay } },
         { upsert: true, new: true, setDefaultsOnInsert: true }
       );
+      const transaction=orders.totalAmountPay
+      const updatingWallet = await Wallet.findOne({ userId: orders.userId });
+      const newTransaction = {
+      amount: transaction,
+      date: new Date(),
+      reasson:"Credited due to cancellation/Return of order"
+    };
+    updatingWallet.transactions.push(newTransaction);
+    await updatingWallet.save();
     }
     const order = await Order.updateOne(
       { orderId: orderId },
@@ -108,6 +117,15 @@ const returnItem=async(req,res)=>{
       { $inc: { amount: price } },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
+    const transaction=price
+      const updatingWallet = await Wallet.findOne({ userId: orders.userId });
+      const newTransaction = {
+      amount: transaction,
+      date: new Date(),
+      reasson:"Credited due to cancellation/return of product"
+    };
+    updatingWallet.transactions.push(newTransaction);
+    await updatingWallet.save();
     res.json({success:true})
   } catch (error) {
     console.log(error.message);
@@ -136,6 +154,15 @@ const cancelItem=async(req,res)=>{
       { $inc: { amount: price } },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
+    const transaction=price
+      const updatingWallet = await Wallet.findOne({ userId: orders.userId });
+      const newTransaction = {
+      amount: transaction,
+      date: new Date(),
+      reasson:"Credited due to cancellation/return of product"
+    };
+    updatingWallet.transactions.push(newTransaction);
+    await updatingWallet.save();
     res.json({success:true})
   } catch (error) {
     console.log(error.message);

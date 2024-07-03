@@ -1,5 +1,7 @@
 const User = require("../model/userModel");
 const Address = require("../model/addressModel");
+const Wallet = require("../model/walletModel");
+
 const openProfile = async (req, res) => {
   try {
     if (req.session && req.session.email) {
@@ -7,7 +9,8 @@ const openProfile = async (req, res) => {
       const user = await User.findOne({ email });
       const userId = user._id;
       const addresses = await Address.find({ userId });
-      res.render("user/my-profile", { user, addresses });
+      const wallet = await Wallet.findOne({ userId });
+      res.render("user/my-profile", { user, addresses,wallet });
     } else {
       res.redirect("/login");
     }

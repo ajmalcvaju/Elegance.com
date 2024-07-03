@@ -445,6 +445,15 @@ const placeOrder = async (req, res) => {
     }
     await order.save();
     await Cart.deleteOne({ userId });
+    const transaction=req.session.wallet
+    const updatingWallet = await Wallet.findOne({ userId });
+    const newTransaction = {
+      amount: -transaction,
+      date: new Date(),
+      reasson:"Debited due to using for order"
+    };
+    updatingWallet.transactions.push(newTransaction);
+    await updatingWallet.save();
     req.session.discount = null;
     req.session.wallet = null;
     req.session.save((err) => {
