@@ -1,7 +1,7 @@
 const User = require("../model/userModel");
 const Address = require("../model/addressModel");
 const Wallet = require("../model/walletModel");
-
+ 
 const openProfile = async (req, res) => {
   try {
     if (req.session && req.session.email) {
