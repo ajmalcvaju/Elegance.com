@@ -446,6 +446,7 @@ const placeOrder = async (req, res) => {
     await order.save();
     await Cart.deleteOne({ userId });
     const transaction=req.session.wallet
+    if(transaction){
     const updatingWallet = await Wallet.findOne({ userId });
     const newTransaction = {
       amount: -transaction,
@@ -454,6 +455,7 @@ const placeOrder = async (req, res) => {
     };
     updatingWallet.transactions.push(newTransaction);
     await updatingWallet.save();
+  }
     req.session.discount = null;
     req.session.wallet = null;
     req.session.save((err) => {
