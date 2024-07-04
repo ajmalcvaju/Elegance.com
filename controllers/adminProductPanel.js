@@ -139,6 +139,7 @@ const editProduct = async (req, res) => {
     let proId = req.query.id;
     req.session.proId=proId;
     const product = await Product.findOne({ _id: proId });
+    req.session.uploadedImages=product.image;
     const categories = await Category.find({});
     res.render("admin/editProduct", { product, categories });
   } catch (error) {
@@ -166,7 +167,7 @@ const updatingProduct = async (req, res) => {
       const files = req.files;
       console.log(files);
 
-      const uploadedImages = [];
+      let uploadedImages = [];
 
       try {
         for (const file of files) {
@@ -174,6 +175,7 @@ const updatingProduct = async (req, res) => {
           uploadedImages.push(result.url);
         }
         console.log(uploadedImages);
+        uploadedImages=req.session.uploadedImages.concat(uploadedImages)
       } catch (error) {
         console.error("Error uploading images: ", error);
       }
