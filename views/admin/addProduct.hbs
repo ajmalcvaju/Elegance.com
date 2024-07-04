@@ -267,6 +267,7 @@
         if (data.exists) {
           pnameError.textContent = "Product name already exists.";
           document.getElementById("pname").classList.add('is-invalid');
+          event.preventDefault()
         } else {
           pnameError.textContent = "";
           document.getElementById("pname").classList.remove('is-invalid');

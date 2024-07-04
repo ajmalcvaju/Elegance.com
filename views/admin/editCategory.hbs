@@ -232,6 +232,7 @@
         if (data.exists) {
           cnameError.textContent = "Category name already exists.";
           document.getElementById("cname").classList.add('is-invalid');
+          event.preventDefault()
         } else {
           cnameError.textContent = "";
           document.getElementById("cname").classList.remove('is-invalid');

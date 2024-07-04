@@ -203,6 +203,7 @@
                 if (data.exists) {
                     usernameError.textContent = "Username already exists.";
                     document.getElementById("username").style.border = "1px solid red";
+                    event.preventDefault()
                 } else {
                     usernameError.textContent = "";
                     document.getElementById("username").style.border = "1px solid #ccc";
@@ -237,6 +238,7 @@
                 if (data.exists) {
                     emailInput.style.border = "1px solid red";
                     emailError.textContent = "Email already exists.";
+                    event.preventDefault()
                 } else {
                     emailInput.style.border = "1px solid #ccc";
                     emailError.textContent = "";
@@ -271,6 +273,7 @@
                 if (data.exists) {
                     mobileNumberInput.style.border = "1px solid red";
                     mobileNumberError.textContent = "Mobile number already exists.";
+                    event.preventDefault()
                 } else {
                     mobileNumberInput.style.border = "1px solid #ccc";
                     mobileNumberError.textContent = "";

@@ -224,6 +224,7 @@
             if (data.exists) {
                 couponCodeError.textContent = "Coupon code already exists.";
                 document.getElementById("couponCode").classList.add('is-invalid');
+                event.preventDefault()
             } else {
                 couponCodeError.textContent = "";
                 document.getElementById("couponCode").classList.remove('is-invalid');
