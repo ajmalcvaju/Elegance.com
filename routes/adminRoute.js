@@ -34,6 +34,7 @@ router.get("/delete-category",middleware.loggedIn, adminCategoryPanel.updateCate
 router.get("/restore-category",middleware.loggedIn, adminCategoryPanel.updateCategoryStatus);
 router.get("/edit-user",middleware.loggedIn, adminUserPanel.editUser);
 router.get("/edit-product",middleware.loggedIn, adminProductPanel.editProduct);
+router.get("/deleteImage",middleware.loggedIn,adminProductPanel.deleteProductImage);
 router.get("/edit-category",middleware.loggedIn, adminCategoryPanel.editCategory);
 router.post("/edit-user", middleware.loggedIn,middleware.uploadNone,adminUserPanel.updatingUser);
 router.post("/edit-product", middleware.loggedIn,middleware.productImage, adminProductPanel.updatingProduct);

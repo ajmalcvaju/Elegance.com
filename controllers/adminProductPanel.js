@@ -137,6 +137,7 @@ const updateProductStatus = async (req, res) => {
 const editProduct = async (req, res) => {
   try {
     let proId = req.query.id;
+    req.session.proId=proId;
     const product = await Product.findOne({ _id: proId });
     const categories = await Category.find({});
     res.render("admin/editProduct", { product, categories });
@@ -187,6 +188,22 @@ const updatingProduct = async (req, res) => {
   }
 };
 
+const deleteProductImage = async (req, res) => {
+  try {
+    
+  const index = req.query.index;
+  const proId = req.session.proId;
+  const product = await Product.findOne(
+    { _id: proId })
+    product.image.splice(index,1)
+    await product.save();
+    res.redirect(`/admin/edit-product?id=${proId}`);
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/admin/error");
+  }
+};
+
 module.exports = {
   adminProduct,
   addProduct,
@@ -195,4 +212,5 @@ module.exports = {
   editProduct,
   updatingProduct,
   ProductExist,
+  deleteProductImage
 };

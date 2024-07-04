@@ -187,11 +187,21 @@
     <span id="pnameError" class="error-message"></span>
     
     <label for="">Product Images</label>
-    <input type="file" name="image" id="img" multiple value="{{product.image}}">
+    <div class="mb-3" style="display: flex; flex-wrap: wrap;">
+    {{#each product.image as |image index|}}
+        <div style="display: flex; flex-direction: column; margin-left: 5%; justify-content: center;">
+            <img src="{{this}}" alt="" width="70px">
+            <a href="/admin/deleteImage?index={{index}}" class="btn btn-danger">Delete</a>
+        </div>
+    {{/each}}
+</div>
+     <label class="form-label" for="basic-icon-default-message">Add image</label>
+    <input type="file" name="image" id="img" multiple >
     <span id="imgError" class="error-message"></span>
 
     <button type="button" id="previewBtn" style="margin-top: 5px ; width: 100%;background-color: #ffffff;color: #080710;padding: 6px 0;font-size: 15px;font-weight: 500;border-radius: 1px;cursor: pointer;">Preview Images</button>
     
+
     <label for="">Description</label>
     <input type="text" name="description" placeholder="Description" id="description" value="{{product.description}}">
     <span id="descriptionError" class="error-message"></span>
@@ -234,19 +244,7 @@
     </div>
   </div>
 
-  <div id="previewModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <div>
-        <img id="previewImage" style="max-width: 100%;">
-      </div>
-      <div style="display: flex;flex-direction: row;">
-      <button id="prevBtn">Previous</button>
-      <button id="nextBtn">Next</button>
-      <button id="deleteBtn">Delete</button>
-      </div>
-    </div>
-  </div>
+ 
 
  <script>
   async function validateProductName() {
@@ -305,12 +303,6 @@
         isValid = false;
         pname.classList.add('is-invalid');
         document.getElementById('pnameError').textContent = 'Product Name is required.';
-      }
-
-      if (!img.value) {
-        isValid = false;
-        img.classList.add('is-invalid');
-        document.getElementById('imgError').textContent = 'Image is required.';
       }
 
       if (!description.value.trim()) {
@@ -422,95 +414,5 @@
       reader.readAsDataURL(fileList[currentIndex]);
     }
   </script>
-  <script>
-    var input = document.getElementById('img');
-    var previewBtn = document.getElementById('previewBtn');
-    var previewModal = document.getElementById("previewModal");
-    var previewImage = document.getElementById('previewImage');
-    var prevBtn = document.getElementById('prevBtn');
-    var nextBtn = document.getElementById('nextBtn');
-    var deleteBtn = document.getElementById('deleteBtn');
-    var fileList;
-    var previewIndex = 0;
-
-    // Open preview modal and update file input
-    previewBtn.addEventListener('click', function () {
-      if (input.files && input.files.length > 0) {
-        fileList = Array.from(input.files);
-        previewIndex = 0;
-        showPreviewImage(previewIndex);
-        previewModal.style.display = "block";
-      }
-    });
-
-    // Close preview modal
-    function closePreviewModal() {
-      previewModal.style.display = "none";
-    }
-
-    // Show previous image in preview
-    prevBtn.addEventListener('click', function () {
-      if (previewIndex > 0) {
-        previewIndex--;
-        showPreviewImage(previewIndex);
-      }
-    });
-
-    // Show next image in preview
-    nextBtn.addEventListener('click', function () {
-      if (previewIndex < fileList.length - 1) {
-        previewIndex++;
-        showPreviewImage(previewIndex);
-      }
-    });
-
-    // Delete selected image from preview
-    deleteBtn.addEventListener('click', function () {
-      if (fileList && fileList.length > 0) {
-        fileList.splice(previewIndex, 1);
-        if (fileList.length > 0) {
-          previewIndex = Math.min(previewIndex, fileList.length - 1);
-          showPreviewImage(previewIndex);
-        } else {
-          closePreviewModal();
-        }
-        updateOriginalFileInput();
-      }
-    });
-
-    // Update original file input with selected files
-    function updateOriginalFileInput() {
-      var dataTransfer = new DataTransfer();
-      fileList.forEach(function (file) {
-        dataTransfer.items.add(file);
-      });
-      input.files = dataTransfer.files;
-    }
-
-    // Show selected image in preview modal
-    function showPreviewImage(index) {
-      var reader = new FileReader();
-      reader.onload = function (event) {
-        previewImage.src = event.target.result;
-      };
-      reader.readAsDataURL(fileList[index]);
-    }
-
-    // Handle file input change for original file selection
-    input.addEventListener('change', function (e) {
-      fileList = Array.from(e.target.files);
-      previewIndex = 0;
-      showPreviewImage(previewIndex);
-    });
-
-    // Close modal on close button click
-    var closeBtns = document.getElementsByClassName("close");
-    for (var i = 0; i < closeBtns.length; i++) {
-      closeBtns[i].addEventListener('click', function () {
-        closePreviewModal();
-      });
-    }
-  </script>
-
 </body>
 </html>
