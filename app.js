@@ -98,6 +98,11 @@ hbs.registerHelper("lt", function (value1, value2) {
 hbs.registerHelper("eq", function (value1, value2) {
   return value1 === value2;
 });
+const Handlebars = require('handlebars');
+
+Handlebars.registerHelper('eq', function(arg1, arg2, options) {
+  return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+});
 
 
 const mongoURI = process.env.MONGODB_URI;
