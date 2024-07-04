@@ -188,7 +188,7 @@
     
     <label for="">Product Images</label>
     <button href="#" id="toggleImages" class="btn btn-warning" style="margin-top: 5px ; width: 100%;background-color: #ffffff;color: #080710;padding: 6px 0;font-size: 10px;font-weight: 400;border-radius: 1px;cursor: pointer;">Current Images</button>
-    <div class="mb-3" style="display: flex; flex-wrap: wrap;">
+<div id="imageSection" style="display: none; display: flex; flex-wrap: wrap;margin-top: 5%;">
     {{#each product.image as |image index|}}
         <div style="display: flex; flex-direction: column; margin-left: 5%; justify-content: center;">
             <img src="{{this}}" alt="" width="70px">
