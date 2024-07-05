@@ -8,10 +8,52 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/myProfile.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        .breadcrumbs {
+  list-style: none;
+  padding: 1rem 0;
+  background-color: #fff;
+  font-size: 13px;
+}
+.breadcrumbs li {
+  padding-right: 10px;
+}
+
+.breadcrumbs li:last-child {
+  padding-right: 0;
+  color: #111;
+}
+.breadcrumbs li i{margin-right:10px;
+   font-size: 12px;
+}
+.breadcrumbs a{
+  color: #999;
+}
+.breadcrumbs a:hover{
+  color: #1cc0a0;
+}
+    </style>
 </head>
 
 <body>
     <div class="container rounded bg-white mt-5 mb-5">
+        <div class="breadcrumbs row align-items-center justify-content-between d-flex">
+            <div class="col-12">
+                <ul class="breadcrumbs_content list-unstyled d-flex justify-content-center">
+                    <li class="home">
+                        <a title="Home" href="/" itemprop="url">
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="home">
+                        <a title="Home" href="/myProfile" itemprop="url">
+                            <span>My Profile</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-3 border-right">
                 <div class="d-flex flex-column align-items-center text-center p-3 py-5">
