@@ -637,9 +637,6 @@
         async function addToCart(event, productId) {
             event.preventDefault();
 
-            // Show success message
-            successMessage();
-
             // Make an asynchronous request to add the product to the cart
             fetch(`/add-to-cart?id=${productId}`)
                 .then(response => response.json())
