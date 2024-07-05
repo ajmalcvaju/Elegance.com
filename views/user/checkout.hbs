@@ -190,12 +190,14 @@
               <select id="c_code" class="form-control me-2" aria-label="Coupon Code" aria-describedby="button-addon2">
                 {{#each coupon}}
                 {{#if this.isActive}}
+                {{#if (gt this.minPurchaseAmount cart.totalAmountPay)}}
                 <option value="disabled selected">
                   <h1>
                     <ul>{{this.couponCode}}</ul>
                   </h1>:Use This Code If The Order Value above
                   {{this.minPurchaseAmount}} You Will get {{this.discount}}% Discount
                 </option>
+                {{/if}}
                 {{/if}}
                 {{/each}}
               </select>
