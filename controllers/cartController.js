@@ -118,29 +118,9 @@ const decCart = async (req, res) => {
     const item = carts.items.find((item) => item._id.toString() === productId);
     let quantity = item.quantity;
     if (quantity == 1) {
-      res.send(`
-      <html>
-          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-      <body>
-          <script>
-             
-              function failMessage() {
-                  Swal.fire({
-                      title: 'Product Quantity',
-                      text: 'Product quantity will be atleast one,Otherwise,Delete Product From Cart',
-                      icon: 'error',
-                      confirmButtonText: 'OK'
-                  }).then((result) => {
-                    if (result.isConfirmed) {
-                      window.location.href = '/cart';
-                    }
-                });
-              }
-              failMessage();
-          </script>
-      </body>
-      </html>
-  `);
+      res.json({
+        success: false,
+    });
     } else {
       await Cart.updateOne(
         { userId, "items._id": productId },
@@ -149,7 +129,9 @@ const decCart = async (req, res) => {
       let cart = await Cart.findOne({ userId });
       console.log(cart);
       const cartData = await cart.save();
-      res.redirect("/cart");
+      res.json({
+        success: true,
+    });
     }
   } catch (error) {
     console.log(error.message);
@@ -171,29 +153,7 @@ const incCart = async (req, res) => {
     console.log(quantity);
     console.log(req.query.id);
     if (stock == quantity) {
-      res.send(`
-      <html>
-          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-      <body>
-          <script>
-             
-              function failMessage() {
-                  Swal.fire({
-                      title: 'Product Quantity',
-                      text: 'Product Become Out of Stock.',
-                      icon: 'error',
-                      confirmButtonText: 'OK'
-                  }).then((result) => {
-                    if (result.isConfirmed) {
-                      window.location.href = '/cart';
-                    }
-                });
-              }
-              failMessage();
-          </script>
-      </body>
-      </html>
-  `);
+      res.json({success: false});
     } else {
       await Cart.updateOne(
         { userId, "items._id": productId },
@@ -203,7 +163,7 @@ const incCart = async (req, res) => {
 
       const cartData = await cart.save();
 
-      res.redirect("/cart");
+      res.json({success: true});
     }
   } catch (error) {
     console.log(error.message);
