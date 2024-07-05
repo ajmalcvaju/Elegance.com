@@ -102,12 +102,10 @@
                 </div>
             </nav>
             <div style="display: flex;flex-direction: column;">
-            <form class="form-inline my-2 my-lg-0" style="display: flex;flex-direction: row;width: 30%;float: right;">
-                    <input class="form-control mr-sm-2" id="searchInput" type="text" placeholder="Search"
-                        aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0 mx-2" id="searchByIdButton"
-                        type="submit">Search</button>
-                </form>
+            <form class="form-inline my-2 my-lg-0" style="display: flex;flex-direction: row;width: 30%;float: right;" id="searchForm">
+    <input class="form-control mr-sm-2" id="searchInput" type="text" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0 mx-2" id="searchByIdButton" type="submit">Search</button>
+</form>
            <div style="display: flex; justify-content: flex-end;margin-top: 2%;">
     <a href="/admin/addUser" class="btn btn-success">Add Users</a>
 </div>
@@ -138,7 +136,7 @@
                                 src="{{this.profilePhoto}}"></td>
                         {{else}}
                         <td><img class="mx-auto d-block img-fluid img-thumbnail" style="width: 7rem"
-                                src="/userImages/{{this.image}}"></td>
+                                src="{{this.image}}"></td>
                                 {{/if}}
                         <td>{{this.email}}</td>
                         <td>{{#if this.is_admin}}Admin{{else}}User{{/if}}</td>
@@ -159,7 +157,23 @@
                     {{/each}}
                 </tbody>
             </table>
+             <div class="pagination-controls">
+                            {{#if (gt currentPage 1)}}
+                            <a href="?page={{subtract currentPage 1}}"
+                                class="btn btn-primary">Previous</a>
+                            {{/if}}
 
+                            {{#each (range 1 totalPages)}}
+                            <a href="?page={{this}}"
+                                class="btn btn-primary {{#if (eq this ../currentPage)}}active{{/if}}">
+                                {{this}}
+                            </a>
+                            {{/each}}
+
+                            {{#if (lt currentPage totalPages)}}
+                            <a href="?page={{add currentPage 1}}" class="btn btn-primary">Next</a>
+                            {{/if}}
+                        </div>
         </div>
 
         <!-- Content End -->
@@ -195,7 +209,7 @@
                 confirmButtonText: 'Yes, block it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = `/admin/block-user?id=${id}`;
+                    window.location.href = `/admin/block-user?id=${id}&status=block`;
                 }
             });
         }
@@ -216,13 +230,25 @@
             });
         }
     </script>
-        <script>
+       <script>
     $(document).ready(function () {
-        $("#searchInput").on("keyup", function () {
-            var value = $(this).val().toLowerCase();
+        // Function to filter table rows
+        function filterTable() {
+            var value = $("#searchInput").val().toLowerCase();
             $("table tbody tr").filter(function () {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
             });
+        }
+
+        // Filter table rows on keyup event in the input field
+        $("#searchInput").on("keyup", function () {
+            filterTable();
+        });
+
+        // Filter table rows on form submit event
+        $("#searchForm").on("submit", function (event) {
+            event.preventDefault();  // Prevent the default form submission
+            filterTable();
         });
     });
 </script>

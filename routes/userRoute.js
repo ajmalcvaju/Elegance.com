@@ -16,6 +16,7 @@ router.get("/auth/google/callback", passport.authenticate("google", { failureRed
 router.post("/login", userauth.login);
 router.get("/signup", middleware.checkSession2, userController.loadRegister);
 router.post("/checkUserExist", userController.checkUserExist);
+router.post("/checkreferralCodeExist", userController.checkreferralCodeExist);
 router.post("/signup",  middleware.userImage, userController.insertUser);
 router.get("/otp", userController.otp);
 router.post("/signup/verify", userController.verifyMail);
@@ -58,6 +59,8 @@ router.post("/editAddress", userCheckoutOrderControll.checkoutEditAddress);
 router.get("/deleteAddress", userCheckoutOrderControll.deleteAddress);
 router.post("/cancelOrder", userCheckoutOrderControll.orderCancell);
 router.post("/returnOrder", userCheckoutOrderControll.returnOrder);
+router.post("/returnItem", userCheckoutOrderControll.returnItem);
+router.post("/cancelItem", userCheckoutOrderControll.cancelItem);
 router.get("/orderDetails", userCheckoutOrderControll.orderDetails);
 router.get("/invoice", userCheckoutOrderControll.invoice);
 router.get("/addWishlist", cartController.addWishlist);

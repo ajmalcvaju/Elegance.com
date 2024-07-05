@@ -1,8 +1,15 @@
 const Coupon = require("../model/couponModel");
 const manageCoupon = async (req, res) => {
   try {
-    let coupons = await Coupon.find({});
-    res.render("admin/coupons", { coupons });
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const totalcoupons = await Coupon.countDocuments({});
+    const totalPages = Math.ceil(totalcoupons / limit);
+    const coupons = await Coupon.find({})
+      .skip((page - 1) * limit)
+      .limit(limit);
+    res.render("admin/coupons", { coupons,currentPage: page,
+      totalPages });
   } catch (error) {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -21,7 +28,6 @@ const editCoupon = async (req, res) => {
 const CouponExist = async (req, res) => {
   try {
     const { couponCode, couponId } = req.body;
-    console.log(req.body);
     if (couponId) {
       const coupon = await Coupon.findOne({ _id: couponId });
       if (couponCode != coupon.couponCode) {

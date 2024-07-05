@@ -5,6 +5,17 @@ const Product = require("../model/productModel");
 const Category = require("../model/categoryModel");
 const Address = require("../model/addressModel");
 const Review = require("../model/reviewModel");
+const Wallet = require("../model/walletModel");
+const fs=require('fs')
+const path = require('path');
+const cloudinary = require('cloudinary').v2;
+require('dotenv').config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDNAME,
+  api_key: process.env.CLOUDAPIKEY,
+  api_secret: process.env.CLOUDINARYSECRET,
+});
 
 const login = async (req, res) => {
   try {
@@ -32,6 +43,14 @@ const checkUserExist = async (req, res) => {
     res.redirect("/error");
   }
 };
+
+const checkreferralCodeExist=async(req,res)=>{
+  const {referralCode}=req.body
+  if(referralCode){
+    const user = await User.findOne({ referralCode });
+    res.json({ notExists: !user });
+  }
+}
 
 const shop = async (req, res) => {
   try {
@@ -179,20 +198,37 @@ const loadRegister = async (req, res) => {
   }
 };
 const insertUser = async (req, res) => {
-  const { username, email, mobileNumber, password, confirmPassword } = req.body;
   try {
+    const { username, email,fname,lname, mobileNumber, password,referralCode,confirmPassword } = req.body;
+    const result = await cloudinary.uploader.upload(req.file.path);
     const user = new User({
-      username: req.body.username,
-      email: req.body.email,
-      fname: req.body.fname,
-      lname: req.body.lname,
-      mobileNumber: req.body.mobileNumber,
-      password: req.body.password,
-      image: req.file.filename,
+      username: username,
+      email: email,
+      fname: fname,
+      lname:lname,
+      mobileNumber: mobileNumber,
+      password: password,
+      image: result.url,
       is_admin: 0,
     });
     console.log();
     const userData = await user.save();
+
+    if(referralCode){
+      const referrencedUser = await User.findOne({ referralCode });
+      const referrencedUserID=referrencedUser._id
+      const userID=userData._id
+      const wallet = await Wallet.findOneAndUpdate(
+        { userId: userID },
+        { $inc: { amount: 600 } }, // Increment the amount by 600
+        { new: true, upsert: true, setDefaultsOnInsert: true }
+      );
+      const refferalWallet = await Wallet.findOneAndUpdate(
+        { userId: referrencedUserID },
+        { $inc: { amount: 600 } }, // Increment the amount by 600
+        { new: true, upsert: true, setDefaultsOnInsert: true }
+      );
+    }
     const OTP = Math.floor(100000 + Math.random() * 900000);
     const otp = new OTPcode({
       userId: userData._id,
@@ -201,7 +237,8 @@ const insertUser = async (req, res) => {
       expiresAt: Date.now() + 300000,
     });
     const otpData = await otp.save();
-    sendVerifyMail(req.body.fname, req.body.lname, req.body.email, OTP);
+
+    sendVerifyMail(fname, lname, email, OTP);
     res.json({ success: true, userId: userData._id });
   } catch (error) {
     console.log(error.message);
@@ -656,10 +693,10 @@ const checkoutAddAddress = async (req, res) => {
 const rating = async (req, res) => {
   try {
     if (req.session.email) {
+      const {productId,comment,rating}=req.body
       const email = req.session.email;
       const user = await User.findOne({ email });
       const userId = user._id;
-      const productId = req.body.productId;
       const existingReview = await Review.findOne({ userId, productId });
       if (existingReview) {
         return res.json({
@@ -668,10 +705,10 @@ const rating = async (req, res) => {
         });
       }
       const newRating = new Review({
-        rating: req.body.rating,
+        rating: rating,
         userId: userId,
         productId: productId,
-        comment: req.body.comment,
+        comment: comment,
       });
       newRating.save();
       res.json({ success: true });
@@ -712,4 +749,5 @@ module.exports = {
   resendOtp,
   checkUserExist,
   otp,
+  checkreferralCodeExist
 };

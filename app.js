@@ -28,7 +28,11 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+
+const paths=path.join(__dirname,"public")
+app.use(express.static("public"));
+console.log(paths)
+
 
 app.use(noCache());
 
@@ -36,10 +40,7 @@ app.use(
   session({
     secret: "my_key",
     resave: false,
-    saveUninitialized: true,
-    store: MongoStore.create({
-      mongoUrl: "mongodb://localhost:27017/NewUsers",
-    }),
+    saveUninitialized: true
   })
 );
 
@@ -53,14 +54,9 @@ app.use(function (req, res, next) {
   res.header("X-Content-Type-Options", "nosniff");
   next();
 });
-mongoose
-  .connect("mongodb://localhost:27017/NewUsers")
-  .then(() => {
-    console.log("mongodb connected successfuly");
-  })
-  .catch(() => {
-    console.log("Failed to connect");
-  });
+
+
+
 app.use("/", usersRouter);
 app.use("/admin", adminRouter);
 app.get("/signout", (req, resp) => {
@@ -72,21 +68,7 @@ app.get("/uSignout", (req, resp) => {
   resp.redirect("/login");
 });
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
-});
 
-// error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render("error");
-});
 const hbs = require("hbs");
 
 hbs.registerHelper("range", function (start, end) {
@@ -116,5 +98,20 @@ hbs.registerHelper("lt", function (value1, value2) {
 hbs.registerHelper("eq", function (value1, value2) {
   return value1 === value2;
 });
+
+
+const mongoURI = process.env.MONGODB_URI;
+mongoose.connect(mongoURI)
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('Could not connect to MongoDB', err));
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+
+  if (res.headersSent) {
+      return next(err);
+  }
+  res.status(500).render('user/errorPage'); 
+})
 
 module.exports = app;

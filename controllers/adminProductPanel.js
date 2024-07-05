@@ -1,10 +1,32 @@
 const Product = require("../model/productModel");
 const Category = require("../model/categoryModel");
+const fs = require("fs");
+const path = require("path");
+const cloudinary = require("cloudinary").v2;
+require("dotenv").config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDNAME,
+  api_key: process.env.CLOUDAPIKEY,
+  api_secret: process.env.CLOUDINARYSECRET,
+});
 
 const adminProduct = async (req, res) => {
   try {
-    const products = await Product.find({});
-    res.render("admin/product", { products });
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+
+    const totalProducts = await Product.countDocuments({});
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    const products = await Product.find({})
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+
+    res.render("admin/product", { products,
+      currentPage: page,
+      totalPages });
   } catch {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -42,55 +64,68 @@ const addProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    const pname = req.body.pname;
+    const{pname,description,price,discount,purchase,category}=req.body
     const products = await Product.findOne({ pname });
     if (products) {
       const categories = await Category.find({});
       res.render("admin/addProduct", { exist: true, categories });
     } else {
-      let cname = req.body.category;
+      let cname = category;
       const categories = await Category.findOne({ cname });
       let actualDiscount;
-      let productDiscount = req.body.discount;
+      let productDiscount = discount;
       let categoryDiscount = categories.discount;
       if (productDiscount >= categoryDiscount) {
         actualDiscount = productDiscount;
       } else {
         actualDiscount = categoryDiscount;
       }
-      DiscountedPrice = req.body.price * (1 - actualDiscount / 100);
-      const imageFiles = req.files.map((file) => file.filename);
+      DiscountedPrice = price * (1 - actualDiscount / 100);
+      const files = req.files;
+      console.log(files);
+
+      const uploadedImages = [];
+
+      try {
+        for (const file of files) {
+          const result = await cloudinary.uploader.upload(file.path);
+          uploadedImages.push(result.url);
+        }
+        console.log(uploadedImages);
+      } catch (error) {
+        console.error("Error uploading images: ", error);
+      }
+                      
       const product = new Product({
-        pname: req.body.pname,
-        image: imageFiles,
-        description: req.body.description,
-        price: req.body.price,
-        discount: req.body.discount,
+        pname: pname,
+        image: uploadedImages,
+        description: description,
+        price: price,
+        discount: discount,
         actualDiscount: actualDiscount,
-        purchase: req.body.purchase,
-        category: req.body.category,
+        purchase: purchase,
+        category: category,
         discountedPrice: DiscountedPrice,
       });
       console.log(req.body);
       const productData = await product.save();
-      if (productData) {
-        const products = await Product.find({});
-        res.render("admin/product", { products });
-      } else {
-        res.redirect("admin/addProduct");
-      }
+      res.redirect("/admin/product");
     }
   } catch (error) {
     console.log(error.message);
     res.redirect("/admin/error");
   }
 };
-const deleteUser = async (req, res) => {
+const updateProductStatus = async (req, res) => {
   try {
     let proId = req.query.id;
+    let status = req.query.status; 
+
+    let isDeleted = status === 'delete' ? 1 : 0;
+
     const updatedInfo = await Product.updateOne(
       { _id: proId },
-      { $set: { is_deleted: 1 } }
+      { $set: { is_deleted: isDeleted } }
     );
     res.redirect("/admin/product");
   } catch (error) {
@@ -99,19 +134,6 @@ const deleteUser = async (req, res) => {
   }
 };
 
-const restoreUser = async (req, res) => {
-  try {
-    let proId = req.query.id;
-    const updatedInfo = await Product.updateOne(
-      { _id: proId },
-      { $set: { is_deleted: 0 } }
-    );
-    res.redirect("/admin/product");
-  } catch (error) {
-    console.log(error.message);
-    res.redirect("/admin/error");
-  }
-};
 const editProduct = async (req, res) => {
   try {
     let proId = req.query.id;
@@ -129,9 +151,34 @@ const updatingProduct = async (req, res) => {
     const proId = req.query.id;
     const { pname, description, category, price, discount, purchase } =
       req.body;
+      const products = await Product.findOne({ pname });
+      const categories = await Category.findOne({ cname:category });
+      let actualDiscount;
+      let productDiscount = discount;
+      let categoryDiscount = categories.discount;
+      if (productDiscount >= categoryDiscount) {
+        actualDiscount = productDiscount;
+      } else {
+        actualDiscount = categoryDiscount;
+      }
+      const DiscountedPrice = price * (1 - actualDiscount / 100);
+      const files = req.files;
+      console.log(files);
+
+      const uploadedImages = [];
+
+      try {
+        for (const file of files) {
+          const result = await cloudinary.uploader.upload(file.path);
+          uploadedImages.push(result.url);
+        }
+        console.log(uploadedImages);
+      } catch (error) {
+        console.error("Error uploading images: ", error);
+      }
     await Product.updateOne(
       { _id: proId },
-      { $set: { pname, description, price, category, discount, purchase } }
+      { $set: { pname, description, price, category, discount, purchase,image: uploadedImages,actualDiscount: actualDiscount,discountedPrice: DiscountedPrice } }
     );
     res.redirect("/admin/product");
   } catch (error) {
@@ -144,8 +191,7 @@ module.exports = {
   adminProduct,
   addProduct,
   updateProduct,
-  deleteUser,
-  restoreUser,
+  updateProductStatus,
   editProduct,
   updatingProduct,
   ProductExist,

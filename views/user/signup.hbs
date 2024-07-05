@@ -73,7 +73,6 @@
             color: #ffffff;
             outline: none;
             border: none;
-            margin-top: 10px;
         }
 
         form h3 {
@@ -86,12 +85,11 @@
 
         input {
             display: block;
-            height: 35px;
+            height: 25px;
             width: 100%;
             background-color: rgba(255, 255, 255, 0.07);
             border-radius: 3px;
             padding: 0 10px;
-            margin-top: 10px;
             font-size: 14px;
             font-weight: 300;
         }
@@ -117,8 +115,10 @@
         }
 
         label {
-            display: none;
-        }
+      display: block;
+      font-size: 10px;
+      font-weight: 400;
+    }
 
         /* Media Queries */
         @media screen and (max-width: 768px) {
@@ -139,9 +139,7 @@
                 margin-top: 25px;
             }
 
-            label {
-                display: none;
-            }
+            
         }
 
         @media screen and (max-width: 576px) {
@@ -153,9 +151,7 @@
                 height: 35px;
             }
 
-            label {
-                display: none;
-            }
+            
         }
     </style>
 </head>
@@ -167,32 +163,71 @@
     </div>
     <form id="signupForm" action="/signup" method="post" enctype="multipart/form-data">
         <h3>Signup Here</h3>
+
+        <label for="">Username</label>
         <input type="text" name="username" id="username" placeholder="Username" onblur="validateUsername()">
         <span id="usernameError" style="color: red;"></span>
-
+         
+         <label for="">First Name</label>
         <input type="text" id="fname" name="fname" placeholder="First Name">
         <span id="fnameError" style="color: red;"></span>
-
+ 
+        <label for="">Last Name</label>
         <input type="text" id="lname" name="lname" placeholder="Last Name">
         <span id="lnameError" style="color: red;"></span>
 
+        <label for="">Email</label>
         <input type="text" name="email" id="email" placeholder="Email" onblur="validateEmail(this.value)">
         <span id="emailError" style="color: red;"></span>
-
+        
+        <label for="">Mobile Number</label>
         <input type="text" name="mobileNumber" id="mobileNumber" placeholder="Mobile Number"
             onblur="validateMobileNumber(this.value)">
         <span id="mobileNumberError" style="color: red;"></span>
-
+        
+        <label for="">Image</label>
         <input type="file" name="image" id="img">
         <span id="imageError" style="color: red;"></span>
-
+        
+        <label for="">Password</label>
         <input type="password" name="password" id="password" placeholder="Password" onblur="validatePassword(this.value)">
         <span id="passwordErrors" style="color: red;"></span>
+
+        <label for="">Referral code(optional)</label>
+         <input type="text" name="referralCode" id="referralCode" placeholder="Referral Code"
+            onblur="validateReferralCode(this.value)">
+        <span id="referralCodeError" style="color: red;"></span>
 
         <button type="submit">Sign Up</button>
     </form>
 
     <script>
+        async function validateReferralCode() {
+            const referralCode = document.getElementById("referralCode").value;
+            const referralCodeError = document.getElementById("referralCodeError");
+
+            try {
+                const response = await fetch("/checkreferralCodeExist", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ referralCode })
+                });
+
+                const data = await response.json();
+
+                if (data.notExists) {
+                    referralCodeError.textContent = "ReferralCode Not Exists.";
+                    document.getElementById("referralCode").style.border = "1px solid red";
+                } else {
+                    usernameError.textContent = "";
+                    document.getElementById("username").style.border = "1px solid #ccc";
+                }
+            } catch (error) {
+                console.error("Error validating username:", error);
+            }
+        }
         async function validateUsername() {
             const username = document.getElementById("username").value;
             const usernameError = document.getElementById("usernameError");

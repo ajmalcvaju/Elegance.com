@@ -80,13 +80,22 @@
     }
 
     label {
-      display: block;
-      margin-top: 30px;
-      font-size: 16px;
-      font-weight: 500;
-    }
+            display: block;
+            font-size: 10px;
+            font-weight: 300;
+        }
 
-    input,
+    input {
+            display: block;
+            height: 25px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.07);
+            border-radius: 3px;
+            padding: 0 10px;
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 300;
+        }
     select {
       display: block;
       height: 30px;
@@ -104,16 +113,16 @@
     }
 
     button {
-      margin-top: 50px;
-      width: 100%;
-      background-color: #ffffff;
-      color: #080710;
-      padding: 15px 0;
-      font-size: 18px;
-      font-weight: 600;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+            margin-top: 40px;
+            width: 100%;
+            background-color: #ffffff;
+            color: #080710;
+            padding: 12px 0;
+            font-size: 15px;
+            font-weight: 400;
+            border-radius: 3px;
+            cursor: pointer;
+        }
 
     .is-invalid {
       border-color: red;
@@ -172,21 +181,30 @@
   </div>
   <form id="productForm" action="/admin/addProduct" method="post" enctype="multipart/form-data">
     <h3>Add Products</h3>
+
+    <label for="">Product Name</label>
     <input type="text" name="pname" placeholder="Product Name" id="pname" onblur="validateProductName()">
     <span id="pnameError" class="error-message"></span>
     
+    <label for="">Product Images</label>
     <input type="file" name="image" id="img" multiple>
     <span id="imgError" class="error-message"></span>
+
+    <button type="button" id="previewBtn" style="margin-top: 5px ; width: 100%;background-color: #ffffff;color: #080710;padding: 6px 0;font-size: 15px;font-weight: 500;border-radius: 1px;cursor: pointer;">Preview Images</button>
     
+    <label for="">Description</label>
     <input type="text" name="description" placeholder="Description" id="description">
     <span id="descriptionError" class="error-message"></span>
     
+    <label for="">Price</label>
     <input type="number" name="price" placeholder="Price" id="price">
     <span id="priceError" class="error-message"></span>
     
+    <label for="">Discount</label>
     <input type="number" name="discount" placeholder="Discount" id="discount" min="0" max="90">
     <span id="discountError" class="error-message"></span>
     
+    <label for="">Stock</label>
     <input type="number" name="purchase" placeholder="Stock" id="purchase">
     <span id="purchaseError" class="error-message"></span>
     
@@ -213,6 +231,18 @@
         <img id="image" style="max-width: 100%;">
       </div>
       <button id="cropBtn">Crop</button>
+    </div>
+  </div>
+
+  <div id="previewModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div>
+        <img id="previewImage" style="max-width: 100%;">
+      </div>
+      <button id="prevBtn">Previous</button>
+      <button id="nextBtn">Next</button>
+      <button id="deleteBtn">Delete</button>
     </div>
   </div>
 
@@ -388,6 +418,95 @@
         });
       };
       reader.readAsDataURL(fileList[currentIndex]);
+    }
+  </script>
+  <script>
+    var input = document.getElementById('img');
+    var previewBtn = document.getElementById('previewBtn');
+    var previewModal = document.getElementById("previewModal");
+    var previewImage = document.getElementById('previewImage');
+    var prevBtn = document.getElementById('prevBtn');
+    var nextBtn = document.getElementById('nextBtn');
+    var deleteBtn = document.getElementById('deleteBtn');
+    var fileList;
+    var previewIndex = 0;
+
+    // Open preview modal and update file input
+    previewBtn.addEventListener('click', function () {
+      if (input.files && input.files.length > 0) {
+        fileList = Array.from(input.files);
+        previewIndex = 0;
+        showPreviewImage(previewIndex);
+        previewModal.style.display = "block";
+      }
+    });
+
+    // Close preview modal
+    function closePreviewModal() {
+      previewModal.style.display = "none";
+    }
+
+    // Show previous image in preview
+    prevBtn.addEventListener('click', function () {
+      if (previewIndex > 0) {
+        previewIndex--;
+        showPreviewImage(previewIndex);
+      }
+    });
+
+    // Show next image in preview
+    nextBtn.addEventListener('click', function () {
+      if (previewIndex < fileList.length - 1) {
+        previewIndex++;
+        showPreviewImage(previewIndex);
+      }
+    });
+
+    // Delete selected image from preview
+    deleteBtn.addEventListener('click', function () {
+      if (fileList && fileList.length > 0) {
+        fileList.splice(previewIndex, 1);
+        if (fileList.length > 0) {
+          previewIndex = Math.min(previewIndex, fileList.length - 1);
+          showPreviewImage(previewIndex);
+        } else {
+          closePreviewModal();
+        }
+        updateOriginalFileInput();
+      }
+    });
+
+    // Update original file input with selected files
+    function updateOriginalFileInput() {
+      var dataTransfer = new DataTransfer();
+      fileList.forEach(function (file) {
+        dataTransfer.items.add(file);
+      });
+      input.files = dataTransfer.files;
+    }
+
+    // Show selected image in preview modal
+    function showPreviewImage(index) {
+      var reader = new FileReader();
+      reader.onload = function (event) {
+        previewImage.src = event.target.result;
+      };
+      reader.readAsDataURL(fileList[index]);
+    }
+
+    // Handle file input change for original file selection
+    input.addEventListener('change', function (e) {
+      fileList = Array.from(e.target.files);
+      previewIndex = 0;
+      showPreviewImage(previewIndex);
+    });
+
+    // Close modal on close button click
+    var closeBtns = document.getElementsByClassName("close");
+    for (var i = 0; i < closeBtns.length; i++) {
+      closeBtns[i].addEventListener('click', function () {
+        closePreviewModal();
+      });
     }
   </script>
 

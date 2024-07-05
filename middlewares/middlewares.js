@@ -20,9 +20,32 @@ const checkSession3 = (req, res, next) => {
   next();
 };
 
+const notlogged = (req, res, next) => {
+  try {
+    if (req.session.email) {
+      res.redirect('/admin/dashboard')
+    } else {
+      next()
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+const loggedIn = (req, res, next) => {
+  try {
+    if (req.session.email) {
+      next()
+    } else {
+      res.redirect('/admin/adminLogin')
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../public/productImages"));
+    cb(null, "public/productImages/");
   },
   filename: function (req, file, cb) {
     const name = Date.now() + "-" + file.originalname;
@@ -36,7 +59,7 @@ const uploadNone = upload.none();
 
 const storage2 = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../public/userImages"));
+    cb(null, 'public/userImages/');
   },
   filename: function (req, file, cb) {
     const name = Date.now() + "-" + file.originalname;
@@ -48,7 +71,7 @@ const userImage = upload2.single("image");
 
 const storage3 = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../public/categoryImages"));
+    cb(null,"public/categoryImages/");
   },
   filename: function (req, file, cb) {
     const name = Date.now() + "-" + file.originalname;
@@ -67,4 +90,8 @@ module.exports = {
   uploadNone,
   userImage,
   categoryImage,
+  notlogged,
+  loggedIn,
+  notlogged,
+  loggedIn
 };

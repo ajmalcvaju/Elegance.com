@@ -54,7 +54,7 @@
                         width="150px" src="{{user.profilePhoto}}">
                     {{else}}
                     <img class="rounded-circle mt-5"
-                        width="150px" src="/userImages/{{user.image}}">
+                        width="150px" src="{{user.image}}">
                     {{/if}}
                     
                         <span
@@ -82,10 +82,14 @@
                         <div class="col-md-12"><label class="labels">Mobile Number</label>
                             <h6>{{user.mobileNumber}}</h6>
                         </div>
-                        {{#each addresses}}
-                        <div class="col-md-12"><u>
-                                <h6>Address</h6>
-                            </u>
+                        <div class="col-md-12"><label class="labels">Referral Code</label>
+                            <h6><b>{{user.referralCode}}</b></h6>
+                            <p>Reffer Our Website For Your Friends and Get 600 Rs Wallet Money</p>
+                        </div>
+                        
+                        <div class="col-md-12">
+                                <h6><u>Address</u></h6>
+                                {{#each addresses}}
                             <p>{{this.houseName}} <a href="/edit-address?id={{this._id}}">Edit </a><br>{{this.street}},
                                 {{this.district}}<br>{{this.state}}, {{this.pincode}}<br><a href="/delete-address?id={{this._id}}" style="color: red;" onclick="return confirmDelete(event, this)">Delete</a></p>
                             {{/each}}<a href="/myProfile/add-address" class="btn btn-success">Add New Address</a>

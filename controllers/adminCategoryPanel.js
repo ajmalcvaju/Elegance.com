@@ -1,9 +1,26 @@
 const Category = require("../model/categoryModel");
+const fs=require('fs')
+const path = require('path');
+const cloudinary = require('cloudinary').v2;
+require('dotenv').config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDNAME,
+  api_key: process.env.CLOUDAPIKEY,
+  api_secret: process.env.CLOUDINARYSECRET,
+});
 
 const adminCategory = async (req, res) => {
   try {
-    const categories = await Category.find({});
-    res.render("admin/category", { categories });
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const totalcategories = await Category.countDocuments({});
+    const totalPages = Math.ceil(totalcategories / limit);
+    const categories = await Category.find({})
+      .skip((page - 1) * limit)
+      .limit(limit);
+    res.render("admin/category", { categories,currentPage: page,
+      totalPages });
   } catch {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -38,52 +55,35 @@ const addCategory = async (req, res) => {
 };
 const updateCategory = async (req, res) => {
   try {
-    const cname = req.body.cname;
+    const {cname,discount,Type} = req.body;
     const category1 = await Category.find({ cname });
     if (category1[0]) {
       res.render("admin/addCategory", { exist: true });
     } else {
-      console.log(req.body);
-      console.log(req.file);
+      const result = await cloudinary.uploader.upload(req.file.path);
       const category = new Category({
-        cname: req.body.cname,
-        discount: req.body.discount,
-        Type: req.body.Type,
-        image: req.file.filename,
+        cname: cname,
+        discount: discount,
+        Type: Type,
+        image: result.url,
       });
       const categoryData = await category.save();
-      if (categoryData) {
-        const categories = await Category.find({});
-        res.render("admin/category", { categories });
-      } else {
-        res.redirect("admin/addProduct");
-      }
+      res.redirect("/admin/category");
     }
   } catch (error) {
     console.log(error.message);
     res.redirect("/admin/error");
   }
 };
-const deleteCategory = async (req, res) => {
+const updateCategoryStatus = async (req, res) => {
   try {
-    let proId = req.query.id;
-    const updatedInfo = await Category.updateOne(
-      { _id: proId },
-      { $set: { is_deleted: 1 } }
-    );
-    res.redirect("/admin/category");
-  } catch (error) {
-    console.log(error.message);
-    res.redirect("/admin/error");
-  }
-};
+    let catId = req.query.id;
+    let status = req.query.status; 
+    let isDeleted = status === 'delete' ? 1 : 0;
 
-const restoreCategory = async (req, res) => {
-  try {
-    let proId = req.query.id;
     const updatedInfo = await Category.updateOne(
-      { _id: proId },
-      { $set: { is_deleted: 0 } }
+      { _id: catId },
+      { $set: { is_deleted: isDeleted } }
     );
     res.redirect("/admin/category");
   } catch (error) {
@@ -123,8 +123,7 @@ module.exports = {
   adminCategory,
   updateCategory,
   addCategory,
-  deleteCategory,
-  restoreCategory,
+  updateCategoryStatus,
   editCategory,
   updatingCategory,
   CategoryExist,
