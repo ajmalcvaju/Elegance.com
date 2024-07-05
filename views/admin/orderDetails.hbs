@@ -66,6 +66,7 @@
 					</div>
 				</div>
 				{{/each}}
+				<div style="display: flex;flex-direction: column;">
 				<div class="back-to-shop">
 					<h5>Address:</h5>
 					<p>{{order.addressId.houseName}},{{order.addressId.street}}
@@ -80,6 +81,8 @@
 					<p>{{order.reasonForReturn}}</p>
 					{{/if}}
 					{{/if}}
+				</div>
+				<div class="back-to-shop" ><a href="/admin/orders">&leftarrow; Back to Orders</a></div>
 				</div>
 			</div>
 
