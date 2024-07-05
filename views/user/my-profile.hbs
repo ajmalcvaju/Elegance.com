@@ -119,7 +119,7 @@
 <span id="transaction-history" style="display: none; background-color: rgb(179, 255, 0); margin-top: 20px;">
     <h2>Transactions</h2>
     {{#each transactions}}
-    <h6>Amount: {{this.amount}}, Date: {{this.formattedDate}}, Reason: {{this.reason}}</h6>
+    <h6>Amount: {{this.amount}}, Date: {{this.formattedDate}}, Reason: {{this.reasson}}</h6>
     {{/each}}
     <div class="pagination-controls">
         {{#if (gt currentPage 1)}}

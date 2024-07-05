@@ -142,7 +142,11 @@
                                     <td ></td>
                                     <td ></td>
                                     <td class="thick-line text-center"><strong>Total Amount has to Pay</strong></td>
-                                    <td class="thick-line text-right">₹{{order.totalAmountPay}}</td>
+                                    {{#if order.priceAfterCoupon}}
+                        <td class="thick-line text-right">₹{{order.priceAfterCoupon}}</td>
+                        {{else}}
+                        <td class="thick-line text-right">₹{{order.totalAmountPay}}</td>
+                        {{/if}}  
                                 </tr>
                                 <tr>
                                     <td ></td>
