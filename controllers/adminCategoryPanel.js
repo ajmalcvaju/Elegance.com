@@ -1,8 +1,8 @@
 const Category = require("../model/categoryModel");
-const fs=require('fs')
-const path = require('path');
-const cloudinary = require('cloudinary').v2;
-require('dotenv').config();
+const fs = require("fs");
+const path = require("path");
+const cloudinary = require("cloudinary").v2;
+require("dotenv").config();
 
 cloudinary.config({
   cloud_name: process.env.CLOUDNAME,
@@ -19,8 +19,7 @@ const adminCategory = async (req, res) => {
     const categories = await Category.find({})
       .skip((page - 1) * limit)
       .limit(limit);
-    res.render("admin/category", { categories,currentPage: page,
-      totalPages });
+    res.render("admin/category", { categories, currentPage: page, totalPages });
   } catch {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -55,7 +54,7 @@ const addCategory = async (req, res) => {
 };
 const updateCategory = async (req, res) => {
   try {
-    const {cname,discount,Type} = req.body;
+    const { cname, discount, Type } = req.body;
     const category1 = await Category.find({ cname });
     if (category1[0]) {
       res.render("admin/addCategory", { exist: true });
@@ -78,8 +77,8 @@ const updateCategory = async (req, res) => {
 const updateCategoryStatus = async (req, res) => {
   try {
     let catId = req.query.id;
-    let status = req.query.status; 
-    let isDeleted = status === 'delete' ? 1 : 0;
+    let status = req.query.status;
+    let isDeleted = status === "delete" ? 1 : 0;
 
     const updatedInfo = await Category.updateOne(
       { _id: catId },

@@ -1,7 +1,7 @@
 const User = require("../model/userModel");
 const Address = require("../model/addressModel");
 const Wallet = require("../model/walletModel");
- 
+
 const openProfile = async (req, res) => {
   try {
     if (req.session && req.session.email) {
@@ -10,22 +10,30 @@ const openProfile = async (req, res) => {
       const userId = user._id;
       const addresses = await Address.find({ userId });
       const page = parseInt(req.query.page) || 1;
-const limit = 10;
+      const limit = 10;
 
-const totalwallet = await Wallet.countDocuments({});
-const totalPages = Math.ceil(totalwallet / limit);
+      const totalwallet = await Wallet.countDocuments({});
+      const totalPages = Math.ceil(totalwallet / limit);
 
-// Fetch user wallet
-const wallet = await Wallet.findOne({ userId });
+      // Fetch user wallet
+      const wallet = await Wallet.findOne({ userId });
 
-// Paginate transactions
-const totalTransactions = wallet.transactions.length;
-const transactionPages = Math.ceil(totalTransactions / limit);
-const transactions = wallet.transactions.slice((page - 1) * limit, page * limit);
+      // Paginate transactions
+      const totalTransactions = wallet.transactions.length;
+      const transactionPages = Math.ceil(totalTransactions / limit);
+      const transactions = wallet.transactions.slice(
+        (page - 1) * limit,
+        page * limit
+      );
 
-      res.render("user/my-profile", { user, addresses,wallet,transactions,
+      res.render("user/my-profile", {
+        user,
+        addresses,
+        wallet,
+        transactions,
         currentPage: page,
-        transactionPages, });
+        transactionPages,
+      });
     } else {
       res.redirect("/login");
     }

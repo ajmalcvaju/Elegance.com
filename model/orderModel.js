@@ -29,12 +29,13 @@ const orderItemSchema = new mongoose.Schema({
   status: {
     type: String,
     default: "Pending",
-  },reasonForCancelation: {
+  },
+  reasonForCancelation: {
     type: String,
   },
   reasonForReturn: {
     type: String,
-  }
+  },
 });
 
 function formatDate(date) {
@@ -134,8 +135,8 @@ const orderSchema = new mongoose.Schema({
   reasonForReturn: {
     type: String,
   },
-  cancelledOrReturnedProductPrice:Number,
-  priceAfterCancellationOrReturn:Number
+  cancelledOrReturnedProductPrice: Number,
+  priceAfterCancellationOrReturn: Number,
 });
 
 orderSchema.pre("save", async function (next) {

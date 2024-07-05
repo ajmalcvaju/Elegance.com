@@ -129,6 +129,11 @@
                <li><a href="/">Home</a></li>
                         <li><a href="/shop">Shop </a>
                         </li>
+                        {{#if login}}
+                            <li><a href="/uSignout"> Logout</a></li>
+                            {{else}}
+                            <li><a href="/login">Login</a></li>
+                            {{/if}}
             </ul>
         </div>
     </div>

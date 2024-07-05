@@ -8,8 +8,7 @@ const manageCoupon = async (req, res) => {
     const coupons = await Coupon.find({})
       .skip((page - 1) * limit)
       .limit(limit);
-    res.render("admin/coupons", { coupons,currentPage: page,
-      totalPages });
+    res.render("admin/coupons", { coupons, currentPage: page, totalPages });
   } catch (error) {
     console.log(error.message);
     res.redirect("/admin/error");

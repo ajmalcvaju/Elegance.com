@@ -120,7 +120,7 @@ const decCart = async (req, res) => {
     if (quantity == 1) {
       res.json({
         success: false,
-    });
+      });
     } else {
       await Cart.updateOne(
         { userId, "items._id": productId },
@@ -131,7 +131,7 @@ const decCart = async (req, res) => {
       const cartData = await cart.save();
       res.json({
         success: true,
-    });
+      });
     }
   } catch (error) {
     console.log(error.message);
@@ -153,7 +153,7 @@ const incCart = async (req, res) => {
     console.log(quantity);
     console.log(req.query.id);
     if (stock == quantity) {
-      res.json({success: false});
+      res.json({ success: false });
     } else {
       await Cart.updateOne(
         { userId, "items._id": productId },
@@ -163,7 +163,7 @@ const incCart = async (req, res) => {
 
       const cartData = await cart.save();
 
-      res.json({success: true});
+      res.json({ success: true });
     }
   } catch (error) {
     console.log(error.message);
@@ -234,8 +234,11 @@ const checkout = async (req, res) => {
       console.log(totalPriceAfterCoupon);
       const cart = await Cart.findOne({ userId }).populate("items.productId");
       const address = await Address.find({ userId });
-      const coupon = await Coupon.find({isActive: true,
-        expiryDate: { $gt: Date.now() },usedUsers: { $nin:userId}});
+      const coupon = await Coupon.find({
+        isActive: true,
+        expiryDate: { $gt: Date.now() },
+        usedUsers: { $nin: userId },
+      });
       const wallet = await Wallet.findOne({ userId });
       console.log(req.session.discount);
       res.render("user/checkout", { cart, address, coupon, wallet });
@@ -405,17 +408,17 @@ const placeOrder = async (req, res) => {
     }
     await order.save();
     await Cart.deleteOne({ userId });
-    const transaction=req.session.wallet
-    if(transaction){
-    const updatingWallet = await Wallet.findOne({ userId });
-    const newTransaction = {
-      amount: -transaction,
-      date: new Date(),
-      reasson:"Debited due to using for order"
-    };
-    updatingWallet.transactions.push(newTransaction);
-    await updatingWallet.save();
-  }
+    const transaction = req.session.wallet;
+    if (transaction) {
+      const updatingWallet = await Wallet.findOne({ userId });
+      const newTransaction = {
+        amount: -transaction,
+        date: new Date(),
+        reasson: "Debited due to using for order",
+      };
+      updatingWallet.transactions.push(newTransaction);
+      await updatingWallet.save();
+    }
     req.session.discount = null;
     req.session.wallet = null;
     req.session.save((err) => {

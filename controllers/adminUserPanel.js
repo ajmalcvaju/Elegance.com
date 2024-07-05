@@ -1,15 +1,14 @@
 const User = require("../model/userModel");
-const fs=require('fs')
-const path = require('path');
-const cloudinary = require('cloudinary').v2;
-require('dotenv').config();
+const fs = require("fs");
+const path = require("path");
+const cloudinary = require("cloudinary").v2;
+require("dotenv").config();
 
 cloudinary.config({
   cloud_name: process.env.CLOUDNAME,
   api_key: process.env.CLOUDAPIKEY,
   api_secret: process.env.CLOUDINARYSECRET,
 });
-
 
 const adminUser = async (req, res) => {
   try {
@@ -22,8 +21,7 @@ const adminUser = async (req, res) => {
     const users = await User.find({})
       .skip((page - 1) * limit)
       .limit(limit);
-    res.render("admin/User", { users,currentPage: page,
-      totalPages });
+    res.render("admin/User", { users, currentPage: page, totalPages });
   } catch {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -51,7 +49,7 @@ const addUser = async (req, res) => {
 
 const UserExist = async (req, res) => {
   try {
-    const { username,userId, email, mobileNumber } = req.body;
+    const { username, userId, email, mobileNumber } = req.body;
     if (userId) {
       const users = await User.findOne({ _id: userId });
       if (username && username != users.username) {
@@ -85,13 +83,21 @@ const UserExist = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const result = await cloudinary.uploader.upload(req.file.path);
-    const { username, email, mobileNumber,fname,lname, password, confirmPassword }=req.body;
+    const {
+      username,
+      email,
+      mobileNumber,
+      fname,
+      lname,
+      password,
+      confirmPassword,
+    } = req.body;
     const user = new User({
       username: username,
       email: email,
       fname: fname,
       lname: lname,
-      mobileNumber:  mobileNumber,
+      mobileNumber: mobileNumber,
       password: password,
       image: result.url,
       is_admin: 0,
@@ -106,8 +112,8 @@ const updateUser = async (req, res) => {
 const updateUserBlockStatus = async (req, res) => {
   try {
     let userId = req.query.id;
-    let status = req.query.status; 
-    let isBlocked = status === 'block' ? 1 : 0;
+    let status = req.query.status;
+    let isBlocked = status === "block" ? 1 : 0;
 
     const updatedInfo = await User.updateOne(
       { _id: userId },
@@ -131,8 +137,8 @@ const editUser = async (req, res) => {
 };
 
 const updatingUser = async (req, res) => {
-  
-  const { userId,username, email, fname, lname, password, mobileNumber } = req.body;
+  const { userId, username, email, fname, lname, password, mobileNumber } =
+    req.body;
   await User.updateOne(
     { _id: userId },
     { $set: { username, email, fname, lname, password, mobileNumber } }

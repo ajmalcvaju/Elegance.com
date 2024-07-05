@@ -23,10 +23,7 @@ const adminProduct = async (req, res) => {
       .skip((page - 1) * limit)
       .limit(limit);
 
-
-    res.render("admin/product", { products,
-      currentPage: page,
-      totalPages });
+    res.render("admin/product", { products, currentPage: page, totalPages });
   } catch {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -64,7 +61,8 @@ const addProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    const{pname,description,price,discount,purchase,category}=req.body
+    const { pname, description, price, discount, purchase, category } =
+      req.body;
     const products = await Product.findOne({ pname });
     if (products) {
       const categories = await Category.find({});
@@ -95,7 +93,7 @@ const updateProduct = async (req, res) => {
       } catch (error) {
         console.error("Error uploading images: ", error);
       }
-                      
+
       const product = new Product({
         pname: pname,
         image: uploadedImages,
@@ -119,9 +117,9 @@ const updateProduct = async (req, res) => {
 const updateProductStatus = async (req, res) => {
   try {
     let proId = req.query.id;
-    let status = req.query.status; 
+    let status = req.query.status;
 
-    let isDeleted = status === 'delete' ? 1 : 0;
+    let isDeleted = status === "delete" ? 1 : 0;
 
     const updatedInfo = await Product.updateOne(
       { _id: proId },
@@ -137,9 +135,9 @@ const updateProductStatus = async (req, res) => {
 const editProduct = async (req, res) => {
   try {
     let proId = req.query.id;
-    req.session.proId=proId;
+    req.session.proId = proId;
     const product = await Product.findOne({ _id: proId });
-    req.session.uploadedImages=product.image;
+    req.session.uploadedImages = product.image;
     const categories = await Category.find({});
     res.render("admin/editProduct", { product, categories });
   } catch (error) {
@@ -153,35 +151,47 @@ const updatingProduct = async (req, res) => {
     const proId = req.query.id;
     const { pname, description, category, price, discount, purchase } =
       req.body;
-      const products = await Product.findOne({ pname });
-      const categories = await Category.findOne({ cname:category });
-      let actualDiscount;
-      let productDiscount = discount;
-      let categoryDiscount = categories.discount;
-      if (productDiscount >= categoryDiscount) {
-        actualDiscount = productDiscount;
-      } else {
-        actualDiscount = categoryDiscount;
-      }
-      const DiscountedPrice = price * (1 - actualDiscount / 100);
-      const files = req.files;
-      console.log(files);
+    const products = await Product.findOne({ pname });
+    const categories = await Category.findOne({ cname: category });
+    let actualDiscount;
+    let productDiscount = discount;
+    let categoryDiscount = categories.discount;
+    if (productDiscount >= categoryDiscount) {
+      actualDiscount = productDiscount;
+    } else {
+      actualDiscount = categoryDiscount;
+    }
+    const DiscountedPrice = price * (1 - actualDiscount / 100);
+    const files = req.files;
+    console.log(files);
 
-      let uploadedImages = [];
+    let uploadedImages = [];
 
-      try {
-        for (const file of files) {
-          const result = await cloudinary.uploader.upload(file.path);
-          uploadedImages.push(result.url);
-        }
-        console.log(uploadedImages);
-        uploadedImages=req.session.uploadedImages.concat(uploadedImages)
-      } catch (error) {
-        console.error("Error uploading images: ", error);
+    try {
+      for (const file of files) {
+        const result = await cloudinary.uploader.upload(file.path);
+        uploadedImages.push(result.url);
       }
+      console.log(uploadedImages);
+      uploadedImages = req.session.uploadedImages.concat(uploadedImages);
+    } catch (error) {
+      console.error("Error uploading images: ", error);
+    }
     await Product.updateOne(
       { _id: proId },
-      { $set: { pname, description, price, category, discount, purchase,image: uploadedImages,actualDiscount: actualDiscount,discountedPrice: DiscountedPrice } }
+      {
+        $set: {
+          pname,
+          description,
+          price,
+          category,
+          discount,
+          purchase,
+          image: uploadedImages,
+          actualDiscount: actualDiscount,
+          discountedPrice: DiscountedPrice,
+        },
+      }
     );
     res.redirect("/admin/product");
   } catch (error) {
@@ -192,12 +202,10 @@ const updatingProduct = async (req, res) => {
 
 const deleteProductImage = async (req, res) => {
   try {
-    
-  const index = req.query.index;
-  const proId = req.session.proId;
-  const product = await Product.findOne(
-    { _id: proId })
-    product.image.splice(index,1)
+    const index = req.query.index;
+    const proId = req.session.proId;
+    const product = await Product.findOne({ _id: proId });
+    product.image.splice(index, 1);
     await product.save();
     res.redirect(`/admin/edit-product?id=${proId}`);
   } catch (error) {
@@ -214,5 +222,5 @@ module.exports = {
   editProduct,
   updatingProduct,
   ProductExist,
-  deleteProductImage
+  deleteProductImage,
 };

@@ -10,10 +10,10 @@ const adminOrder = async (req, res) => {
     const order = await Order.find({})
       .populate("items.productId")
       .populate("userId")
-      .sort({ orderId: -1 }).skip((page - 1) * limit)
-      .limit(limit);;
-    res.render("admin/orders", { order,currentPage: page,
-      totalPages });
+      .sort({ orderId: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
+    res.render("admin/orders", { order, currentPage: page, totalPages });
   } catch {
     console.log(error.message);
     res.redirect("/admin/error");
@@ -32,7 +32,7 @@ const manageOrder = async (req, res) => {
 const updateOrder = async (req, res) => {
   try {
     const orderId = req.query.orderId;
-    const {expectedArrival,orderStatus}=req.body;
+    const { expectedArrival, orderStatus } = req.body;
     const orders = await Order.findOne({ orderId });
     if (
       orders.paymentStatus === "Successfull" &&
@@ -55,15 +55,15 @@ const updateOrder = async (req, res) => {
         { $inc: { amount: orders.totalAmountPay } },
         { upsert: true, new: true, setDefaultsOnInsert: true }
       );
-      const transaction=orders.totalAmountPay
+      const transaction = orders.totalAmountPay;
       const updatingWallet = await Wallet.findOne({ userId: orders.userId });
       const newTransaction = {
-      amount: transaction,
-      date: new Date(),
-      reasson:"Credited due to cancellation/Return of order"
-    };
-    updatingWallet.transactions.push(newTransaction);
-    await updatingWallet.save();
+        amount: transaction,
+        date: new Date(),
+        reasson: "Credited due to cancellation/Return of order",
+      };
+      updatingWallet.transactions.push(newTransaction);
+      await updatingWallet.save();
     }
     const order = await Order.updateOne(
       { orderId: orderId },
@@ -71,7 +71,8 @@ const updateOrder = async (req, res) => {
         $set: {
           status: orderStatus,
           expectedArrival: expectedArrival,
-        },"items.$[].status": orderStatus
+        },
+        "items.$[].status": orderStatus,
       }
     );
 
@@ -95,26 +96,26 @@ const orderDetails = async (req, res) => {
   }
 };
 
-const returnItem=async(req,res)=>{
+const returnItem = async (req, res) => {
   try {
-    console.log(req.body)
-    const {itemId,price}=req.body
-    const orders = await Order.findOne({"items._id": itemId })
+    console.log(req.body);
+    const { itemId, price } = req.body;
+    const orders = await Order.findOne({ "items._id": itemId });
     let totalAmount;
-    if(orders.priceAfterCoupon){
-      totalAmount=orders.priceAfterCoupon
-    }else{
-      totalAmount=orders.totalAmountPay
+    if (orders.priceAfterCoupon) {
+      totalAmount = orders.priceAfterCoupon;
+    } else {
+      totalAmount = orders.totalAmountPay;
     }
-    const priceAfterCancellationOrReturn=totalAmount-price
+    const priceAfterCancellationOrReturn = totalAmount - price;
     const order = await Order.updateOne(
-      {"items._id": itemId },
+      { "items._id": itemId },
       {
         $set: {
           "items.$.status": "Return Completed",
-          cancelledOrReturnedProductPrice:price,
-          priceAfterCancellationOrReturn:priceAfterCancellationOrReturn
-        }
+          cancelledOrReturnedProductPrice: price,
+          priceAfterCancellationOrReturn: priceAfterCancellationOrReturn,
+        },
       }
     );
     const wallet = await Wallet.findOneAndUpdate(
@@ -122,41 +123,41 @@ const returnItem=async(req,res)=>{
       { $inc: { amount: price } },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
-    const transaction=price
-      const updatingWallet = await Wallet.findOne({ userId: orders.userId });
-      const newTransaction = {
+    const transaction = price;
+    const updatingWallet = await Wallet.findOne({ userId: orders.userId });
+    const newTransaction = {
       amount: transaction,
       date: new Date(),
-      reasson:"Credited due to cancellation/return of product"
+      reasson: "Credited due to cancellation/return of product",
     };
     updatingWallet.transactions.push(newTransaction);
     await updatingWallet.save();
-    res.json({success:true})
+    res.json({ success: true });
   } catch (error) {
     console.log(error.message);
     res.redirect("/admin/error");
   }
-}
-const cancelItem=async(req,res)=>{
+};
+const cancelItem = async (req, res) => {
   try {
-    console.log(req.body)
-    const {itemId,price}=req.body
-    const orders = await Order.findOne({"items._id": itemId })
+    console.log(req.body);
+    const { itemId, price } = req.body;
+    const orders = await Order.findOne({ "items._id": itemId });
     let totalAmount;
-    if(orders.priceAfterCoupon){
-      totalAmount=orders.priceAfterCoupon
-    }else{
-      totalAmount=orders.totalAmountPay
+    if (orders.priceAfterCoupon) {
+      totalAmount = orders.priceAfterCoupon;
+    } else {
+      totalAmount = orders.totalAmountPay;
     }
-    const priceAfterCancellationOrReturn=totalAmount-price
+    const priceAfterCancellationOrReturn = totalAmount - price;
     const order = await Order.updateOne(
-      {"items._id": itemId },
+      { "items._id": itemId },
       {
         $set: {
           "items.$.status": "Cancellation Completed",
-          cancelledOrReturnedProductPrice:price,
-          priceAfterCancellationOrReturn:priceAfterCancellationOrReturn
-        }
+          cancelledOrReturnedProductPrice: price,
+          priceAfterCancellationOrReturn: priceAfterCancellationOrReturn,
+        },
       }
     );
     const wallet = await Wallet.findOneAndUpdate(
@@ -164,24 +165,32 @@ const cancelItem=async(req,res)=>{
       { $inc: { amount: price } },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
-    const transaction=price
-      const updatingWallet = await Wallet.findOne({ userId: orders.userId });
-      const newTransaction = {
+    const transaction = price;
+    const updatingWallet = await Wallet.findOne({ userId: orders.userId });
+    const newTransaction = {
       amount: transaction,
       date: new Date(),
-      reasson:"Credited due to cancellation/return of product"
+      reasson: "Credited due to cancellation/return of product",
     };
     updatingWallet.transactions.push(newTransaction);
     await updatingWallet.save();
-    res.json({success:true})
+    res.json({ success: true });
   } catch (error) {
     console.log(error.message);
     res.redirect("/admin/error");
   }
-}
+};
 
 const error = async (req, res) => {
   res.render("admin/errorPage");
 };
 
-module.exports = { adminOrder, manageOrder, updateOrder, orderDetails,returnItem,cancelItem, error };
+module.exports = {
+  adminOrder,
+  manageOrder,
+  updateOrder,
+  orderDetails,
+  returnItem,
+  cancelItem,
+  error,
+};

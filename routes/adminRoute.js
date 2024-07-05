@@ -40,7 +40,7 @@ router.post("/edit-user", middleware.loggedIn,middleware.uploadNone,adminUserPan
 router.post("/edit-product", middleware.loggedIn,middleware.productImage, adminProductPanel.updatingProduct);
 router.post("/edit-category", middleware.loggedIn,adminCategoryPanel.updatingCategory);
 router.get("/manage", middleware.loggedIn,adminOrderPanel.manageOrder);
-router.post("/manage", middleware.loggedIn, adminOrderPanel.updateOrder);
+router.post("/manage", middleware.loggedIn, adminOrderPanel.updateOrder); 
 router.post("/returnItem", middleware.loggedIn,adminOrderPanel.returnItem);
 router.post("/cancelItem", middleware.loggedIn,adminOrderPanel.cancelItem);
 router.get("/coupons", middleware.loggedIn,adminCouponPanel.manageCoupon);

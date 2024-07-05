@@ -6,18 +6,24 @@ const userauth = require("../controllers/userauth");
 const middleware = require("../middlewares/middlewares");
 const cartController = require("../controllers/cartController");
 const userCheckoutOrderControll = require("../controllers/userCheckoutOrderControll");
-const passport =require("../config/passport");
-
+const passport = require("../config/passport");
 
 router.get("/", userController.home);
 router.get("/login", middleware.checkSession, userController.login);
-router.get("/auth/google", passport.authenticate("google", { scope: ['email', 'profile'] }));
-router.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: '/' }), userauth.googleAuth);
+router.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["email", "profile"] })
+);
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/" }),
+  userauth.googleAuth
+);
 router.post("/login", userauth.login);
 router.get("/signup", middleware.checkSession2, userController.loadRegister);
 router.post("/checkUserExist", userController.checkUserExist);
 router.post("/checkreferralCodeExist", userController.checkreferralCodeExist);
-router.post("/signup",  middleware.userImage, userController.insertUser);
+router.post("/signup", middleware.userImage, userController.insertUser);
 router.get("/otp", userController.otp);
 router.post("/signup/verify", userController.verifyMail);
 router.get("/reset", userController.reset);
@@ -28,8 +34,8 @@ router.post("/reset/new-password", userController.updatePassword);
 router.get("/shop", userController.shop);
 router.get("/home", userController.home);
 router.get("/product-details", userController.productDetails);
-router.post("/rate",userController.rating)
-router.get("/reviews",userController.review)
+router.post("/rate", userController.rating);
+router.get("/reviews", userController.review);
 router.get("/myProfile", userProfile.openProfile);
 router.get("/myProfile/add-address", userProfile.addAddres);
 router.post("/myProfile/add-address", userProfile.addAddress);
@@ -48,11 +54,11 @@ router.get("/checkout", cartController.checkout);
 router.post("/checkout", userCheckoutOrderControll.checkout);
 router.post("/createOrder", cartController.createOrder);
 router.post("/use-wallet", userCheckoutOrderControll.useWallet);
-router.get("/remove-wallet",userCheckoutOrderControll.removeWallet)
+router.get("/remove-wallet", userCheckoutOrderControll.removeWallet);
 router.get("/placeOrder", cartController.placeOrder);
 router.get("/orderStatus", cartController.orderStatus);
 router.get("/advanceSearch", userController.advanceSearch);
-router.get("/AddAddress",userCheckoutOrderControll.addAddress);
+router.get("/AddAddress", userCheckoutOrderControll.addAddress);
 router.post("/AddAddress", userCheckoutOrderControll.checkoutAddAddress);
 router.get("/editAddress", userCheckoutOrderControll.editAddress);
 router.post("/editAddress", userCheckoutOrderControll.checkoutEditAddress);
@@ -73,6 +79,5 @@ router.get("/removeCoupon", userCheckoutOrderControll.removeCoupon);
 router.post("/repayOrder", userCheckoutOrderControll.repayOrder);
 router.get("/repay", userCheckoutOrderControll.repay);
 router.get("/error", userauth.error);
-
 
 module.exports = router;

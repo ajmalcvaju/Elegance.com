@@ -59,7 +59,7 @@ const checkoutEditAddress = async (req, res) => {
 };
 const orderCancell = async (req, res) => {
   try {
-    const {orderId,reason}=req.body
+    const { orderId, reason } = req.body;
     const order = await Order.updateOne(
       { _id: orderId },
       { $set: { status: "Cancelation Pending", reasonForCancelation: reason } }
@@ -72,7 +72,7 @@ const orderCancell = async (req, res) => {
 };
 const returnOrder = async (req, res) => {
   try {
-    const {orderId,reason}=req.body
+    const { orderId, reason } = req.body;
     const order = await Order.updateOne(
       { _id: orderId },
       { $set: { status: "Return Pending", reasonForReturn: reason } }
@@ -341,45 +341,45 @@ const deleteAddress = async (req, res) => {
   }
 };
 
-const returnItem=async(req,res)=>{
+const returnItem = async (req, res) => {
   try {
-    console.log(req.body)
-      const {itemId,reason}=req.body
-      const order = await Order.updateOne(
-        {"items._id": itemId },
-        {
-          $set: {
-            "items.$.status": "Return Pending",
-            "items.$.reasonForCancelation": reason
-          }
-        }
-      );
-    
-      res.json({success:true})
+    console.log(req.body);
+    const { itemId, reason } = req.body;
+    const order = await Order.updateOne(
+      { "items._id": itemId },
+      {
+        $set: {
+          "items.$.status": "Return Pending",
+          "items.$.reasonForCancelation": reason,
+        },
+      }
+    );
+
+    res.json({ success: true });
   } catch (error) {
     console.log(error.message);
-      res.redirect("/admin/error");
+    res.redirect("/admin/error");
   }
+};
+const cancelItem = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { itemId, reason } = req.body;
+    const order = await Order.updateOne(
+      { "items._id": itemId },
+      {
+        $set: {
+          "items.$.status": "Cancellation Pending",
+          "items.$.reasonForCancelation": reason,
+        },
+      }
+    );
+    res.json({ success: true });
+  } catch (error) {
+    console.log(error.message);
+    res.redirect("/admin/error");
   }
-  const cancelItem=async(req,res)=>{
-    try {
-      console.log(req.body)
-      const {itemId,reason}=req.body
-      const order = await Order.updateOne(
-        {"items._id": itemId },
-        {
-          $set: {
-            "items.$.status": "Cancellation Pending",
-            "items.$.reasonForCancelation": reason
-          }
-        }
-      );
-      res.json({success:true})
-    } catch (error) {
-      console.log(error.message);
-      res.redirect("/admin/error");
-    } 
-  }
+};
 
 module.exports = {
   checkoutAddAddress,
@@ -399,5 +399,5 @@ module.exports = {
   editAddress,
   deleteAddress,
   returnItem,
-  cancelItem
+  cancelItem,
 };

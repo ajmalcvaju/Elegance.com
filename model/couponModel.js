@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 
 // Function to format date as dd/mm/yyyy
 function formatDate(date) {
-  if (!date) return '';
-  const dd = String(date.getDate()).padStart(2, '0');
-  const mm = String(date.getMonth() + 1).padStart(2, '0'); // January is 0
+  if (!date) return "";
+  const dd = String(date.getDate()).padStart(2, "0");
+  const mm = String(date.getMonth() + 1).padStart(2, "0"); // January is 0
   const yyyy = date.getFullYear();
   return `${yyyy}-${mm}-${dd}`;
 }
@@ -30,7 +30,7 @@ const couponSchema = new mongoose.Schema({
   expiryDate: {
     type: Date,
     required: true,
-    get: formatDate
+    get: formatDate,
   },
   isActive: {
     type: Boolean,

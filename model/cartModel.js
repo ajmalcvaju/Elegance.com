@@ -89,7 +89,7 @@ cartSchema.pre("save", function (next) {
   });
   this.totalPriceBeforeOffer = totalPriceBeforeOffer;
 
-  next();   
+  next();
 });
 
 const Cart = mongoose.model("Cart", cartSchema);
