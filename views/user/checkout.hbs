@@ -59,6 +59,31 @@
       }
     }
   </style>
+  <style>
+    .breadcrumb {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .breadcrumb-item {
+      display: inline;
+    }
+    .breadcrumb-item + .breadcrumb-item::before {
+      content: " > ";
+      padding: 0 5px;
+      color: #6c757d;
+    }
+    .breadcrumb-item a {
+      text-decoration: none;
+      color: #007bff;
+    }
+    .breadcrumb-item a:hover {
+      text-decoration: underline;
+    }
+    .breadcrumb-item.active {
+      color: #6c757d;
+    }
+  </style>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
@@ -70,6 +95,16 @@
   <section class="content">
 
     <div class="container">
+       <div style="display: flex; justify-content: center;">
+                    <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+    </ol>
+  </nav>
+  </div>
+
       <table>
         <thead>
           <tr>
