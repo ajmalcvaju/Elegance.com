@@ -100,7 +100,12 @@ const returnItem=async(req,res)=>{
     console.log(req.body)
     const {itemId,price}=req.body
     const orders = await Order.findOne({"items._id": itemId })
-    const totalAmount=orders.totalAmountPay
+    let totalAmount;
+    if(orders.priceAfterCoupon){
+      totalAmount=orders.priceAfterCoupon
+    }else{
+      totalAmount=orders.totalAmountPay
+    }
     const priceAfterCancellationOrReturn=totalAmount-price
     const order = await Order.updateOne(
       {"items._id": itemId },
@@ -137,7 +142,12 @@ const cancelItem=async(req,res)=>{
     console.log(req.body)
     const {itemId,price}=req.body
     const orders = await Order.findOne({"items._id": itemId })
-    const totalAmount=orders.totalAmountPay
+    let totalAmount;
+    if(orders.priceAfterCoupon){
+      totalAmount=orders.priceAfterCoupon
+    }else{
+      totalAmount=orders.totalAmountPay
+    }
     const priceAfterCancellationOrReturn=totalAmount-price
     const order = await Order.updateOne(
       {"items._id": itemId },
