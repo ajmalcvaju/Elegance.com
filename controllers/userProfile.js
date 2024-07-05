@@ -9,8 +9,16 @@ const openProfile = async (req, res) => {
       const user = await User.findOne({ email });
       const userId = user._id;
       const addresses = await Address.find({ userId });
-      const wallet = await Wallet.findOne({ userId });
-      res.render("user/my-profile", { user, addresses,wallet });
+      const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+
+    const totalwallet = await Wallet.countDocuments({});
+    const totalPages = Math.ceil(totalwallet / limit);
+
+    const wallet = await Wallet.findOne({ userId })
+      .skip((page - 1) * limit)
+      .limit(limit);
+      res.render("user/my-profile", { user, addresses,wallet,currentPage: page,totalPages });
     } else {
       res.redirect("/login");
     }
