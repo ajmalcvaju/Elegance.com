@@ -233,10 +233,12 @@ const checkout = async (req, res) => {
     } else {
       console.log(totalPriceAfterCoupon);
       const cart = await Cart.findOne({ userId }).populate("items.productId");
+      let totalAmount=cart.totalAmountPay;
       const address = await Address.find({ userId });
       const coupon = await Coupon.find({
         isActive: true,
         expiryDate: { $gt: Date.now() },
+        minPurchaseAmount:{ $lt:totalAmount  },
         usedUsers: { $nin: userId },
       });
       const wallet = await Wallet.findOne({ userId });
