@@ -195,7 +195,7 @@
         async function validateUsername() {
             const username = document.getElementById("username").value;
             const usernameError = document.getElementById("usernameError");
-
+            let exist=0
             try {
                 const response = await fetch("/admin/UserExist", {
                     method: "POST",
@@ -210,10 +210,11 @@
                 if (data.exists) {
                     usernameError.textContent = "Username already exists.";
                     document.getElementById("username").style.border = "1px solid red";
-                    event.preventDefault()
+                    exist=1
                 } else {
                     usernameError.textContent = "";
                     document.getElementById("username").style.border = "1px solid #ccc";
+                    exist=0
                 }
             } catch (error) {
                 console.error("Error validating username:", error);
@@ -245,10 +246,11 @@
                 if (data.exists) {
                     emailInput.style.border = "1px solid red";
                     emailError.textContent = "Email already exists.";
-                    event.preventDefault()
+                    exist=1
                 } else {
                     emailInput.style.border = "1px solid #ccc";
                     emailError.textContent = "";
+                    exist=0
                 }
             } catch (error) {
                 console.error("Error validating email:", error);
@@ -280,10 +282,11 @@
                 if (data.exists) {
                     mobileNumberInput.style.border = "1px solid red";
                     mobileNumberError.textContent = "Mobile number already exists.";
-                    event.preventDefault()
+                    exist=1
                 } else {
                     mobileNumberInput.style.border = "1px solid #ccc";
                     mobileNumberError.textContent = "";
+                    exist=0
                 }
             } catch (error) {
                 console.error("Error validating mobile number:", error);
@@ -376,7 +379,11 @@
             }
 
             if (isValid) {
-                document.getElementById("addUserForm").submit();
+                if(exist==0){
+          document.getElementById("addUserForm").submit();
+        }else{
+          event.preventDefault()
+        }
             }
         });
     </script>

@@ -214,6 +214,7 @@
 
   
 <script>
+  let exist=0
     async function validateCategoryName() {
       var cname = document.getElementById("cname").value;
       var cnameError = document.getElementById("cnameError");
@@ -233,9 +234,11 @@
           cnameError.textContent = "Category name already exists.";
           document.getElementById("cname").classList.add('is-invalid');
           event.preventDefault()
+          exist=1
         } else {
           cnameError.textContent = "";
           document.getElementById("cname").classList.remove('is-invalid');
+          exist=0
         }
       } catch (error) {
         console.error("Error validating category name:", error);
@@ -282,7 +285,11 @@
       }
 
       if (isValid) {
-        form.submit();
+        if(exist==0){
+          form.submit();
+        }else{
+          event.preventDefault()
+        }
       }
     });
   </script>

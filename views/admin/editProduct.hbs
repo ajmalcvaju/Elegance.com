@@ -260,6 +260,7 @@
  
 
  <script>
+  let exist=0
   async function validateProductName() {
     const pname = document.getElementById("pname").value;
     const pnameError = document.getElementById("pnameError");
@@ -278,10 +279,11 @@
         if (data.exists) {
           pnameError.textContent = "Product name already exists.";
           document.getElementById("pname").classList.add('is-invalid');
-          event.preventDefault()
+          exist=1
         } else {
           pnameError.textContent = "";
           document.getElementById("pname").classList.remove('is-invalid');
+          exist=0
         }
       } catch (error) {
         console.error("Error validating product name:", error);
@@ -350,7 +352,11 @@
       }
 
       if (isValid) {
-        form.submit();
+        if(exist==0){
+          form.submit();
+        }else{
+          event.preventDefault()
+        }
       } 
       {{!-- else {
         alert('Please fill out all required fields.');

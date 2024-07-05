@@ -166,6 +166,7 @@
     </form>
 
     <script>
+        let exist=0
         async function validatecouponCode() {
             var couponCode = document.getElementById("couponCode").value;
             var couponCodeError = document.getElementById("couponCodeError");
@@ -184,10 +185,11 @@
                 if (data.exists) {
                     couponCodeError.textContent = "Coupon code already exists.";
                     document.getElementById("couponCode").classList.add('is-invalid');
-                    event.preventDefault()
+                    exist=1
                 } else {
                     couponCodeError.textContent = "";
                     document.getElementById("couponCode").classList.remove('is-invalid');
+                    exist=0
                 }
             } catch (error) {
                 console.error("Error validating coupon code:", error);
@@ -247,7 +249,11 @@
             }
 
             if (isValid) {
-                form.submit();
+                if(exist==0){
+          form.submit();
+        }else{
+          event.preventDefault()
+        }
             }
         });
     </script>
