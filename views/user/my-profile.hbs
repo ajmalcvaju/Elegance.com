@@ -108,37 +108,36 @@
                             <h6><b>{{user.referralCode}}</b></h6>
                             <p>Reffer Our Website For Your Friends and Get 600 Rs Wallet Money</p>
                         </div>
-                        <div class="col-md-12"><label class="labels">
-                                <h3>Wallet Balance</h3>
-                            </label>
-                            <h4><b>{{wallet.amount}}</b></h4>
-                            <a href="#" id="toggle-history" class="btn btn-warning">History</a>
-                        </div>
+                        <div class="col-md-12">
+    <label class="labels">
+        <h3>Wallet Balance</h3>
+    </label>
+    <h4><b>{{wallet.amount}}</b></h4>
+    <a href="#" id="toggle-history" class="btn btn-warning">History</a>
+</div>
 
-                        <span id="transaction-history"
-                            style="display: none; background-color: rgb(179, 255, 0); margin-top: 20px;">
-                            <h2>Transactions</h2>
-                            {{#each wallet.transactions}}
-                            <h6>Amount: {{this.amount}}, Date: {{this.formattedDate}}, Reasson: {{this.reasson}}</h6>
-                            {{/each}}
-                            <div class="pagination-controls">
-                            {{#if (gt currentPage 1)}}
-                            <a href="?page={{subtract currentPage 1}}"
-                                class="btn btn-primary">Previous</a>
-                            {{/if}}
+<span id="transaction-history" style="display: none; background-color: rgb(179, 255, 0); margin-top: 20px;">
+    <h2>Transactions</h2>
+    {{#each transactions}}
+    <h6>Amount: {{this.amount}}, Date: {{this.formattedDate}}, Reason: {{this.reason}}</h6>
+    {{/each}}
+    <div class="pagination-controls">
+        {{#if (gt currentPage 1)}}
+        <a href="?page={{subtract currentPage 1}}" class="btn btn-primary">Previous</a>
+        {{/if}}
 
-                            {{#each (range 1 totalPages)}}
-                            <a href="?page={{this}}"
-                                class="btn btn-primary {{#if (eq this ../currentPage)}}active{{/if}}">
-                                {{this}}
-                            </a>
-                            {{/each}}
+        {{#each (range 1 transactionPages)}}
+        <a href="?page={{this}}" class="btn btn-primary {{#if (eq this ../currentPage)}}active{{/if}}">
+            {{this}}
+        </a>
+        {{/each}}
 
-                            {{#if (lt currentPage totalPages)}}
-                            <a href="?page={{add currentPage 1}}" class="btn btn-primary">Next</a>
-                            {{/if}}
-                        </div>
-                        </span>
+        {{#if (lt currentPage transactionPages)}}
+        <a href="?page={{add currentPage 1}}" class="btn btn-primary">Next</a>
+        {{/if}}
+    </div>
+</span>
+
 
 
                         <div class="col-md-12" style="margin-top: 10%;">

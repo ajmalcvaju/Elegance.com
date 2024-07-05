@@ -10,15 +10,22 @@ const openProfile = async (req, res) => {
       const userId = user._id;
       const addresses = await Address.find({ userId });
       const page = parseInt(req.query.page) || 1;
-    const limit = 10;
+const limit = 10;
 
-    const totalwallet = await Wallet.countDocuments({});
-    const totalPages = Math.ceil(totalwallet / limit);
+const totalwallet = await Wallet.countDocuments({});
+const totalPages = Math.ceil(totalwallet / limit);
 
-    const wallet = await Wallet.findOne({ userId })
-      .skip((page - 1) * limit)
-      .limit(limit);
-      res.render("user/my-profile", { user, addresses,wallet,currentPage: page,totalPages });
+// Fetch user wallet
+const wallet = await Wallet.findOne({ userId });
+
+// Paginate transactions
+const totalTransactions = wallet.transactions.length;
+const transactionPages = Math.ceil(totalTransactions / limit);
+const transactions = wallet.transactions.slice((page - 1) * limit, page * limit);
+
+      res.render("user/my-profile", { user, addresses,wallet,transactions,
+        currentPage: page,
+        transactionPages, });
     } else {
       res.redirect("/login");
     }
