@@ -16,8 +16,20 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12">
-					<div class="main-heading mb-10">My wishlist</div>
+					<div style="display: flex; justify-content: center;">
+						<nav aria-label="breadcrumb" style="text-align: center;">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="/">Home</a></li>
+								<li class="breadcrumb-item"><a href="/shop">Shop</a></li>
+								<li class="breadcrumb-item active" aria-current="page">My Wishlist</li>
+							</ol>
+						</nav>
+					</div>
+					<div class="main-heading mb-10" style="display: flex;justify-content: center;size: 40px;">My wishlist</div>
 					<div class="table-wishlist">
+						{{#if noProduct}}
+						<h3 style="display: flex;justify-content: center;">No Product in Wishlist</h3>
+						{{else}}
 						<table cellpadding="0" cellspacing="0" border="0" width="100%">
 							<thead>
 								<tr>
@@ -56,13 +68,8 @@
 								{{/if}}
 								{{/each}}
 								{{/each}}
-
-
 							</tbody>
-
 						</table>
-						{{#if noProduct}}
-						<h3>No Product in Wishlist</h3>
 						{{/if}}
 					</div>
 				</div>
