@@ -190,9 +190,8 @@
                                     {{#each categories}}
                                     <div class="block-lst align-items-center d-flex justify-content-between">
                                         <div class="form-check">
-
                                             <a href="/advanceSearch?category={{this.cname}}&Psort={{priceSort}}&Asort={{alphabetSort}}"
-                                                class="btn btn-light">
+                                                class="btn btn-light {{#if (eq this.cname ../category)}}text-danger{{/if}}">
                                                 <label class="form-check-label"
                                                     for="flexCheckChecked">{{this.cname}}</label>
                                             </a>
