@@ -11,117 +11,113 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <title>User Order Status</title>
+    <title>User Order status</title>
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            margin: 0%;
+            padding: 0%;
         }
 
         .content {
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* Ensure the content takes at least full height of viewport */
         }
 
-        header {
-            background-color: #343a40;
-            color: #fff;
-            padding: 10px 0;
-            text-align: center;
-        }
-
-        .breadcrumb {
-            padding: 0;
-            margin: 0;
-            list-style: none;
-            background-color: #e9ecef;
-            padding: 8px 15px;
-            border-radius: 5px;
-            display: inline-block;
-        }
-
-        .breadcrumb-item {
-            display: inline;
-            font-size: 16px;
-        }
-
-        .breadcrumb-item+ .breadcrumb-item::before {
-            content: " > ";
-            padding: 0 5px;
-            color: #6c757d;
-        }
-
-        .breadcrumb-item a {
-            text-decoration: none;
-            color: #007bff;
-        }
-
-        .breadcrumb-item a:hover {
-            text-decoration: underline;
-        }
-
-        .breadcrumb-item.active {
-            color: #6c757d;
-        }
-
-        .table {
-            background-color: #fff; /* Table background color */
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .table th,
-        .table td {
-            vertical-align: middle;
-        }
-
-        .table th {
-            background-color: #343a40; /* Header background color */
-            color: #fff;
-            border-color: #dee2e6;
-        }
-
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: #f8f9fa; /* Alternating row color */
-        }
-
-        .table-striped tbody tr:nth-of-type(even) {
-            background-color: #e9ecef; /* Alternating row color */
-        }
-
-        .btn-danger,
-        .btn-success,
-        .btn-info,
-        .btn-warning {
+        #aPanel {
             width: 100%;
-            margin-top: 5px;
+            display: flex;
+            height: 5%;
+            justify-content: center;
+            margin: 0;
         }
 
-        .btn-danger:hover,
-        .btn-success:hover,
-        .btn-info:hover,
-        .btn-warning:hover {
-            opacity: 0.85;
+        #aPanel2 {
+            width: 100%;
+            height: 95%;
+            display: flex;
+            flex-direction: row;
         }
 
-        .btn {
-            border-radius: 5px;
+        .dashboard-menu {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #949494;
+            width: 12%;
         }
 
-        .form-control {
-            border-radius: 5px;
+        .nav-link {
+            color: black;
+            margin-left: 10%;
         }
 
-        @media (max-width: 768px) {
-            .breadcrumb {
-                font-size: 14px;
-            }
+        #so {
+            margin-top: 100%;
+            font-size: large;
+            font-weight: 500;
+        }
+
+        .aPanel2-r {
+            width: 90%;
+        }
+
+        .aPanel2-l {
+            width: 10%;
+            background-color: #949494;
+        }
+
+        .nav-item {
+            margin-top: 5%;
+            margin-bottom: 5%;
+        }
+
+        .nav-link.btn.btn-success {
+            width: 100%;
+        }
+
+        .row {
+            display: flex;
+            align-self: center;
+        }
+
+        .img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .btn-danger {
+            width: 100%;
+        }
+
+        .btn-success {
+            width: 100%;
         }
     </style>
+    <style>
+    .breadcrumb {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .breadcrumb-item {
+      display: inline;
+    }
+    .breadcrumb-item + .breadcrumb-item::before {
+      content: " > ";
+      padding: 0 5px;
+      color: #6c757d;
+    }
+    .breadcrumb-item a {
+      text-decoration: none;
+      color: #007bff;
+    }
+    .breadcrumb-item a:hover {
+      text-decoration: underline;
+    }
+    .breadcrumb-item.active {
+      color: #6c757d;
+    }
+  </style>
 </head>
 
 <body>
@@ -131,16 +127,18 @@
                 <h3>Order Status</h3>
             </div>
 
-            <div id="aPanel2">
-                <div class="container">
+            <div id="aPanel2" style="align-items: center;">
+                <div class="aPanel2-r">
+                    <div style="display: flex; justify-content: center;">
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/">Home</a></li>
-                            <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Order Details</li>
-                        </ol>
-                    </nav>
-                    <table class="table table-striped mt-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Order Details</li>
+    </ol>
+  </nav>
+  </div>
+                    <table class="table mt-5">
                         <thead>
                             <tr>
                                 <th scope="col">Order Id</th>
@@ -155,6 +153,7 @@
                                 <th scope="col">Reason for Cancel/Return</th>
                                 <th scope="col">Repay</th>
                                 <th scope="col">Invoice</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -164,10 +163,10 @@
                                 <td>{{this.date}}</td>
                                 <td>{{this.productQuantity}}</td>
                                 {{#if this.priceAfterCoupon}}
-                                <td>{{this.priceAfterCoupon}}</td>
-                                {{else}}
-                                <td>{{this.totalAmountPay}}</td>
-                                {{/if}}
+                                    <td>{{this.priceAfterCoupon}}</td>
+                                    {{else}}
+                                    <td>{{this.totalAmountPay}}</td>
+                                    {{/if}}
                                 <td>{{this.status}}</td>
                                 <td>{{this.paymentStatus}}</td>
                                 <td>{{this.paymentMethod}}</td>
@@ -178,7 +177,7 @@
                                 {{#if (eq this.status "Rejected")}}
                                 <td></td>
                                 {{else}}
-                                {{#if (eq this.status "Cancellation Pending")}}
+                                {{#if (eq this.status "Cancelation Pending")}}
                                 <td></td>
                                 {{else}}
                                 {{#if (eq this.status "Return Completed")}}
@@ -194,11 +193,10 @@
                                 <td>
                                     <a href="#" class="btn btn-danger"
                                         onclick="confirmReturn('{{this._id}}', '{{this.orderId}}')">Return</a>
-                                </td>
+                                        </td>
                                 {{else}}
                                 <td>
-                                    <a href="#" class="btn btn-danger"
-                                        onclick="confirmCancel('{{this._id}}', '{{this.orderId}}')">Cancel</a>
+                                    <a href="#" class="btn btn-danger" onclick="confirmCancel('{{this._id}}', '{{this.orderId}}')">Cancel</a>
                                 </td>
                                 {{/if}}
                                 {{/if}}
@@ -216,15 +214,17 @@
                                 {{#if (eq this.paymentStatus "Failed")}}
                                 <td>
                                     <form action="/repay" method="post" class="form">
-                                        {{#if this.priceAfterCoupon}}
-                                        <input type="hidden" id="totalAmountPay" name="totalAmountPay"
-                                            value="{{this.priceAfterCoupon}}">
-                                        {{else}}
-                                        <input type="hidden" id="totalAmountPay" name="totalAmountPay"
-                                            value="{{this.totalAmountPay}}">
-                                        {{/if}}
+
+                                            {{#if this.priceAfterCoupon}}
+                                            <input type="hidden" id="totalAmountPay" name="totalAmountPay"
+                                                value="{{this.priceAfterCoupon}}">
+                                            {{else}}
+                                            <input type="hidden" id="totalAmountPay" name="totalAmountPay"
+                                                value="{{this.totalAmountPay}}">
+                                            {{/if}}
                                         <input type="hidden" id="orderId" name="orderId" value="{{this.orderId}}">
                                         <button type="submit" class="btn btn-success">Repay</button>
+
                                     </form>
                                 </td>
                                 {{else}}
@@ -238,64 +238,83 @@
                                 <td></td>
                                 {{/if}}
                             </tr>
+
                             {{/each}}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-    </header>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script>
-        function confirmCancel(orderId, displayOrderId) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: `Do you want to cancel order ${displayOrderId}?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, cancel it!',
-                input: 'textarea', // Add a textarea input for the reason
-                inputPlaceholder: 'Enter the reason for cancellation...',
-                inputValidator: (value) => {
-                    if (!value) {
-                        return 'You need to provide a reason for cancellation!';
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+    function confirmCancel(orderId, displayOrderId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `Do you want to cancel order ${displayOrderId}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, cancel it!',
+            input: 'textarea',  // Add a textarea input for the reason
+            inputPlaceholder: 'Enter the reason for cancellation...',
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'You need to provide a reason for cancellation!';
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const reason = result.value; // Get the reason from the input
+
+                // Display a message for confirmation
+                Swal.fire({
+                    title: 'Cancelling Order',
+                    text: 'Your order cancellation status will be updated in 3 seconds.',
+                    icon: 'success',
+                    timer: 3000,
+                    showConfirmButton: false,
+                    willClose: () => {
+                        // Send the reason to the backend
+                        $.ajax({
+                            url: `/cancelOrder`,
+                            method: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify({ orderId: orderId, reason: reason }),
+                            success: function(response) {
+                                console.log(response);
+                                window.location.href = '/orderStatus'; // Navigate to the orderStatus page
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("An error occurred while cancelling the order:", error);
+                            }
+                        });
                     }
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const reason = result.value; // Get the reason from the input
+                });
+            }
+        });
+    }
+</script>
 
-                    // Display a message for confirmation
-                    Swal.fire({
-                        title: 'Cancelling Order',
-                        text: 'Your order cancellation status will be updated in 3 seconds.',
-                        icon: 'success',
-                        timer: 3000,
-                        showConfirmButton: false,
-                        willClose: () => {
-                            // Send the reason to the backend
-                            $.ajax({
-                                url: `/cancelOrder`,
-                                method: 'POST',
-                                contentType: 'application/json',
-                                data: JSON.stringify({ orderId: orderId, reason: reason }),
-                                success: function(response) {
-                                    console.log(response);
-                                    window.location.href = '/orderStatus'; // Navigate to the orderStatus page
-                                },
-                                error: function(xhr, status, error) {
-                                    console.error("An error occurred while cancelling the order:", error);
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        }
 
+        <script>
         function confirmReturn(orderId, displayOrderId) {
             Swal.fire({
                 title: 'Are you sure?',
@@ -305,7 +324,7 @@
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, return it!',
-                input: 'textarea', // Add a textarea input for the reason
+                input: 'textarea',  // Add a textarea input for the reason
                 inputPlaceholder: 'Enter the reason for return...',
                 inputValidator: (value) => {
                     if (!value) {
@@ -344,16 +363,60 @@
             });
         }
     </script>
+        <script>
+            $(document).ready(function () {
+                $(".form").submit(function (e) {
+                    e.preventDefault();
+                    console.log("Form submitted");
+                    var formData = $(this).serialize();
+                    var totalAmountPay = document.getElementById("totalAmountPay").value
+                    var orderId = document.getElementById("orderId").value
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
+                    $.ajax({
+                        url: "/repayOrder",
+                        type: "POST",
+                        data: formData,
+                        success: function (res) {
+                            console.log("Server response:", res);
+                            if (res.success) {
+                                var options = {
+                                    "key": res.key_id,
+                                    "amount": res.amount,
+                                    "currency": "INR",
+                                    "order_id": res.orderId,
+                                    "handler": function (response) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Payment Successful',
+                                            text: 'Your payment has been processed successfully.',
+                                            confirmButtonText: 'OK'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                window.location.href = `/repay?paid=1&orderId=${orderId}`
+                                            }
+                                        });
+                                        console.log("Payment response:", response);
+                                    }
+                                };
+                                var razorpayObject = new Razorpay(options);
+                                razorpayObject.on('payment.failed', function (response) {
+                                    window.location.href = `/repay?paid=0&orderId=${orderId}`
+                                    console.log("Payment failed response:", response);
+                                });
+                                razorpayObject.open();
+
+                            } else {
+                                alert(res.msg);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert("An error occurred: " + error);
+                            console.error("AJAX error:", error);
+                        }
+                    });
+                });
+            });
+        </script>
 </body>
 
 </html>
