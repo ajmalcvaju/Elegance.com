@@ -65,16 +65,13 @@
                 <div class="main-header row w-100 d-flex align-items-center justify-content-between">
                     <div class="menu-left col-lg-4 col-md-4 d-flex flex-nowrap align-items-center">
 
-                        <div class="field-box position-relative">
-                            <div class="search-field position-absolute">
-                                <a href="#">
-                                    <img src="/images/resources/search-outline.svg" alt="" width="28px" style="-webkit-transform: rotateY(180deg);
-                                   -moz-transform: rotateY(180deg);
-                                    -ms-transform: rotateY(180deg);
-                                     -o-transform: rotateY(180deg);
-                                        transform: rotateY(180deg);"></a>
-
-                            </div>
+                        <div class="field-box position-relative" style="display: flex; flex-direction: row;">
+                            <form class="form-inline my-2 my-lg-0" style="display: flex; flex-direction: row;">
+                                <input class="form-control mr-sm-2" id="searchInput" type="text" placeholder="Search"
+                                    aria-label="Search">
+                                <button class="btn btn-outline-success my-2 my-sm-0" id="searchByIdButton"
+                                    type="button">Search</button>
+                            </form>
                         </div>
                     </div>
                     <div class="menu-mid col-lg-4 col-md-4 text-lg-center">
