@@ -7,7 +7,7 @@ const categorySchema = new mongoose.Schema({
     required: true,
   },
   street: {
-    type: String,
+    type: String, 
     required: true,
   },
   district: {
