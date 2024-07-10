@@ -369,32 +369,6 @@
 
                                 <p class="mb-0" style="color: black;"><b>Description:</b> {{product.description}}</p>
 
-                                <div class="products-color d-flex flex-wrap align-items-center w-100">
-                                    <span>Colors:</span>
-                                    <select class="form-select form-select-sm" aria-label=".form-select-sm example">
-                                        <option selected>Select a color</option>
-                                        <option value="1">Yellow</option>
-                                        <option value="1">Red</option>
-                                        <option value="2">Green</option>
-
-                                    </select>
-
-                                    <!--products-color-->
-                                </div>
-
-                                <div class="products-size d-flex flex-wrap align-items-center w-100">
-
-                                    <span>Size:</span>
-                                    <select class="v3 form-select form-select-sm" aria-label=".form-select-sm example">
-                                        <option selected>Select a size</option>
-                                        <option value="1">Large</option>
-                                        <option value="1">Medium</option>
-                                        <option value="2">Small</option>
-
-                                    </select>
-
-                                    <!--products-size-->
-                                </div>
 
 
                                 <div class="product-bottom d-flex flex-wrap align-items-center w-100">
@@ -953,6 +927,48 @@
                 return { x: x, y: y };
             }
         });
+    </script>
+    <script>
+        function fetchReviews() {
+            fetch(`/reviews?productId={{product._id}}`) // Replace with the actual product ID
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const reviewsContainer = document.getElementById('reviews-container');
+                        reviewsContainer.innerHTML = ''; // Clear the container
+                        data.reviews.forEach(review => {
+                            const reviewElement = document.createElement('div');
+                            reviewElement.className = 'review';
+                            reviewElement.innerHTML = `
+                                <div class="stars">${generateStars(review.rating)}</div>
+                                <p>${review.comment}</p>
+                                <small>Reviewed by: ${review.userId.fname} ${review.userId.lname}</small>
+                            `;
+                            reviewsContainer.appendChild(reviewElement);
+                        });
+                    } else {
+                        console.error('Error fetching reviews:', data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function generateStars(rating) {
+            let starsHtml = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    starsHtml += '<i class="fas fa-star"></i>';
+                } else {
+                    starsHtml += '<i class="far fa-star"></i>';
+                }
+            }
+            return starsHtml;
+        }
+
+        // Fetch reviews on page load
+        fetchReviews();
     </script>
 </body>
 
