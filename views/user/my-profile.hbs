@@ -2,58 +2,68 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/myProfile.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <style>
-        .breadcrumbs {
-  list-style: none;
-  padding: 1rem 0;
-  background-color: #fff;
-  font-size: 13px;
-}
-.breadcrumbs li {
-  padding-right: 10px;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/myProfile.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <style>
+    .breadcrumbs {
+      list-style: none;
+      padding: 1rem 0;
+      background-color: #fff;
+      font-size: 13px;
+    }
 
-.breadcrumbs li:last-child {
-  padding-right: 0;
-  color: #111;
-}
-.breadcrumbs li i{margin-right:10px;
-   font-size: 12px;
-}
-.breadcrumbs a{
-  color: #999;
-}
-.breadcrumbs a:hover{
-  color: #1cc0a0;
-}
-    </style>
-    <style>
+    .breadcrumbs li {
+      padding-right: 10px;
+    }
+
+    .breadcrumbs li:last-child {
+      padding-right: 0;
+      color: #111;
+    }
+
+    .breadcrumbs li i {
+      margin-right: 10px;
+      font-size: 12px;
+    }
+
+    .breadcrumbs a {
+      color: #999;
+    }
+
+    .breadcrumbs a:hover {
+      color: #1cc0a0;
+    }
+  </style>
+  <style>
     .breadcrumb {
       padding: 0;
       margin: 0;
       list-style: none;
     }
+
     .breadcrumb-item {
       display: inline;
     }
-    .breadcrumb-item + .breadcrumb-item::before {
+
+    .breadcrumb-item+.breadcrumb-item::before {
       content: " > ";
       padding: 0 5px;
       color: #6c757d;
     }
+
     .breadcrumb-item a {
       text-decoration: none;
       color: #007bff;
     }
+
     .breadcrumb-item a:hover {
       text-decoration: underline;
     }
+
     .breadcrumb-item.active {
       color: #6c757d;
     }
@@ -61,129 +71,140 @@
 </head>
 
 <body>
-    <div class="container rounded bg-white mt-5 mb-5">
-        <div style="display: flex; justify-content: center;">
-                    <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="/">Home</a></li>
-      <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
-      <li class="breadcrumb-item active" aria-current="page">My Profile</li>
-    </ol>
-  </nav>
+  <div class="container rounded bg-dark text-light mt-5 mb-5 shadow-lg">
+  <div class="d-flex justify-content-center">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb" style="background-color: transparent;">
+        <li class="breadcrumb-item"><a href="/" class="text-primary">Home</a></li>
+        <li class="breadcrumb-item"><a href="/shop" class="text-primary">Shop</a></li>
+        <li class="breadcrumb-item active" aria-current="page">My Profile</li>
+      </ol>
+    </nav>
   </div>
-        <div class="row">
-            <div class="col-md-3 border-right">
-                <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                    {{#if user.profilePhoto}}
-                    <img class="rounded-circle mt-5" width="150px" src="{{user.profilePhoto}}">
-                    {{else}}
-                    <img class="rounded-circle mt-5" width="150px" src="{{user.image}}">
-                    {{/if}}
 
-                    <span class="font-weight-bold">{{user.username}}</span><span
-                        class="text-black-50">{{user.email}}</span><span> </span>
-                    <h5 class="pi"><a href="/myProfile" class="btn btn-info">Personal Information</a></h5>
-                    <h5 class="pi"><a href="/orderStatus" class="btn btn-info">My Orders</a></h5>
-                    <h5 class="pi"><a href="/myProfile/changePassword" class="btn btn-info">Change Password</a></h5>
-                </div>
+  <div class="row">
+    <div class="col-md-3 border-end border-info">
+      <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+        {{#if user.profilePhoto}}
+        <img class="rounded-circle mt-5" width="150px" src="{{user.profilePhoto}}" style="border: 5px solid #ff5722;">
+        {{else}}
+        <img class="rounded-circle mt-5" width="150px" src="{{user.image}}" style="border: 5px solid #ff5722;">
+        {{/if}}
+
+        <span class="font-weight-bold text-warning" style="font-size: 18px;">{{user.username}}</span>
+        <span class="text-black-50" style="font-size: 14px;">{{user.email}}</span>
+
+        <div class="mt-4">
+          <a href="/myProfile" class="btn btn-info w-100 mb-2" style="font-weight: bold;">Personal Information</a>
+          <a href="/orderStatus" class="btn btn-info w-100 mb-2" style="font-weight: bold;">My Orders</a>
+          <a href="/myProfile/changePassword" class="btn btn-info w-100 mb-2" style="font-weight: bold;">Change Password</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+      <div class="p-3 py-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="text-light">My Profile</h4>
+          <a href="/edit-profile" class="btn btn-primary">✎ Edit</a>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <label class="labels text-light">Full Name</label>
+            <h6 class="text-muted">{{user.fname}} {{user.lname}}</h6>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <label class="labels text-light">Email ID</label>
+            <h6 class="text-muted">{{user.email}}</h6>
+          </div>
+          <div class="col-md-12">
+            <label class="labels text-light">Mobile Number</label>
+            <h6 class="text-muted">{{user.mobileNumber}}</h6>
+          </div>
+          <div class="col-md-12">
+            <label class="labels text-light">Referral Code</label>
+            <h6 class="text-muted"><b>{{user.referralCode}}</b></h6>
+            <p class="text-success">Refer our website to friends and earn ₹600 Wallet Money!</p>
+          </div>
+
+          <div class="col-md-12 mt-4">
+            <h3 class="text-warning">Wallet Balance</h3>
+            <h4><b>₹{{wallet.amount}}</b></h4>
+            <a href="#" id="toggle-history" class="btn btn-warning w-100" style="font-weight: bold;">History</a>
+          </div>
+
+          <span id="transaction-history" style="display: none; background-color: rgb(255, 253, 199); padding: 20px; margin-top: 20px; border-radius: 10px;">
+            <h2 class="text-dark">Transactions</h2>
+            {{#each transactions}}
+            <h6 class="text-muted">Amount: ₹{{this.amount}}, Date: {{this.formattedDate}}, Reason: {{this.reasson}}</h6>
+            {{/each}}
+
+            <div class="pagination-controls mt-3">
+              {{#if (gt currentPage 1)}}
+              <a href="?page={{subtract currentPage 1}}" class="btn btn-primary">Previous</a>
+              {{/if}}
+
+              {{#each (range 1 transactionPages)}}
+              <a href="?page={{this}}" class="btn btn-primary {{#if (eq this ../currentPage)}}active{{/if}}">
+                {{this}}
+              </a>
+              {{/each}}
+
+              {{#if (lt currentPage transactionPages)}}
+              <a href="?page={{add currentPage 1}}" class="btn btn-primary">Next</a>
+              {{/if}}
             </div>
-            <div class="col-md-5 border-right">
-                <div class="p-3 py-5">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="text-right">My Profile</h4><a href="/edit-profile" class="btn btn-primary">✎</a>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-6"><label class="labels">Full Name</label>
-                            <h6>{{user.fname}} {{user.lname}}</h6>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-12"><label class="labels">Email ID</label>
-                            <h6>{{user.email}}</h6>
-                        </div>
-                        <div class="col-md-12"><label class="labels">Mobile Number</label>
-                            <h6>{{user.mobileNumber}}</h6>
-                        </div>
-                        <div class="col-md-12"><label class="labels">Referral Code</label>
-                            <h6><b>{{user.referralCode}}</b></h6>
-                            <p>Reffer Our Website For Your Friends and Get 600 Rs Wallet Money</p>
-                        </div>
-                        <div class="col-md-12">
-    <label class="labels">
-        <h3>Wallet Balance</h3>
-    </label>
-    <h4><b>{{wallet.amount}}</b></h4>
-    <a href="#" id="toggle-history" class="btn btn-warning">History</a>
+          </span>
+
+          <div class="col-md-12 mt-5">
+            <h6><u class="text-info">Address</u></h6>
+            {{#each addresses}}
+            <p class="text-light">{{this.houseName}} <a href="/edit-address?id={{this._id}}" class="text-info">Edit</a><br>{{this.street}},
+              {{this.district}}<br>{{this.state}}, {{this.pincode}}<br><a href="/delete-address?id={{this._id}}"
+              class="text-danger" onclick="return confirmDelete(event, this)">Delete</a></p>
+            {{/each}}
+            <a href="/myProfile/add-address" class="btn btn-success w-100" style="font-weight: bold;">Add New Address</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<span id="transaction-history" style="display: none; background-color: rgb(179, 255, 0); margin-top: 20px;">
-    <h2>Transactions</h2>
-    {{#each transactions}}
-    <h6>Amount: {{this.amount}}, Date: {{this.formattedDate}}, Reason: {{this.reasson}}</h6>
-    {{/each}}
-    <div class="pagination-controls">
-        {{#if (gt currentPage 1)}}
-        <a href="?page={{subtract currentPage 1}}" class="btn btn-primary">Previous</a>
-        {{/if}}
+  
+  <!-- Bootstrap Bundle (Bootstrap JS and Popper.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    function confirmDelete(event, element) {
+      event.preventDefault(); // Prevent the default link behavior
 
-        {{#each (range 1 transactionPages)}}
-        <a href="?page={{this}}" class="btn btn-primary {{#if (eq this ../currentPage)}}active{{/if}}">
-            {{this}}
-        </a>
-        {{/each}}
-
-        {{#if (lt currentPage transactionPages)}}
-        <a href="?page={{add currentPage 1}}" class="btn btn-primary">Next</a>
-        {{/if}}
-    </div>
-</span>
-
-
-
-                        <div class="col-md-12" style="margin-top: 10%;">
-                            <h6><u>Address</u></h6>
-                            {{#each addresses}}
-                            <p>{{this.houseName}} <a href="/edit-address?id={{this._id}}">Edit </a><br>{{this.street}},
-                                {{this.district}}<br>{{this.state}}, {{this.pincode}}<br><a
-                                    href="/delete-address?id={{this._id}}" style="color: red;"
-                                    onclick="return confirmDelete(event, this)">Delete</a></p>
-                            {{/each}}<a href="/myProfile/add-address" class="btn btn-success">Add New Address</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    <!-- Bootstrap Bundle (Bootstrap JS and Popper.js) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        function confirmDelete(event, element) {
-            event.preventDefault(); // Prevent the default link behavior
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'Do you want to delete this address?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Redirect to the href of the link if the user confirms
-                    window.location.href = element.href;
-                }
-            });
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you want to delete this address?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Redirect to the href of the link if the user confirms
+          window.location.href = element.href;
         }
-    </script>
-    <script>
-    $(document).ready(function() {
-      $('#toggle-history').click(function(event) {
+      });
+    }
+  </script>
+  <script>
+    $(document).ready(function () {
+      $('#toggle-history').click(function (event) {
         event.preventDefault();
         $('#transaction-history').toggle();
       });

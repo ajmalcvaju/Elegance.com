@@ -6,281 +6,283 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Elegance</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/style.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    <link rel="stylesheet" type="text/css" href="/css/all.min.css">
+    <link rel="stylesheet" href="/css/uicons-regular-rounded.css">
+    <link rel="stylesheet" type="text/css" href="/css/responsive.css">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href=" /css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <link rel="stylesheet" href=" /css/uicons-regular-rounded.css">
-    <link rel="stylesheet" type="text/css" href=" /css/responsive.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+        body {
+            background-color: #121212;
+        }
+
         #add-to-cart-link:hover {
             cursor: pointer;
         }
-         #searchInput {
-           background-color: rgb(214, 213, 213);
+
+        #searchInput {
+            background-color: rgb(214, 213, 213);
+        }
+
+        /* Hover Effects */
+        .btn-dark:hover,
+        .btn-outline-light:hover {
+            background-color: #FFD700 !important;
+            color: black !important;
+            border-color: #FFD700 !important;
+        }
+
+        .btn-warning:hover {
+            background-color: #FF5722 !important;
+            border-color: #FF5722 !important;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .block-sidebar {
+                text-align: center;
+            }
+
+            .block-lst {
+                justify-content: center;
+            }
+        }
+
+        .navbar-dark .nav-link {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .navbar-dark .nav-link:hover {
+            color: #a855f7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .block-product {
+                margin: 0 auto 20px auto;
+            }
         }
     </style>
     <style>
         @media (max-width: 1024px) {
-    .top-bar, .main-pd {
-        display: none;
-    }
-}
 
+            .top-bar,
+            .main-pd {
+                display: none;
+            }
+        }
     </style>
 </head>
 
 <body>
-   <header>
-        <div class="w-100 bg-1 header-pd">
-            <div class="container">
-                <div class="top-bar d-flex flex-wrap align-items-center justify-content-between">
-                    <div class="bar-left">
-                        <ul class="list-unstyled">
-                            <li><a href="#"><i class="fa-solid fa-phone"></i> Call: +91 8714156151</a></li>
-                        </ul>
-                    </div>
-                    <div class="bar-right">
-                        <ul class="list-unstyled d-flex flex-wrap align-items-center gap-3">
-                            <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
-                            <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fa-brands fa-google-plus-g"></i></a></li>
-                            <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
-                            <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
-                            {{#if login}}
-                            <li><a href="/uSignout"><i class="fa-regular fa-user"></i> Logout</a></li>
-                            {{else}}
-                            <li><a href="/login"><i class="fa-regular fa-user"></i> Login</a></li>
-                            {{/if}}
-                        </ul>
-                    </div>
+    <header class="bg-gray-900">
+        <nav class="bg-gray-800 shadow-md">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <!-- Logo -->
+                <a href="/" class="text-white text-3xl font-extrabold tracking-wider">
+                    <span class="text-purple-400">Elegance</span>
+                </a>
+
+                <!-- Desktop Menu -->
+                <ul class="hidden md:flex space-x-6 text-white font-semibold">
+                    <li><a href="/" class="hover:text-blue-400 transition duration-300 text-lg">Home</a></li>
+                    <li><a href="/shop" class="hover:text-purple-400 transition duration-300 text-lg">Shop</a></li>
+                    <li><a href="/myProfile"
+                            class="flex items-center hover:text-green-400 transition duration-300 text-lg">
+                            <i class="fa-solid fa-user text-xl mr-2"></i> My Profile</a></li>
+                    <li><a href="/myWishlist"
+                            class="flex items-center hover:text-yellow-400 transition duration-300 text-lg">
+                            <i class="fa-solid fa-heart text-xl mr-2"></i> My Wishlist</a></li>
+                    <li><a href="/cart"
+                            class="flex items-center hover:text-red-400 transition duration-300 text-lg font-semibold">
+                            <i class="fa-solid fa-shopping-cart text-xl mr-2"></i> My Cart</a></li>
+                    {{#if login}}
+                    <li><a href="/uSignout" class="hover:text-red-500 transition duration-300 text-lg">
+                            <i class="fa-solid fa-sign-out-alt text-xl mr-2"></i> Logout</a></li>
+                    {{else}}
+                    <li><a href="/login" class="hover:text-blue-500 transition duration-300 text-lg">
+                            <i class="fa-solid fa-sign-in-alt text-xl mr-2"></i> Login</a></li>
+                    {{/if}}
+                </ul>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="block md:hidden text-white text-3xl focus:outline-none">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu"
+            class="fixed inset-0 h-full w-64 bg-gray-800 shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out z-50">
+            <div class="p-5">
+                <!-- Logo and Close Button -->
+                <div class="flex justify-between items-center">
+                    <a href="/" class="text-white text-2xl font-extrabold tracking-wider">
+                        <span class="text-purple-400">Elegance</span>
+                    </a>
+                    <button id="close-menu" class="text-white text-3xl focus:outline-none">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
                 </div>
 
-            </div>
-        </div>
-        <div class="w-100 bg-white main-pd">
-            <div class="container">
-                <div class="main-header row w-100 d-flex align-items-center justify-content-between">
-                    <div class="menu-left col-lg-4 col-md-4 d-flex flex-nowrap align-items-center">
-
-                        <div class="field-box position-relative" style="display: flex; flex-direction: row;">
-                            <form class="form-inline my-2 my-lg-0" style="display: flex; flex-direction: row;">
-                                <input class="form-control mr-sm-2" id="searchInput" type="text" placeholder="Search"
-                                    aria-label="Search">
-                                <button class="btn btn-outline-success my-2 my-sm-0" id="searchByIdButton"
-                                    type="button">Search</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="menu-mid col-lg-4 col-md-4 text-lg-center">
-                        <h1>Elegance</h1>
-                    </div>
-                    <div class="menu-right col-md-4 col-lg-4">
-                        <ul class="shp-lst list-unstyled d-flex align-items-center justify-content-end">
-                            <li><a style="font-weight: 300;" href="/myProfile"><i class="fa-regular fa-user"
-                                        style="transform: scale(1.4)"></i> My Profile</a></li>
-                            <li><a style="font-weight: 300;" href="/myWishlist"><img src="/images/resources/icon-1.png"
-                                        alt=""> My wishlist</a></li>
-                            <li><a style="font-weight: 500;" href="/cart"><img src="/images/resources/icon-2.png"
-                                        alt="">My Cart</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="w-100 header-bottom d-none d-lg-block">
-            <div class="container">
-                <div class="border-top" style="opacity: 0.5;"></div>
-                <nav class="main-navigation">
-                    <ul class="main-menu list-unstyled d-flex justify-content-center">
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/shop">Shop </a>
-                        </li>
-                    </ul>
-                </nav>
+                <!-- Mobile Navigation -->
+                <ul class="text-gray-300 flex flex-col space-y-4 mt-4">
+                    <li><a href="/" class="hover:text-blue-400 text-lg">Home</a></li>
+                    <li><a href="/shop" class="hover:text-purple-400 text-lg">Shop</a></li>
+                    <li><a href="/myProfile" class="flex items-center hover:text-green-400 text-lg">
+                            <i class="fa-solid fa-user text-xl mr-2"></i> My Profile</a></li>
+                    <li><a href="/myWishlist" class="flex items-center hover:text-yellow-400 text-lg">
+                            <i class="fa-solid fa-heart text-xl mr-2"></i> My Wishlist</a></li>
+                    <li><a href="/cart" class="flex items-center hover:text-red-400 text-lg font-semibold">
+                            <i class="fa-solid fa-shopping-cart text-xl mr-2"></i> My Cart</a></li>
+                    {{#if login}}
+                    <li><a href="/uSignout" class="hover:text-red-500 text-lg">
+                            <i class="fa-solid fa-sign-out-alt text-xl mr-2"></i> Logout</a></li>
+                    {{else}}
+                    <li><a href="/login" class="hover:text-blue-500 text-lg">
+                            <i class="fa-solid fa-sign-in-alt text-xl mr-2"></i> Login</a></li>
+                    {{/if}}
+                </ul>
             </div>
         </div>
     </header>
 
-    <div class="res-header w-100">
-        <div class="res-topbar w-100">
-            <div class="container">
-                <div class="res-topbar-inner d-flex flex-wrap align-items-center justify-content-between">
-                    <div class="logo">
-                        <h1 class="mb-0">
-                            Elegance
-                        </h1>
-                    </div>
-                    <ul class="shp-lst list-unstyled d-flex align-items-center justify-content-end">
-                        <li class="bar">
-                            <a class="responsive-menu-trigger d-inline-block" href="#" onclick="showMenu()"><i
-                                    class="fi fi-rr-align-justify"></i></a>
-                        </li>
-                       <li><a style="font-weight: 300;" href="/myProfile"><i class="fa-regular fa-user"
-                                        style="transform: scale(1.4)"></i></a></li>
-                        <li><a style="font-weight: 300;" href="/myWishlist"><img src="/images/resources/icon-3.png" alt=""></a>
-                        </li>
-                        <li><a style="font-weight: 500;" href="/cart"><img src="/images/resources/icon-4.png" alt=""></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="mobile-nav position-relative">
-        <div class="nav-links" id="navLinks">
-            <a href="#" class="position-absolute res-menu-close" onclick="hideMenu()">
-                <i class="fa-solid fa-xmark"></i></a>
-            <ul class="mobile-res list-unstyled mb-0">
-               <li><a href="/">Home</a></li>
-                        <li><a href="/shop">Shop </a>
-                        </li>
-            </ul>
-        </div>
-    </div>
+    <!-- JavaScript for Mobile Menu -->
     <script>
-        var navLinks = document.getElementById("navLinks");
-        function showMenu() {
-            navLinks.style.right = "0";
-        }
-        function hideMenu() {
-            navLinks.style.right = "-322px";
-        }
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuButton = document.getElementById("mobile-menu-button");
+            const closeButton = document.getElementById("close-menu");
+            const mobileMenu = document.getElementById("mobile-menu");
 
+            menuButton.addEventListener("click", () => {
+                mobileMenu.classList.remove("-translate-x-full");
+            });
+
+            closeButton.addEventListener("click", () => {
+                mobileMenu.classList.add("-translate-x-full");
+            });
+        });
     </script>
 
-    <div class="border-top" style="opacity: .3;"></div>
-    <div class="container">
-        <div class="breadcrumbs row align-items-center justify-content-between d-flex">
-            <div class="col-12">
-                <ul class="breadcrumbs_content list-unstyled d-flex justify-content-center">
-                    <li class="home">
-                        <a title="Home" href="/" itemprop="url">
-                            <span>Home</span>
-                        </a>
-                    </li>
-                    <li>
-                        <span><i class="fa-solid fa-angle-right"></i> Shop</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="border-top mb-2" style="opacity: .3;"></div>
-    <section class="sp-wrap org v2">
+    <section class="sp-wrap org v2" style="background-color: #121212;">
         <div class="w-100">
             <div class="container">
                 <div class="row">
-                    <div class="filter-wrap d-flex justify-content-between align-items-center flex-wrap">
-                        <a class="meu" href="#">FILTER:</a>
-                    </div>
-                </div>
-                <div class="row">
+                    <!-- Sidebar Filters -->
                     <div class="col-lg-3 col-md-12 col-sm-12">
-                        <div class="block-sidebar">
-                            <div class="Catagories border-top">
-                                <h3 class="mt-3"><b><u>Categories</u></b></h3>
-                                <div class="content">
-                                    {{#each categories}}
-                                    <div class="block-lst align-items-center d-flex justify-content-between">
-                                        <div class="form-check">
-                                            <a href="/advanceSearch?category={{this.cname}}&Psort={{priceSort}}&Asort={{alphabetSort}}"
-                                                class="btn btn-light {{#if (eq this.cname ../category)}}text-danger{{/if}}">
-                                                <label class="form-check-label"
-                                                    for="flexCheckChecked">{{this.cname}}</label>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    {{/each}}
-                                    <a href="/advanceSearch?category=&Psort={{priceSort}}&Asort={{alphabetSort}}"
-                                        class="btn btn-info">Clear Filter</a>
-                                    <div class="block-lst align-items-center d-flex justify-content-between">
-                                        <div class="form-check">
-                                            <h3><b><u>Price</u></b></h3>
-                                            <a href="/advanceSearch?category={{category}}&Psort=1&Asort={{alphabetSort}}"
-                                                class="btn btn-light">
-                                                <label class="form-check-label" for="flexCheckChecked">Price: Low To
-                                                    High</label>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="block-lst align-items-center d-flex justify-content-between">
-                                        <div class="form-check">
-                                            <a href="/advanceSearch?category={{category}}&Psort=-1&Asort={{alphabetSort}}"
-                                                class="btn btn-light">
-                                                <label class="form-check-label" for="flexCheckChecked">Price: High To
-                                                    Low</label>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <a href="/advanceSearch?category={{category}}&Psort=&Asort={{alphabetSort}}"
-                                        class="btn btn-info">Clear Filter</a>
-                                    <h3><b><u>Alphabet Sorting</u></b></h3>
-                                    <div class="block-lst align-items-center d-flex justify-content-between">
-                                        <div class="form-check">
-                                            <a href="/advanceSearch?category={{category}}&Psort={{priceSort}}&Asort=1"
-                                                class="btn btn-light">
-                                                <label class="form-check-label" for="flexCheckChecked">Aa-Zz</label>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="block-lst align-items-center d-flex justify-content-between">
-                                        <div class="form-check">
-                                            <a href="/advanceSearch?category={{category}}&Psort={{priceSort}}&Asort=-1"
-                                                class="btn btn-light">
-                                                <label class="form-check-label" for="flexCheckChecked">Zz-Aa</label>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <a href="/advanceSearch?category={{category}}&Psort={{priceSort}}&Asort="
-                                        class="btn btn-info">Clear Filter</a>
-                                </div>
+                        <div class="block-sidebar p-3" style="
+        background: linear-gradient(145deg, #1E1E1E, #252525);
+        border-radius: 15px;
+        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5), -5px -5px 15px rgba(255, 255, 255, 0.05);
+    ">
+                            <h3 class="text-white text-center mb-3" style="font-weight: bold; letter-spacing: 1px;">✨
+                                Filters ✨</h3>
 
+                            <!-- Categories -->
+                            <h4 class="text-warning"><u>Categories</u></h4>
+                            <div class="content">
+                                {{#each categories}}
+                                <div class="block-lst d-flex justify-content-between align-items-center mb-2">
+                                    <a href="/advanceSearch?category={{this.cname}}&Psort={{priceSort}}&Asort={{alphabetSort}}"
+                                        class="btn w-100 {{#if (eq this.cname ../category)}}border-warning text-warning{{/if}}"
+                                        style="background: #333; color: white; padding: 8px; border-radius: 6px; font-size: 14px;">
+                                        {{this.cname}}
+                                    </a>
+                                </div>
+                                {{/each}}
+                                <a href="/advanceSearch?category=&Psort={{priceSort}}&Asort={{alphabetSort}}"
+                                    class="btn btn-danger w-100 py-1">❌ Clear Filter</a>
                             </div>
 
+                            <!-- Price Sorting -->
+                            <h4 class="text-warning mt-3"><u>Price</u></h4>
+                            <div class="content">
+                                <a href="/advanceSearch?category={{category}}&Psort=1&Asort={{alphabetSort}}"
+                                    class="btn w-100 mb-1"
+                                    style="background: #007bff; color: white; padding: 8px; border-radius: 6px; font-size: 14px;">
+                                    🔼 Low to High
+                                </a>
+                                <a href="/advanceSearch?category={{category}}&Psort=-1&Asort={{alphabetSort}}"
+                                    class="btn w-100 mb-1"
+                                    style="background: #ff5722; color: white; padding: 8px; border-radius: 6px; font-size: 14px;">
+                                    🔽 High to Low
+                                </a>
+                                <a href="/advanceSearch?category={{category}}&Psort=&Asort={{alphabetSort}}"
+                                    class="btn btn-danger w-100 py-1">❌ Clear Filter</a>
+                            </div>
+
+                            <!-- Alphabet Sorting -->
+                            <h4 class="text-warning mt-3"><u>Alphabet Sorting</u></h4>
+                            <div class="content">
+                                <a href="/advanceSearch?category={{category}}&Psort={{priceSort}}&Asort=1"
+                                    class="btn w-100 mb-1"
+                                    style="background: #28a745; color: white; padding: 8px; border-radius: 6px; font-size: 14px;">
+                                    🔠 A-Z
+                                </a>
+                                <a href="/advanceSearch?category={{category}}&Psort={{priceSort}}&Asort=-1"
+                                    class="btn w-100 mb-1"
+                                    style="background: #dc3545; color: white; padding: 8px; border-radius: 6px; font-size: 14px;">
+                                    🔠 Z-A
+                                </a>
+                                <a href="/advanceSearch?category={{category}}&Psort={{priceSort}}&Asort="
+                                    class="btn btn-danger w-100 py-1">❌ Clear Filter</a>
+                            </div>
+
+                            <!-- Clear All Filters -->
+                            <a href="/advanceSearch?category=&Psort=&Asort=" class="btn w-100 mt-3"
+                                style="background: #ffc107; color: black; font-weight: bold; padding: 10px; border-radius: 6px; font-size: 14px;">
+                                🚀 Clear All Filters
+                            </a>
                         </div>
-                        <a href="/advanceSearch?category=&Psort=&Asort=" class="btn btn-danger">Clear All Filters</a>
                     </div>
 
 
+
+                    <!-- Products Section -->
                     <div class="col-lg-9 col-sm-12 col-md-12">
                         <div class="row">
                             {{#each products}}
                             {{#unless this.is_deleted}}
                             {{#if this.purchase}}
-                            <div id="product" class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="block-product">
-                                    <div class="product-thumb position-relative">
+                            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <div class="block-product p-3"
+                                    style="background: #1E1E1E; border-radius: 12px; box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);">
+                                    <div class="product-thumb position-relative text-center">
                                         <a href="/product-details?id={{this._id}}">
-                                            <img id="mainImage" src="{{this.image.[0]}}">
+                                            <img src="{{this.image.[0]}}" class="img-fluid rounded"
+                                                style="height: 250px; object-fit: cover; border-radius: 8px;">
                                         </a>
-                                        <span class="position-absolute sv">Save {{this.actualDiscount}}%</span>
-
+                                        <span class="position-absolute"
+                                            style="top: 10px; left: 10px; background: crimson; color: white; padding: 5px 10px; border-radius: 4px;">
+                                            Save {{this.actualDiscount}}%
+                                        </span>
                                         <span onclick="addToCart(event, '{{this._id}}')"
-                                            class="ad-cart position-absolute text-center" id="add-to-cart-link">Add to
-                                            Cart</span>
-
-
+                                            class="ad-cart position-absolute text-center d-block mt-2 py-2" style="width: 100%; background: #FF5722; color: white; font-weight: bold; 
+                                               border-radius: 4px; cursor: pointer; transition: 0.3s;">
+                                            Add to Cart
+                                        </span>
                                     </div>
-
-                                    <div class="product-body text-center">
-                                        <a href="#" class="brand-name" style="color: black;">{{this.pname}}</a>
-                                        <h2 class="product-name">
-                                            <a href="#"></a>
+                                    <div class="product-body text-center mt-3">
+                                        <a href="#" class="brand-name"
+                                            style="color: white; font-weight: bold; font-size: 1.2em;">{{this.pname}}</a>
+                                        <h2 class="product-name" style="font-size: 1em; color: #FFD700;">
+                                            <a href="#">{{this.brand}}</a>
                                         </h2>
-                                        <span class="product-price">₹{{this.discountedPrice}} <del
-                                                style="color: red;">₹{{this.price}}</del></span>
-                                        <div class="prd-options">
-                                            <ul
-                                                class="list-unstyled d-flex gap-2 align-items-center justify-content-center">
-                                            </ul>
-                                        </div>
+                                        <span class="product-price"
+                                            style="font-size: 1.3em; font-weight: bold;">₹{{this.discountedPrice}}</span>
+                                        <del style="color: red; font-size: 1em;">₹{{this.price}}</del>
                                     </div>
                                 </div>
                             </div>
@@ -290,104 +292,78 @@
                         </div>
 
                         <!-- Pagination Controls -->
-                        <div class="pagination-controls">
+                        <div class="pagination-controls text-center mt-4">
                             {{#if (gt currentPage 1)}}
                             <a href="?page={{subtract currentPage 1}}&category={{category}}"
-                                class="btn btn-primary">Previous</a>
+                                class="btn btn-outline-light">Previous</a>
                             {{/if}}
 
                             {{#each (range 1 totalPages)}}
                             <a href="?page={{this}}&category={{category}}"
-                                class="btn btn-primary {{#if (eq this ../currentPage)}}active{{/if}}">
+                                class="btn {{#if (eq this ../currentPage)}}btn-warning{{else}}btn-outline-light{{/if}}">
                                 {{this}}
                             </a>
                             {{/each}}
 
                             {{#if (lt currentPage totalPages)}}
-                            <a href="?page={{add currentPage 1}}&category={{category}}" class="btn btn-primary">Next</a>
+                            <a href="?page={{add currentPage 1}}&category={{category}}"
+                                class="btn btn-outline-light">Next</a>
                             {{/if}}
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <div class="section-width my-5">
+        <div class="container">
+            <div class="w-100 border-top" style="border-top-color: #ebebeb !important;"></div>
+        </div>
+    </div>
+    <footer style="background: #111; color: white; padding: 30px 0;">
 
-    <footer>
-        <div class="w-100 ft-main">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="widget widget-about">
-                            <h1 style="color: white;">Elegance</h1>
-                            <p class="ft-info">Discover style and comfort at Elegance, your go-to apparel store for trendy and timeless pieces. From chic everyday wear to elegant evening outfits, we offer a curated selection for every occasion. Experience quality craftsmanship, sustainable fabrics, and personalized service. Elevate your wardrobe with Elegance—where fashion meets function.</p>
-                            <div class="widget-info">
-                                <div class="row">
-                                    <div class="col-sm-6 col-md-4">
-                                        <span class="widget-about-title">Got Question? Call us 24/7</span>
-                                        <a class="cnt-number" href="tel:+98765432">+91 8714156151</a>
-                                    </div>
-                                    <div class="col-sm-6 col-md-8">
-                                        <span class="widget-about-title">Payment Method</span>
-                                        <a class="payment_image" href="#">
-                                            <img src="/images/resources/pay.webp" width="272" height="20">
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-6">
-                        <div class="widget">
-                            <h4 class="widget-title">Useful Links</h4>
-                            <ul class="widget-list list-unstyled">
-                                <li>
-                                    <a title="Home" href="/" itemprop="url">
-                            <span>Home</span>
-                        </a>
-                                </li>
-                                <li>
-                                    <a href="/shop">Shop </a>
-                                </li>
-                                <li>
-                                    <a style="font-weight: 300;" href="/myProfile">My Profile</a>
-                                </li>
-                                <li>
-                                    <a style="font-weight: 500;" href="/cart">My Cart</a>
-                                </li>
-                                <li>
-                                    <a style="font-weight: 300;" href="/myWishlist">My Wishlist</a>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                    </div>
-                    
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Brand Info -->
+                <div class="col-lg-4 col-md-6 text-center text-md-start">
+                    <h2 style="color: #f8b400;">Elegance</h2>
+                    <p style="font-size: 14px; line-height: 1.5;">Discover style and comfort at Elegance, your go-to
+                        apparel store for trendy and timeless pieces.</p>
+                    <p style="margin-bottom: 5px; font-size: 14px;"><strong>Call us 24/7:</strong> <a
+                            href="tel:+918714156151" style="color: #f8b400;">+91 8714156151</a></p>
                 </div>
-                <div class="footer-bottom">
-                    <div class="row justify-content-between">
-                        <div class="col-12 col-md-auto py-1">
-                            <p class="footer-copyright m-0">Copyright © 2019 Elegance Store. All Rights Reserved.</p>
-                            <ul class="footer-menu list-unstyled">
-                                <li>
-                                    <a href="#">Terms / Privacy Policy</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-12 col-md-auto py-1">
-                            <div class="socials d-flex align-items-center gap-3">
-                                <span class="social-label">Social Media</span>
-                                <ul class="list-unstyled d-flex align-items-center flex-wrap gap-3">
-                                    <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
-                                    <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
-                                    <li><a href="#"><i class="fa-brands fa-google-plus-g"></i></a></li>
-                                    <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
-                                    <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
+
+                <!-- Links -->
+                <div class="col-lg-3 col-md-6 text-center text-md-start">
+                    <h4 style="font-size: 18px; color: #f8b400;">Quick Links</h4>
+                    <ul class="list-unstyled" style="font-size: 14px; margin: 0; padding: 0;">
+                        <li><a href="/" style="color: white; text-decoration: none;">Home</a></li>
+                        <li><a href="/shop" style="color: white; text-decoration: none;">Shop</a></li>
+                        <li><a href="/myProfile" style="color: white; text-decoration: none;">My Profile</a></li>
+                        <li><a href="/cart" style="color: white; text-decoration: none;">My Cart</a></li>
+                        <li><a href="/myWishlist" style="color: white; text-decoration: none;">My Wishlist</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social Media -->
+                <div class="col-lg-5 col-md-12 text-center text-md-end">
+                    <h4 style="font-size: 18px; color: #f8b400;">Follow Us</h4>
+                    <div class="d-flex justify-content-center justify-content-md-end gap-2">
+                        <a href="#" style="color: white; font-size: 18px;"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" style="color: white; font-size: 18px;"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#" style="color: white; font-size: 18px;"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" style="color: white; font-size: 18px;"><i class="fa-brands fa-youtube"></i></a>
                     </div>
+                </div>
+            </div>
+
+            <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 15px 0;">
+
+            <!-- Bottom Section -->
+            <div class="row">
+                <div class="col text-center">
+                    <p style="margin: 0; font-size: 13px;">© 2024 Elegance Store. All Rights Reserved | <a href="#"
+                            style="color: #f8b400;">Privacy Policy</a></p>
                 </div>
             </div>
         </div>
@@ -506,7 +482,7 @@
             });
         }
     </script>
-    
+
 </body>
 
 </html>

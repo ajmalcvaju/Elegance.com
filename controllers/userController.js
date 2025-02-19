@@ -55,7 +55,7 @@ const checkreferralCodeExist = async (req, res) => {
 const shop = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = 6;
+    const limit = 9;
     const category = req.query.category;
 
     const query = category ? { category } : {};
@@ -84,7 +84,7 @@ const shop = async (req, res) => {
 const home = async (req, res) => {
   try {
     if (req.session && req.session.email) {
-      // const featured = await Product.find({});
+      const featured = await Product.find({});
       const topDeal = await Product.find({ discount: { $gt: 10 } })
         .sort({ discount: -1 })
         .limit(8);
@@ -105,13 +105,13 @@ const home = async (req, res) => {
       // const featured = await Product.find({});
       const topDeal = await Product.find({ discount: { $gt: 10 } })
         .sort({ discount: -1 })
-        .limit(10);
+        .limit(8);
       const newArrival = await Product.find({})
         .sort({ PurchaseDate: -1 })
-        .limit(10);
+        .limit(8);
       const bestSellerProduct = await Product.find({})
         .sort({ soldCount: -1 })
-        .limit(10);
+        .limit(8);
       res.render("user/home", {
         login: 0,
         bestSellerProduct,
@@ -517,7 +517,7 @@ const advanceSearch = async (req, res) => {
       const categories = await Category.find({});
 
       const page = parseInt(req.query.page) || 1;
-      const limit = 6;
+      const limit = 9;
 
       const query = category ? { category } : {};
 
@@ -644,7 +644,7 @@ const advanceSearch = async (req, res) => {
       const categories = await Category.find({});
 
       const page = parseInt(req.query.page) || 1;
-      const limit = 6;
+      const limit = 9;
 
       const query = category ? { category } : {};
 
