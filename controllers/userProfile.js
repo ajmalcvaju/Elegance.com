@@ -17,14 +17,23 @@ const openProfile = async (req, res) => {
 
       // Fetch user wallet
       const wallet = await Wallet.findOne({ userId });
-
+      let totalTransactions
+      let transactionPages
+      let transactions
+      if(!wallet){
+        totalTransactions=[]
+        transactionPages=[]
+        transactions=[]
+      }else{
+        const totalTransactions = wallet.transactions.length;
+        transactionPages = Math.ceil(totalTransactions / limit);
+        transactions = wallet.transactions.slice(
+          (page - 1) * limit,
+          page * limit
+        );
+      }
       // Paginate transactions
-      const totalTransactions = wallet.transactions.length;
-      const transactionPages = Math.ceil(totalTransactions / limit);
-      const transactions = wallet.transactions.slice(
-        (page - 1) * limit,
-        page * limit
-      );
+      
 
       res.render("user/my-profile", {
         user,

@@ -4,80 +4,159 @@
   <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700,900&display=swap" rel="stylesheet">
 </head>
 <style>
+  /* General Styles */
   body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #121212, #1a1a2e);
+    font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
     text-align: center;
-    padding: 40px 0;
-    background: #EBF0F5;
+    padding: 20px;
   }
 
+  .container {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  /* Card Styles */
+  .card {
+    background: #222;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
+    color: white;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .card.success {
+    border-top: 5px solid #4CAF50;
+  }
+
+  .card.failed {
+    border-top: 5px solid #FF3B3B;
+  }
+
+  /* Icon Styles */
+  .icon-container {
+    width: 120px;
+    height: 120px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+
+  i {
+    font-size: 60px;
+    font-weight: bold;
+  }
+
+  .success i {
+    color: #4CAF50;
+  }
+
+  .failed i {
+    color: #FF3B3B;
+  }
+
+  /* Text Styles */
   h1 {
-    color: #88B04B;
-    font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
-    font-weight: 900;
-    font-size: 40px;
+    font-size: 28px;
+    font-weight: bold;
     margin-bottom: 10px;
   }
 
   p {
-    color: #404F5E;
-    font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
-    font-size: 20px;
-    margin: 0;
+    font-size: 18px;
+    color: #ddd;
+    margin-bottom: 20px;
   }
 
-  i {
-    color: #9ABC66;
-    font-size: 100px;
-    line-height: 200px;
-    margin-left: -15px;
-  }
-
-  .card {
-    background: white;
-    padding: 60px;
-    border-radius: 4px;
-    box-shadow: 0 2px 3px #C8D0D8;
-    display: inline-block;
-    margin: 0 auto;
-  }
-
-  button {
-    margin-top: 20%;
-    background-color: green;
-    width: 55%;
-    border-radius: 15px;
+  /* Button */
+  .show-orders {
+    background: linear-gradient(135deg, #28a745, #218838);
     color: white;
-    font-weight: 500;
-    font-size: 22px;
-    height: 7%;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    transition: 0.3s ease;
   }
 
-  .SO {
-    color: white;
+  .show-orders a {
     text-decoration: none;
+    color: white;
+    display: block;
+  }
+
+  .show-orders:hover {
+    background: linear-gradient(135deg, #218838, #1c7430);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 480px) {
+    .card {
+      padding: 30px;
+    }
+
+    .icon-container {
+      width: 100px;
+      height: 100px;
+    }
+
+    i {
+      font-size: 50px;
+    }
+
+    h1 {
+      font-size: 24px;
+    }
+
+    p {
+      font-size: 16px;
+    }
+
+    .show-orders {
+      font-size: 16px;
+      padding: 10px;
+    }
   }
 </style>
 
 <body>
-  {{#if paid}}
-  <div class="card">
-    <div style="border-radius:200px; height:200px; width:200px; background: #F8FAF5; margin:0 auto;">
-      <i class="checkmark">✓</i>
+  <div class="container">
+    {{#if paid}}
+    <div class="card success">
+      <div class="icon-container">
+        <i class="checkmark">✓</i>
+      </div>
+      <h1>Payment Successful</h1>
+      <p>We received your purchase request!<br> You'll hear from us soon.</p>
+      <button class="show-orders">
+        <a href="/orderStatus">Show Orders</a>
+      </button>
     </div>
-    <h1>Success</h1>
-    <p>We received your purchase request;<br /> we'll be in touch shortly!</p>
-    <button><a href="/orderStatus" class="SO">Show Orders</a></button>
-  </div>
-{{else}}
-<div class="card">
-    <div style="border-radius:200px; height:200px; width:200px; background: #F8FAF5; margin:0 auto;">
-      <i class="checkmark">✗</i>
+    {{else}}
+    <div class="card failed">
+      <div class="icon-container">
+        <i class="checkmark">✗</i>
+      </div>
+      <h1>Payment Failed</h1>
+      <p>Oops! Something went wrong.<br> Please try again.</p>
+      <button class="show-orders">
+        <a href="/orderStatus">Show Orders</a>
+      </button>
     </div>
-    <h1>Failed</h1>
-    <p>Your Payment Failed.<br /> Repay The Amount.</p>
-    <button><a href="/orderStatus" class="SO">Show Orders</a></button>
+    {{/if}}
   </div>
-{{/if}}
 </body>
 
 </html>

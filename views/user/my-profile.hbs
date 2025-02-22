@@ -138,27 +138,33 @@
           </div>
 
           <span id="transaction-history" style="display: none; background-color: rgb(255, 253, 199); padding: 20px; margin-top: 20px; border-radius: 10px;">
-            <h2 class="text-dark">Transactions</h2>
-            {{#each transactions}}
+    <h2 class="text-dark">Transactions</h2>
+
+    {{#if transactions.length}}
+        {{#each transactions}}
             <h6 class="text-muted">Amount: ₹{{this.amount}}, Date: {{this.formattedDate}}, Reason: {{this.reasson}}</h6>
+        {{/each}}
+
+        <div class="pagination-controls mt-3">
+            {{#if (gt currentPage 1)}}
+                <a href="?page={{subtract currentPage 1}}" class="btn btn-primary">Previous</a>
+            {{/if}}
+
+            {{#each (range 1 transactionPages)}}
+                <a href="?page={{this}}" class="btn btn-primary {{#if (eq this ../currentPage)}}active{{/if}}">
+                    {{this}}
+                </a>
             {{/each}}
 
-            <div class="pagination-controls mt-3">
-              {{#if (gt currentPage 1)}}
-              <a href="?page={{subtract currentPage 1}}" class="btn btn-primary">Previous</a>
-              {{/if}}
+            {{#if (lt currentPage transactionPages)}}
+                <a href="?page={{add currentPage 1}}" class="btn btn-primary">Next</a>
+            {{/if}}
+        </div>
+    {{else}}
+        <p class="text-muted">There are no transactions.</p>
+    {{/if}}
+</span>
 
-              {{#each (range 1 transactionPages)}}
-              <a href="?page={{this}}" class="btn btn-primary {{#if (eq this ../currentPage)}}active{{/if}}">
-                {{this}}
-              </a>
-              {{/each}}
-
-              {{#if (lt currentPage transactionPages)}}
-              <a href="?page={{add currentPage 1}}" class="btn btn-primary">Next</a>
-              {{/if}}
-            </div>
-          </span>
 
           <div class="col-md-12 mt-5">
             <h6><u class="text-info">Address</u></h6>
