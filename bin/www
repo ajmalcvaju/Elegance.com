@@ -12,8 +12,8 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 
-// var port = normalizePort(process.env.PORT || 'https://elegance-com.onrender.com');
-var port = normalizePort(process.env.PORT || 7000);
+var port = normalizePort(process.env.PORT || 'https://elegance-com.onrender.com');
+// var port = normalizePort(process.env.PORT || 7000);
 app.set('port', port);
 
 /**
